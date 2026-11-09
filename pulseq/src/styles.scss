@@ -796,7 +796,7 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 }
 
 .logo{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:var(--fg)!important;font-family:var(--disp);font-weight:800;font-size:26px;letter-spacing:-0.02em;flex:0 0 auto;line-height:1}
-.logo-mark{display:block;flex:none;width:46px;height:46px;border-radius:15px;box-shadow:none!important}
+.logo-mark{display:block;flex:none;width:46px;height:46px;border-radius:15px;object-fit:cover;box-shadow:none!important}
 
 .nav-links{display:flex;align-items:center;gap:22px}
 .nav-links a,.nav-link-with-arrow{color:var(--muted)!important;text-decoration:none;font-weight:500;font-size:15px;padding:8px 4px;min-height:40px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:opacity .15s ease,color .15s ease,text-decoration .15s ease}

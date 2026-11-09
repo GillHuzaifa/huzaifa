@@ -39,12 +39,9 @@ const SAY: Record<string, string> = {
     <!-- Header Container per PulseQ (9).html -->
     <header class="wrap">
       <div class="nav">
-        <!-- Brand Logo on Top Left with Heartbeat Mark -->
+        <!-- Brand Logo on Top Left -->
         <a class="logo" routerLink="/" aria-label="PulseQ home">
-          <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true">
-            <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#1D6FE0" stroke-width="2"/>
-            <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" fill="none" stroke="#1D6FE0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+          <img src="assets/logo.png" alt="PulseQ logo" class="logo-mark" loading="eager" width="46" height="46">
           <span>PulseQ</span>
         </a>
 

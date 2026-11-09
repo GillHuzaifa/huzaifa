@@ -11,7 +11,10 @@ import { PulseAiService } from '../../services/pulse-ai.service';
       <div class="wrap">
         <div class="foot-cols">
           <div style="max-width:320px;flex:1 1 260px">
-            <p style="font-family:var(--disp);font-weight:800;font-size:30px;color:#fff">PulseQ</p>
+            <div style="display:flex;align-items:center;gap:12px">
+              <img src="assets/logo.png" alt="PulseQ" style="width:40px;height:40px;border-radius:12px;object-fit:cover;flex:none" loading="lazy">
+              <p style="font-family:var(--disp);font-weight:800;font-size:30px;color:#fff;margin:0">PulseQ</p>
+            </div>
             <p class="muted" style="margin-top:10px">Book doctors and hospitals online, by search or chat in Urdu and English.</p>
             <p class="hand" style="font-size:26px;color:#93C5FD;margin-top:8px">made with care in Pakistan</p>
           </div>
