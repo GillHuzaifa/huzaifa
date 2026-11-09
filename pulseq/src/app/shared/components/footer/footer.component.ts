@@ -25,7 +25,6 @@ import { PulseAiService } from '../../services/pulse-ai.service';
             <a routerLink="/" fragment="conditions">Conditions</a>
             <a href="javascript:void(0)" (click)="openAi()">PulseQ AI</a>
             <a routerLink="/surgery">Surgery</a>
-            <a routerLink="/surgery" fragment="surgeons">Surgeons</a>
             <a routerLink="/medicine">Medicine</a>
           </div>
           <div>

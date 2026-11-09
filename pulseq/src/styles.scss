@@ -360,7 +360,7 @@ textarea.inp{padding:14px 16px;min-height:110px;resize:vertical;font:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* Minimal header: white, one accent, less clutter per PulseQ (9).html */
 #top{overflow-x:clip}
-header.wrap{position:relative;background:#fff;box-shadow:0 0 0 100vmax #fff;clip-path:inset(0 -100vmax);padding-bottom:12px;margin-bottom:0}
+header.wrap{position:relative;background:#fff;box-shadow:0 0 0 100vmax #fff;clip-path:inset(0 -100vmax -2000px -100vmax);padding-bottom:12px;margin-bottom:0}
 header.wrap .hero-l>svg,#hBubble,.hcard-wrap .confirmed,header.wrap .hbar{display:none!important}
 header.wrap .hero{gap:56px;padding-block:48px 24px}
 header.wrap .hero-l{gap:20px}
@@ -469,7 +469,8 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .pghead p{color:rgba(255,255,255,.86);font-size:17px;max-width:46ch}
 .pgh-txt{flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:14px}
 .pgsearch{flex:1 1 360px;min-width:0;display:flex;flex-wrap:wrap;gap:10px;background:#fff;border-radius:28px;padding:10px;box-shadow:0 20px 40px -24px rgba(7,24,42,.7)}
-.pgsearch .inp{flex:1 1 200px;border:0;background:#F3F8FF;min-height:52px}
+.pgsearch .inp{flex:1 1 200px;border:0;background:#F3F8FF;min-height:52px;color:#102A43!important}
+.pgsearch .inp::placeholder{color:#627D98!important}
 .pgsearch .btn{flex:0 0 auto}
 .pgstats{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
 .pgstat{flex:1 1 140px;display:flex;flex-direction:column;gap:2px;background:#fff;border-radius:22px;padding:16px 20px;box-shadow:0 0 0 1.5px #D6E6FB}

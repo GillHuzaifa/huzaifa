@@ -7,6 +7,7 @@ import { BookingsService } from '../../services/bookings.service';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
 import { ModalService } from '../../services/modal.service';
+import { PulseAiService } from '../../services/pulse-ai.service';
 import { Doctor, Booking } from '../../models';
 import { SPEC, CITIES } from '../../../data/specialties.data';
 
@@ -177,7 +178,7 @@ const SAY: Record<string, string> = {
           <div class="hero-l">
             <span class="eyebrow">Online appointments · Doctors · Hospitals</span>
             <h1>Your health, <span class="mk">one tap away.</span></h1>
-            <p class="ur ur-hero" lang="ur" dir="rtl">آپ کی صحت، بس ایک ٹیپ کی دوری پر۔</p>
+            <p class="ur ur-hero" lang="ur" dir="rtl" (click)="openAiUrdu()" style="cursor:pointer" title="اردو میں چیٹ کریں">آپ کی صحت، بس ایک ٹیپ کی دوری پر۔</p>
             <div class="hero-ecg-wrap">
               <svg width="220" height="38" viewBox="0 0 230 44" aria-hidden="true" style="max-width:100%">
                 <path d="M2 24h62l12-18 16 34 14-16h124" fill="none" stroke="#1D6FE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -327,6 +328,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   modalService = inject(ModalService);
+  pulseAi = inject(PulseAiService);
 
   nextAppt: Signal<Booking | null> = this.bookingsService.nextAppointment;
   isHome = signal<boolean>(true);
@@ -544,5 +546,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   getWaLink(appt: Booking): string {
     const text = `Hello PulseQ, please send my appointment number.\nCode: ${appt.code}\nDoctor: ${appt.doctor}, ${appt.hospital}\nWhen: ${appt.when}\nPatient: ${appt.name}`;
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  }
+
+  openAiUrdu(): void {
+    if (typeof window !== 'undefined') {
+      const el = document.getElementById('ai');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+        window.dispatchEvent(new CustomEvent('pulseq:set-urdu-ai'));
+        return;
+      }
+    }
+    this.pulseAi.open();
   }
 }

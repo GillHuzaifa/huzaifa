@@ -251,80 +251,98 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
     <section class="sec dk home" id="ai">
       <div class="wrap dk-two">
         <div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:24px">
-          <span class="eyebrow">PulseQ AI assistant <span class="ur" lang="ur">· اردو میں لکھ کر بک کریں</span></span>
+          <span class="eyebrow">
+            PulseQ AI assistant 
+            <button type="button" class="ur" lang="ur" (click)="setUrduAiBlock()" style="background:none;border:0;color:var(--mint);font-size:inherit;font-family:inherit;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:4px">· اردو میں لکھ کر بک کریں</button>
+          </span>
           <h2 style="font-size:clamp(29px,4.3vw,55px);color:#fff">Ask PulseQ. PulseQ books it.</h2>
           <p class="muted" style="font-size:19px;max-width:480px">Type in your own words. PulseQ finds a doctor, checks real free slots and holds your visit in one conversation.</p>
           <div style="display:flex;flex-direction:column;gap:14px;max-width:480px">
-            <div style="display:flex;gap:14px"><i class="dot" style="margin-top:8px;background:var(--mint)"></i><p><b style="color:#fff">Urdu or English text.</b> <span class="muted">Type in Urdu, English or a mix of both.</span></p></div>
+            <div style="display:flex;gap:14px;cursor:pointer" (click)="setUrduAiBlock()"><i class="dot" style="margin-top:8px;background:var(--mint)"></i><p><b style="color:#fff">Urdu or English text.</b> <span class="muted">Type in Urdu, English or a mix of both. <span style="color:var(--mint);font-weight:600">(اردو میں کھولیں)</span></span></p></div>
             <div style="display:flex;gap:14px"><i class="dot" style="margin-top:8px;background:var(--mint)"></i><p><b style="color:#fff">Suggests, never diagnoses.</b> <span class="muted">PulseQ points you to the right kind of specialist. The doctor does the rest.</span></p></div>
             <div style="display:flex;gap:14px"><i class="dot" style="margin-top:8px;background:var(--mint)"></i><p><b style="color:#fff">You stay in control.</b> <span class="muted">Nothing is booked until you confirm.</span></p></div>
           </div>
           <p class="muted sm" style="max-width:480px">For a severe emergency, call <a href="tel:1122" style="color:var(--mint);font-weight:700;text-decoration:underline">1122</a> immediately instead of using the app.</p>
         </div>
 
-        <div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:24px">
-          <div class="aicta">
-            <svg width="72" height="72" viewBox="0 0 64 64" aria-hidden="true"><use href="#robotIcon"/></svg>
-            <h3 style="color:#fff;font-size:30px">PulseQ is always one tap away</h3>
-            <p class="muted">Look for the blue robot at the bottom right of every page. Ask a question, get support or book a visit.</p>
-            <button class="btn btn-mint" type="button" (click)="openPulseAi()">Chat with PulseQ</button>
-          </div>
-          <div class="chat">
-            <div class="chat-head">
-              <span style="width:36px;height:36px;border-radius:12px;background:var(--dk-bg);display:flex;align-items:center;justify-content:center;flex:none">
+        <div style="flex:1 1 460px;min-width:0">
+          <div class="chat" id="homeAiBlock" style="border-radius:28px;padding:20px;box-shadow:0 0 0 1px var(--dk-line), 0 24px 60px -20px rgba(7,24,42,.65)">
+            <div class="chat-head" style="padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08)">
+              <span style="width:38px;height:38px;border-radius:12px;background:var(--dk-bg);display:flex;align-items:center;justify-content:center;flex:none">
                 <svg width="22" height="22" viewBox="0 0 36 36" aria-hidden="true"><path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="#5FA3FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               </span>
-              <div class="grow"><b style="color:#fff">PulseQ</b><p class="xs muted">Answers, support and booking</p></div>
+              <div class="grow">
+                <span class="eyebrow" style="color:var(--mint);font-size:11px;letter-spacing:.12em;display:block">PULSEQ AI</span>
+                <p class="xs muted" style="margin:0">Answers, support and booking</p>
+              </div>
               <label class="sr" for="homeAiLang">Language</label>
               <select class="lang" id="homeAiLang" [(ngModel)]="aiLang" (change)="onAiLangChange()">
                 <option value="en-US">English</option>
-                <option value="ur-PK">اردو (Urdu)</option>
+                <option value="ur-PK">اردو</option>
               </select>
             </div>
-            <div class="log" role="log" aria-live="polite">
-              <div *ngFor="let m of inlineAiMessages" class="msg {{ m.from }}" [attr.dir]="isUrduText(m.text) ? 'rtl' : 'ltr'">
-                <div *ngIf="m.from === 'bot'" style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-                  <svg width="18" height="18" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3"><use href="#robotIcon"/></svg>
-                  <span class="xs" style="color:var(--mint);font-weight:700">PulseQ</span>
-                </div>
-                <div>{{ m.text }}</div>
 
-                @if (m.doctorOptions && m.doctorOptions.length > 0) {
-                  <div class="ai-opts" style="display:flex;flex-direction:column;gap:10px;margin-top:12px" dir="ltr">
-                    @for (opt of m.doctorOptions; track opt.doctor.id + opt.slot.t) {
-                      <div class="opt" style="background:#fff;color:#102A43;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18)">
-                        <div style="display:flex;align-items:center;gap:12px">
-                          <div class="avatar t{{ opt.doctor.t }}" style="width:44px;height:44px;border-radius:14px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;background:#EFF6FF;color:#1558B8">
-                            {{ getInitials(opt.doctor.name) }}
+            <div class="log" role="log" aria-live="polite" style="max-height:430px;padding:10px 2px">
+              @for (m of inlineAiMessages; track $index) {
+                <div class="bub {{ m.from === 'bot' ? 'bot' : 'me' }}" [attr.dir]="isUrduText(m.text) ? 'rtl' : 'ltr'">
+                  @if (m.from === 'bot') {
+                    <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                      <svg width="18" height="18" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3"><use href="#robotIcon"/></svg>
+                      <span class="xs" style="color:var(--mint);font-weight:700">PulseQ</span>
+                    </div>
+                  }
+                  @if (m.isHtml) {
+                    <div [innerHTML]="m.text"></div>
+                  } @else {
+                    <div>{{ m.text }}</div>
+                  }
+
+                  @if (m.doctorOptions && m.doctorOptions.length > 0) {
+                    <div class="ai-opts" style="display:flex;flex-direction:column;gap:10px;margin-top:12px" dir="ltr">
+                      @for (opt of m.doctorOptions; track opt.doctor.id + opt.slot.t) {
+                        <div class="opt" style="background:#fff;color:#102A43;border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18)">
+                          <div style="display:flex;align-items:center;gap:12px">
+                            <div class="avatar t{{ opt.doctor.t }}" style="width:44px;height:44px;border-radius:14px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;background:#EFF6FF;color:#1558B8">
+                              {{ getInitials(opt.doctor.name) }}
+                            </div>
+                            <div class="min0" style="flex:1">
+                              <b style="font-size:16px;color:#102A43;display:block">{{ opt.doctor.name }}</b>
+                              <p class="muted sm" style="font-size:13px;color:#526477;margin:0">{{ getHospitalName(opt.doctor.h) }} · {{ getHospitalCity(opt.doctor.h) }}</p>
+                            </div>
                           </div>
-                          <div class="min0" style="flex:1">
-                            <b style="font-size:16px;color:#102A43;display:block">{{ opt.doctor.name }}</b>
-                            <p class="muted sm" style="font-size:13px;color:#526477;margin:0">{{ getHospitalName(opt.doctor.h) }} · {{ getHospitalCity(opt.doctor.h) }}</p>
+                          <div style="display:flex;flex-wrap:wrap;gap:8px">
+                            <span class="tag" style="background:#DBEAFE;color:#1558B8;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
+                              {{ doctorsService.dayLabel(opt.slot.o) }}
+                            </span>
+                            <span class="tag" style="background:#DBEAFE;color:#1558B8;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
+                              {{ doctorsService.formatTime(opt.slot.t) }}
+                            </span>
+                            <span class="tag" style="background:#DCFCE7;color:#166534;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
+                              Rs {{ opt.doctor.fee.toLocaleString('en-US') }}
+                            </span>
                           </div>
+                          <button
+                            type="button"
+                            class="btn btn-ink"
+                            style="width:100%;padding:10px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer"
+                            (click)="bookAiDoctor(opt.doctor.id, opt.slot.o, opt.slot.t)">
+                            {{ aiLang === 'ur-PK' ? 'وقت بک کریں (Book this slot)' : 'Book this slot' }}
+                          </button>
                         </div>
-                        <div style="display:flex;flex-wrap:wrap;gap:8px">
-                          <span class="tag" style="background:#DBEAFE;color:#1558B8;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
-                            {{ doctorsService.dayLabel(opt.slot.o) }}
-                          </span>
-                          <span class="tag" style="background:#DBEAFE;color:#1558B8;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
-                            {{ doctorsService.formatTime(opt.slot.t) }}
-                          </span>
-                          <span class="tag" style="background:#DCFCE7;color:#166534;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600">
-                            Rs {{ opt.doctor.fee.toLocaleString('en-US') }}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          class="btn btn-ink"
-                          style="width:100%;padding:10px;border-radius:12px;font-weight:600;font-size:14px;cursor:pointer"
-                          (click)="bookAiDoctor(opt.doctor.id, opt.slot.o, opt.slot.t)">
-                          {{ aiLang === 'ur-PK' ? 'وقت بک کریں (Book this slot)' : 'Book this slot' }}
-                        </button>
-                      </div>
-                    }
-                  </div>
-                }
-              </div>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Suggestion Chips (Photo 4) -->
+              @if (inlineAiMessages.length <= 2) {
+                <div class="sugs" [attr.dir]="aiLang === 'ur-PK' ? 'rtl' : 'ltr'" style="margin-top:10px;gap:8px">
+                  @for (s of currentAiSuggestions(); track s) {
+                    <button class="sug" type="button" (click)="pickAiSuggestion(s)">{{ s }}</button>
+                  }
+                </div>
+              }
             </div>
 
             <!-- Urdu Writing Assistance Options -->
@@ -384,7 +402,7 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
                 id="homeAiMsg"
                 type="text"
                 [attr.dir]="aiLang === 'ur-PK' ? 'rtl' : 'ltr'"
-                [placeholder]="aiLang === 'ur-PK' ? 'مثال: سر میں درد، کل شام یا ڈاکٹر کا نام...' : 'e.g. skin rash, tomorrow evening'"
+                [placeholder]="aiLang === 'ur-PK' ? 'اپنی بات یا علامت یہاں لکھیں…' : 'Tell PulseQ what you need...'"
                 [(ngModel)]="aiInput"
                 (keydown.enter)="sendInlineAi()"
                 autocomplete="off">
@@ -604,8 +622,56 @@ export class HomeComponent implements OnInit {
     isHtml?: boolean;
     doctorOptions?: { doctor: Doctor; slot: Slot }[];
   }[] = [
-    { from: 'bot', text: 'Hello! I can help you find a doctor, hospital or free appointment in Urdu or English.' }
+    {
+      from: 'bot',
+      text: 'Hi, I’m PulseQ. I can answer questions, help with support and book your visit. Tell me what’s wrong or who you’d like to see. You can type in English or Urdu.'
+    },
+    {
+      from: 'user',
+      text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">Example</span>Mujhe do din se bukhar hai, kal shaam ko appointment chahiye.',
+      isHtml: true
+    }
   ];
+
+  aiSuggestionsEn = [
+    'Fever since two days',
+    'Skin rash, tomorrow evening',
+    'Child check-up on Friday',
+    'Dil mein dard, kal subah',
+    'How do I order medicine?',
+    'How do I book a surgery?'
+  ];
+
+  aiSuggestionsUr = [
+    'مجھے دو دن سے بخار ہے',
+    'جلد کی الرجی یا دانوں کا معائنہ',
+    'دل کے معائنے کے لیے ڈاکٹر',
+    'بچوں کا ڈاکٹر کل کے لیے',
+    'دوائی آرڈر کیسے کروں؟',
+    'سرجری کی معلومات'
+  ];
+
+  currentAiSuggestions(): string[] {
+    return this.aiLang === 'ur-PK' ? this.aiSuggestionsUr : this.aiSuggestionsEn;
+  }
+
+  pickAiSuggestion(s: string): void {
+    this.aiInput = s;
+    this.sendInlineAi();
+  }
+
+  setUrduAiBlock(): void {
+    this.aiLang = 'ur-PK';
+    this.onAiLangChange();
+    if (typeof document !== 'undefined') {
+      const el = document.getElementById('ai');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        const inp = document.getElementById('homeAiMsg');
+        if (inp) inp.focus();
+      }, 350);
+    }
+  }
 
   urduQuickPhrases = [
     'سر میں درد',
@@ -628,13 +694,15 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Check fragment
-    if (typeof window !== 'undefined' && window.location.hash) {
-      setTimeout(() => {
-        const id = window.location.hash.slice(1);
-        const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 300);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('pulseq:set-urdu-ai', () => this.setUrduAiBlock());
+      if (window.location.hash) {
+        setTimeout(() => {
+          const id = window.location.hash.slice(1);
+          const el = document.getElementById(id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
     }
   }
 
@@ -775,13 +843,33 @@ export class HomeComponent implements OnInit {
   onAiLangChange(): void {
     if (this.aiLang === 'ur-PK') {
       this.showInlineUrduKeyboard = true;
-      if (this.inlineAiMessages.length === 1 && this.inlineAiMessages[0].from === 'bot') {
-        this.inlineAiMessages[0].text = 'السلام علیکم! میں PulseQ ہوں، آپ کو اردو یا انگریزی میں ڈاکٹر، ہسپتال یا وقت تلاش کرنے میں مدد کر سکتا ہوں۔';
+      if (this.inlineAiMessages.length <= 2) {
+        this.inlineAiMessages = [
+          {
+            from: 'bot',
+            text: 'سلام! میں PulseQ ہوں۔ میں اردو یا انگریزی میں آپ کے سوالات کا جواب، ڈاکٹر کی تلاش اور اپائنٹمنٹ بکنگ میں مدد کر سکتا ہوں۔ آپ اپنی ضرورت یا علامت لکھ سکتے ہیں۔'
+          },
+          {
+            from: 'user',
+            text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">مثال</span>مجھے دو دن سے بخار ہے، کل شام کو اپائنٹمنٹ چاہیے',
+            isHtml: true
+          }
+        ];
       }
     } else {
       this.showInlineUrduKeyboard = false;
-      if (this.inlineAiMessages.length === 1 && this.inlineAiMessages[0].from === 'bot') {
-        this.inlineAiMessages[0].text = 'Hello! I can help you find a doctor, hospital or free appointment in Urdu or English.';
+      if (this.inlineAiMessages.length <= 2) {
+        this.inlineAiMessages = [
+          {
+            from: 'bot',
+            text: 'Hi, I’m PulseQ. I can answer questions, help with support and book your visit. Tell me what’s wrong or who you’d like to see. You can type in English or Urdu.'
+          },
+          {
+            from: 'user',
+            text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">Example</span>Mujhe do din se bukhar hai, kal shaam ko appointment chahiye.',
+            isHtml: true
+          }
+        ];
       }
     }
   }
