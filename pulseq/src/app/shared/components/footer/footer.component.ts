@@ -12,10 +12,7 @@ import { PulseAiService } from '../../services/pulse-ai.service';
         <div class="foot-cols">
           <div style="max-width:320px;flex:1 1 260px">
             <div style="display:flex;align-items:center;gap:12px">
-              <svg viewBox="0 0 48 48" width="40" height="40" fill="none" aria-hidden="true" style="border-radius:12px;flex:none">
-                <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#1D6FE0" stroke-width="2"/>
-                <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" stroke="#1D6FE0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              <img src="/assets/logo.png" alt="PulseQ" style="width:40px;height:40px;border-radius:12px;flex:none;object-fit:cover" loading="lazy">
               <p style="font-family:var(--disp);font-weight:800;font-size:30px;color:#fff;margin:0">PulseQ</p>
             </div>
             <p class="muted" style="margin-top:10px">Book doctors and hospitals online, by search or chat in Urdu and English.</p>
