@@ -360,7 +360,8 @@ textarea.inp{padding:14px 16px;min-height:110px;resize:vertical;font:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* Minimal header: white, one accent, less clutter per PulseQ (9).html */
 #top{overflow-x:clip}
-header.wrap{position:relative;background:#fff;box-shadow:0 0 0 100vmax #fff;clip-path:inset(0 -100vmax -2000px -100vmax);padding-bottom:12px;margin-bottom:0}
+app-header{display:block;width:100%;background:#fff;position:relative;z-index:120}
+header.wrap{position:relative;background:#fff;padding-bottom:12px;margin-bottom:0}
 header.wrap .hero-l>svg,#hBubble,.hcard-wrap .confirmed,header.wrap .hbar{display:none!important}
 header.wrap .hero{gap:56px;padding-block:48px 24px}
 header.wrap .hero-l{gap:20px}
