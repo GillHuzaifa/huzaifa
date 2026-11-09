@@ -178,10 +178,12 @@ const SAY: Record<string, string> = {
             <span class="eyebrow">Online appointments · Doctors · Hospitals</span>
             <h1>Your health, <span class="mk">one tap away.</span></h1>
             <p class="ur ur-hero" lang="ur" dir="rtl">آپ کی صحت، بس ایک ٹیپ کی دوری پر۔</p>
-            <svg width="230" height="44" viewBox="0 0 230 44" aria-hidden="true" style="margin-top:-6px;max-width:100%">
-              <path d="M2 24h62l12-18 16 34 14-16h124" fill="none" stroke="#1D6FE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-            <p class="muted" style="font-size:19px;max-width:520px">Search a doctor, hospital or symptom, or just tell Pulse.</p>
+            <div class="hero-ecg-wrap">
+              <svg width="220" height="38" viewBox="0 0 230 44" aria-hidden="true" style="max-width:100%">
+                <path d="M2 24h62l12-18 16 34 14-16h124" fill="none" stroke="#1D6FE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <p class="hero-desc">Search a doctor, hospital or symptom, or just tell Pulse.</p>
 
             <div class="search">
               <div class="tabs" role="group" aria-label="Search type">
@@ -201,7 +203,7 @@ const SAY: Record<string, string> = {
                     <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
                   </select>
                 </div>
-                <button class="btn btn-coral" id="goBtn" style="flex:1 1 150px;min-height:62px" (click)="goSearch()">
+                <button class="btn btn-coral" id="goBtn" (click)="goSearch()">
                   {{ tabConfigs[activeTab].btnText }}
                 </button>
               </div>

@@ -4,7 +4,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
-    title: 'PulseQ — Healthcare booking for Pakistan'
+    title: 'PulseQ — Your health, one tap away.'
   },
   {
     path: 'find-doctors',

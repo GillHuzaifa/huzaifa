@@ -262,7 +262,7 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
           <p class="muted sm" style="max-width:480px">For a severe emergency, call <a href="tel:1122" style="color:var(--mint);font-weight:700;text-decoration:underline">1122</a> immediately instead of using the app.</p>
         </div>
 
-        <div style="flex:1 1 440px;min-width:0">
+        <div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:24px">
           <div class="aicta">
             <svg width="72" height="72" viewBox="0 0 64 64" aria-hidden="true"><use href="#robotIcon"/></svg>
             <h3 style="color:#fff;font-size:30px">PulseQ is always one tap away</h3>

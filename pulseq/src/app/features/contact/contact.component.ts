@@ -131,7 +131,8 @@ interface CollabOption {
             <div class="ct-panel" id="panelClinic" role="tabpanel">
               @if (!cfDone) {
                 <form id="clinicForm" (submit)="submitClinic($event)" novalidate>
-                  <fieldset class="ct-fs"><legend>About your clinic</legend>
+                  <div class="ct-fs">
+                    <h4 class="ct-fsh">About your clinic</h4>
                     <div class="ct-row">
                       <div><label class="lbl" for="cfName">Clinic or hospital name</label><input class="inp" id="cfName" type="text" [(ngModel)]="cfName" name="cfName" autocomplete="organization"></div>
                       <div><label class="lbl" for="cfType">Type</label>
@@ -148,9 +149,10 @@ interface CollabOption {
                       <div><label class="lbl" for="cfCity">City</label><input class="inp" id="cfCity" type="text" [(ngModel)]="cfCity" name="cfCity" placeholder="e.g. Rawalpindi"></div>
                       <div><label class="lbl" for="cfArea">Area / address</label><input class="inp" id="cfArea" type="text" [(ngModel)]="cfArea" name="cfArea" placeholder="e.g. Saddar, Mall Road"></div>
                     </div>
-                  </fieldset>
+                  </div>
 
-                  <fieldset class="ct-fs"><legend>Capacity</legend>
+                  <div class="ct-fs">
+                    <h4 class="ct-fsh">Capacity</h4>
                     <div class="ct-row ct-row3">
                       <div><label class="lbl" for="cfDocs">Doctors at the clinic</label><input class="inp" id="cfDocs" type="number" min="1" max="500" [(ngModel)]="cfDocs" name="cfDocs" placeholder="e.g. 4"></div>
                       <div><label class="lbl" for="cfPts">Patients per day</label><input class="inp" id="cfPts" type="number" min="1" max="5000" [(ngModel)]="cfPts" name="cfPts" placeholder="e.g. 60"></div>
@@ -164,15 +166,16 @@ interface CollabOption {
                         </button>
                       }
                     </div>
-                  </fieldset>
+                  </div>
 
-                  <fieldset class="ct-fs"><legend>Who should we call?</legend>
+                  <div class="ct-fs">
+                    <h4 class="ct-fsh">Who should we call?</h4>
                     <div class="ct-row">
                       <div><label class="lbl" for="cfPerson">Contact person</label><input class="inp" id="cfPerson" type="text" [(ngModel)]="cfPerson" name="cfPerson" autocomplete="name"></div>
                       <div><label class="lbl" for="cfPhone">Phone number</label><input class="inp" id="cfPhone" type="tel" [(ngModel)]="cfPhone" name="cfPhone" placeholder="03XX-XXXXXXX" autocomplete="tel"></div>
                     </div>
                     <div><label class="lbl" for="cfNote">Anything else? <span class="ct-opt">(optional)</span></label><textarea class="inp" id="cfNote" rows="3" [(ngModel)]="cfNote" name="cfNote" placeholder="Timings, languages, services, questions"></textarea></div>
-                  </fieldset>
+                  </div>
 
                   <p class="err" id="cfMsg" role="status" *ngIf="cfError">{{ cfError }}</p>
                   <div class="ct-submit">

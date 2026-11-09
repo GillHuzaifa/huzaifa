@@ -377,7 +377,8 @@ header.wrap .nav{padding-block:20px}
 header.wrap .nav-links a{font-size:15px;color:var(--muted)!important}
 header.wrap .nav-links a:hover,header.wrap .nav-links a.active,header.wrap .nav-links a[aria-current="page"]{color:var(--fg)!important;text-decoration:underline!important;text-underline-offset:6px}
 header.wrap .hero-l [data-try]{border-color:#DCE8F8;background:#fff;min-height:38px;font-size:14px}
-header.wrap>.nav,header.wrap>.hero,header.wrap>.trust{position:relative;z-index:1}
+header.wrap>.nav{position:relative;z-index:120!important}
+header.wrap>.hero,header.wrap>.trust{position:relative;z-index:1!important}
 
 /* Urdu line: dark blue, easy to read, balanced line wrapping */
 header.wrap .ur-hero{
@@ -405,7 +406,7 @@ header.wrap .btn-line{box-shadow:inset 0 0 0 1.5px currentColor!important}
 .pstrip{padding-top:28px}
 
 /* Pulse floating assistant */
-.aicta{background:var(--dk-surface);border-radius:32px;padding:32px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;box-shadow:0 0 0 1px var(--dk-line);color:#5FA3FF}
+.aicta{background:var(--dk-surface);border-radius:32px;padding:32px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;box-shadow:0 0 0 1px var(--dk-line);color:#5FA3FF;margin-bottom:24px}
 .botfab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(145deg,#2381FF,#1558B8);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 3px #fff,0 16px 30px -10px rgba(21,88,184,.75);transition:transform .15s,opacity .2s,visibility .2s}
 .botfab:hover{transform:translateY(-2px) scale(1.04)}
 .botfab::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #2381FF;animation:botring 2.4s ease-out infinite;pointer-events:none}
@@ -934,7 +935,7 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-item-dropdown{position:relative;display:inline-flex;align-items:center}
 .nav-item-dropdown .chevron{display:inline-flex;align-items:center;justify-content:center;transition:transform .2s ease;border:0;background:transparent;padding:0 2px;cursor:pointer;color:inherit}
 .nav-item-dropdown:hover .chevron{transform:rotate(180deg)}
-.nav-dropdown{position:absolute;top:calc(100% - 2px);left:50%;transform:translateX(-50%);min-width:215px;background:#ffffff;color:#102a43;border-radius:20px;box-shadow:0 20px 45px -10px rgba(12,45,94,.35),0 0 0 1px rgba(21,88,184,.12);padding:10px;display:none;flex-direction:column;gap:2px;z-index:120;animation:fadeIn .16s ease-out}
+.nav-dropdown{position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);min-width:225px;background:#ffffff!important;color:#102a43;border-radius:20px;border:1.5px solid #D6E6FB;box-shadow:0 24px 50px -12px rgba(12,45,94,.28);padding:10px;display:none;flex-direction:column;gap:2px;z-index:99999!important;opacity:1!important;animation:fadeIn .16s ease-out}
 .nav-item-dropdown:hover .nav-dropdown,.nav-dropdown.show{display:flex}
 .nav-dropdown .dd-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#627D98;padding:6px 12px 4px}
 .nav-dropdown a{padding:8px 12px!important;color:#102A43!important;font-size:14px!important;font-weight:500!important;border-radius:10px;text-decoration:none!important;display:block!important;min-height:auto!important;line-height:1.4!important;transition:background .12s ease,color .12s ease}
@@ -956,8 +957,8 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .ct-tabs{display:inline-flex;flex-wrap:wrap;gap:4px;margin:22px 0 24px;padding:5px;background:#EAF3FF;border-radius:999px}
 .ct-tab{min-height:46px;padding:0 22px;border:0;border-radius:999px;background:transparent;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
 .ct-tab.on{background:#1D6FE0;color:#fff;box-shadow:0 8px 18px -10px rgba(29,111,224,.9)}
-.ct-fs{border:0;margin:0 0 22px;padding:22px;border-radius:24px;background:#F6FAFF;box-shadow:inset 0 0 0 1.5px #E1ECFB;min-width:0}
-.ct-fs legend{padding:0 10px;margin-left:-10px;font-family:var(--disp);font-weight:800;font-size:19px;color:#0C2D5E}
+.ct-fs{margin:0 0 20px;padding:22px;border-radius:22px;background:#F6FAFF;border:1.5px solid #E1ECFB;min-width:0}
+.ct-fsh{margin:0 0 16px 0;font-family:var(--disp);font-weight:800;font-size:19px;color:#0C2D5E;line-height:1.2}
 .ct-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:16px;margin-bottom:16px}
 .ct-row:last-child{margin-bottom:0}
 .ct-row3{grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
@@ -1023,43 +1024,82 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
 
   /* Hero search box fits neatly in 1 column */
   .search {
-    padding: 14px 12px !important;
-    border-radius: 24px !important;
+    padding: 12px !important;
+    border-radius: 20px !important;
     width: 100% !important;
+    box-shadow: 0 0 0 1.5px #BFD9FF !important;
   }
   .search .tabs {
     width: 100% !important;
     display: flex !important;
+    gap: 4px !important;
   }
   .search .tabs .tab {
     flex: 1 !important;
-    padding: 0 6px !important;
+    padding: 0 8px !important;
     font-size: 13px !important;
-    min-height: 44px !important;
+    min-height: 40px !important;
+    border-radius: 999px !important;
   }
   .search .fields {
     flex-direction: column !important;
-    gap: 10px !important;
+    gap: 8px !important;
     width: 100% !important;
   }
   .search .field {
     width: 100% !important;
     flex: 1 1 100% !important;
+    padding: 8px 12px !important;
+    border-radius: 14px !important;
+    background: #F3F8FF !important;
+  }
+  .search .field label {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: .08em !important;
+    color: #526477 !important;
+    display: block !important;
+    margin-bottom: 2px !important;
   }
   .search #goBtn {
     width: 100% !important;
-    min-height: 52px !important;
+    min-height: 48px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    border-radius: 14px !important;
+    margin-top: 2px !important;
+  }
+
+  /* Hero headings and balanced spacing */
+  .hero h1 {
+    font-size: 30px !important;
+    line-height: 1.15 !important;
+    margin: 4px 0 6px !important;
+  }
+  .ur-hero {
+    font-size: 20px !important;
+    line-height: 1.9 !important;
+    margin: 4px 0 10px !important;
+  }
+  .hero-ecg-wrap {
+    margin: 2px 0 10px !important;
+  }
+  .hero-desc {
+    margin: 0 0 14px !important;
+    font-size: 15px !important;
+    line-height: 1.45 !important;
   }
 
   /* Hero doctor cards */
   .hero-r {
-    padding-top: 14px !important;
-    padding-bottom: 14px !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
     width: 100% !important;
   }
   .hcard {
-    padding: 18px 14px !important;
-    border-radius: 24px !important;
+    padding: 16px 14px !important;
+    border-radius: 20px !important;
     width: 100% !important;
   }
   .hcard .slots {
@@ -1070,6 +1110,26 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     flex: 1 1 calc(50% - 6px) !important;
     min-width: 110px !important;
     min-height: 44px !important;
+  }
+
+  /* AI Assistant Cards & Spacing */
+  .aicta {
+    padding: 22px 18px !important;
+    border-radius: 22px !important;
+    margin-bottom: 20px !important;
+    gap: 12px !important;
+  }
+  .aicta h3 {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+  }
+  .aicta p {
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+  }
+  .aicta svg {
+    width: 48px !important;
+    height: 48px !important;
   }
 
   /* Find doctors list items */
@@ -1113,12 +1173,69 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Laptop dashboard on /clinics scrolls inside frame */
+  /* Laptop dashboard on /clinics adapted gracefully to mobile */
   .laptop-box {
     max-width: 100% !important;
     width: 100% !important;
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch !important;
+    padding: 0 !important;
+  }
+  .laptop {
+    min-width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  .lid {
+    padding: 8px !important;
+    border-radius: 18px !important;
+  }
+  .base {
+    display: none !important;
+  }
+  .screen {
+    flex-direction: column !important;
+    border-radius: 12px !important;
+  }
+  .rail {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    justify-content: flex-start !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .rail button {
+    width: auto !important;
+    min-width: 64px !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    min-height: 38px !important;
+    flex-direction: row !important;
+    gap: 5px !important;
+  }
+  .dmain {
+    padding: 12px 10px !important;
+  }
+  .dtop {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  .dtop .dsearch {
+    width: 100% !important;
+    order: 3 !important;
+  }
+  .dcols {
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+  .dnext {
+    padding: 14px 12px !important;
+  }
+  .dnext .big {
+    font-size: 28px !important;
+    line-height: 1.1 !important;
   }
 
   /* Contact page forms & capacity columns */
@@ -1169,17 +1286,21 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
 
   /* Floating fab size on phones */
   .botfab {
-    width: 52px !important;
-    height: 52px !important;
-    right: max(14px, env(safe-area-inset-right, 0px)) !important;
-    bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+    width: 48px !important;
+    height: 48px !important;
+    right: max(12px, env(safe-area-inset-right, 0px)) !important;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
   }
   .botfab svg {
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
   }
   .botlbl {
     display: none !important;
+  }
+
+  body {
+    padding-bottom: 64px !important;
   }
 }
 
