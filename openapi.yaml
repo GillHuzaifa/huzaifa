@@ -1,0 +1,636 @@
+openapi: 3.0.3
+info:
+  title: PulseQ Healthcare Booking Platform API
+  description: >
+    Production backend REST API for PulseQ Pakistan.
+    Provides endpoints for doctor appointments, hospital directory, surgery consultations,
+    medicine deliveries with blister pack calculation, prescription uploads, and AI assistance.
+  version: 1.0.0
+servers:
+  - url: https://api.pulseq.pk/v1
+    description: Production API Server
+  - url: http://localhost:3000/v1
+    description: Local Development Server
+
+paths:
+  # ---------------------------------------------------------
+  # AUTHENTICATION & PATIENT IDENTITY
+  # ---------------------------------------------------------
+  /auth/otp/send:
+    post:
+      summary: Send OTP to Pakistani mobile number
+      operationId: sendOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone:
+                  type: string
+                  example: "03001234567"
+      responses:
+        '200':
+          description: OTP dispatched successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+                  message: { type: string }
+
+  /auth/otp/verify:
+    post:
+      summary: Verify OTP and exchange for JWT session token
+      operationId: verifyOtp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, code]
+              properties:
+                phone: { type: string, example: "03001234567" }
+                code: { type: string, example: "4920" }
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token: { type: string }
+                  patient:
+                    $ref: '#/components/schemas/Patient'
+
+  # ---------------------------------------------------------
+  # DOCTORS & SLOTS
+  # ---------------------------------------------------------
+  /doctors:
+    get:
+      summary: List and search verified doctors
+      operationId: getDoctors
+      parameters:
+        - name: query
+          in: query
+          schema: { type: string }
+          description: Doctor name or keyword
+        - name: spec
+          in: query
+          schema: { type: string }
+          description: Specialty key (e.g., heart, skin, bones, child)
+        - name: city
+          in: query
+          schema: { type: string }
+          description: City (e.g., Lahore, Karachi, Islamabad)
+        - name: hospital
+          in: query
+          schema: { type: string }
+          description: Hospital ID filter
+        - name: todayOnly
+          in: query
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Array of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+
+  /doctors/{id}:
+    get:
+      summary: Get full doctor profile by ID
+      operationId: getDoctorById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Full doctor profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DoctorProfile'
+
+  /doctors/{id}/places/{placeId}/slots:
+    get:
+      summary: Get real-time available booking slots for a doctor at a specific practice location
+      operationId: getDoctorSlots
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: placeId
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: daysAhead
+          in: query
+          schema: { type: integer, default: 7 }
+      responses:
+        '200':
+          description: Available slots per day
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlotDay'
+
+  # ---------------------------------------------------------
+  # HOSPITALS
+  # ---------------------------------------------------------
+  /hospitals:
+    get:
+      summary: List partner hospitals and clinics
+      operationId: getHospitals
+      parameters:
+        - name: city
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Hospital directory
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hospital'
+
+  /hospitals/{id}:
+    get:
+      summary: Get hospital details and list of affiliated doctors
+      operationId: getHospitalById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Hospital details with doctors
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HospitalDetail'
+
+  # ---------------------------------------------------------
+  # APPOINTMENT BOOKINGS
+  # ---------------------------------------------------------
+  /bookings:
+    post:
+      summary: Create a confirmed appointment
+      operationId: createBooking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingRequest'
+      responses:
+        '201':
+          description: Booking confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingConfirmation'
+
+  /bookings/{code}:
+    get:
+      summary: Retrieve booking details by confirmation code
+      operationId: getBookingByCode
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+
+  /bookings/{code}/cancel:
+    post:
+      summary: Cancel a scheduled booking
+      operationId: cancelBooking
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Cancellation processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success: { type: boolean }
+
+  # ---------------------------------------------------------
+  # MEDICINES & PHARMACIES
+  # ---------------------------------------------------------
+  /medicines:
+    get:
+      summary: Search and browse medicine catalogue
+      operationId: getMedicines
+      parameters:
+        - name: query
+          in: query
+          schema: { type: string }
+        - name: category
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Medicines catalog
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Medicine'
+
+  /pharmacies:
+    get:
+      summary: List licensed partner pharmacies with operational areas
+      operationId: getPharmacies
+      parameters:
+        - name: area
+          in: query
+          schema: { type: string }
+        - name: lat
+          in: query
+          schema: { type: number }
+        - name: lng
+          in: query
+          schema: { type: number }
+      responses:
+        '200':
+          description: List of pharmacies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pharmacy'
+
+  /pharmacies/{id}/stock:
+    get:
+      summary: Check stock and pricing for specific medicines at pharmacy
+      operationId: getPharmacyStock
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Stock list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StockItem'
+
+  /orders/medicine:
+    post:
+      summary: Place a medicine delivery order to the selected pharmacy
+      operationId: createMedicineOrder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicineOrderRequest'
+      responses:
+        '201':
+          description: Order placed; pharmacy will contact patient directly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicineOrderConfirmation'
+
+  # ---------------------------------------------------------
+  # SURGERY & PROCEDURES
+  # ---------------------------------------------------------
+  /surgeries/procedures:
+    get:
+      summary: List available surgical procedures with cost brackets
+      operationId: getProcedures
+      parameters:
+        - name: category
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Surgical procedures
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Procedure'
+
+  /surgeries/requests:
+    post:
+      summary: Request a surgical consultation quote
+      operationId: createSurgeryRequest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SurgeryRequestPayload'
+      responses:
+        '201':
+          description: Consultation request recorded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SurgeryRequestResponse'
+
+  # ---------------------------------------------------------
+  # FILE UPLOADS
+  # ---------------------------------------------------------
+  /uploads/prescriptions:
+    post:
+      summary: Securely upload patient prescription (JPG, PNG, PDF up to 8MB)
+      operationId: uploadPrescription
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Upload successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url: { type: string }
+                  fileName: { type: string }
+                  fileSize: { type: integer }
+
+  # ---------------------------------------------------------
+  # PULSE AI TRIAGE ASSISTANT
+  # ---------------------------------------------------------
+  /ai/chat:
+    post:
+      summary: Submit user query to Pulse assistant for specialty suggestion
+      description: >
+        Triage conversation engine with Pakistani healthcare context.
+        Provides doctor suggestions without ever diagnosing.
+      operationId: chatPulseAi
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [message]
+              properties:
+                message: { type: string, example: "Mere chest me pain ho raha hai" }
+                history:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      from: { type: string, enum: [user, bot] }
+                      text: { type: string }
+      responses:
+        '200':
+          description: AI response with triage classification and recommended doctors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reply: { type: string }
+                  suggestedSpecialty: { type: string, nullable: true }
+                  doctors:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Doctor'
+                  isEmergency: { type: boolean }
+
+components:
+  schemas:
+    Patient:
+      type: object
+      properties:
+        id: { type: string }
+        phone: { type: string }
+        name: { type: string }
+
+    Doctor:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        spec: { type: string }
+        h: { type: string }
+        fee: { type: integer }
+        mode: { type: string }
+        degrees: { type: array, items: { type: string } }
+        exp: { type: integer }
+        langs: { type: array, items: { type: string } }
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Place'
+
+    DoctorProfile:
+      allOf:
+        - $ref: '#/components/schemas/Doctor'
+        - type: object
+          properties:
+            about: { type: string }
+            treats: { type: array, items: { type: string } }
+            qualifications: { type: array, items: { type: string } }
+
+    Place:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        hospitalId: { type: string }
+        hospitalName: { type: string }
+        fee: { type: integer }
+        mode: { type: string }
+        times: { type: array, items: { type: string } }
+        days: { type: array, items: { type: integer } }
+
+    SlotDay:
+      type: object
+      properties:
+        date: { type: string, format: date }
+        dayName: { type: string }
+        slots: { type: array, items: { type: string } }
+
+    Hospital:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        city: { type: string }
+        departments: { type: array, items: { type: string } }
+        badge: { type: string }
+        address: { type: string }
+
+    HospitalDetail:
+      allOf:
+        - $ref: '#/components/schemas/Hospital'
+        - type: object
+          properties:
+            doctors:
+              type: array
+              items:
+                $ref: '#/components/schemas/Doctor'
+
+    BookingRequest:
+      type: object
+      required: [doctorId, placeId, date, time, patientName, patientPhone]
+      properties:
+        doctorId: { type: integer }
+        placeId: { type: integer }
+        date: { type: string, format: date }
+        time: { type: string }
+        patientName: { type: string }
+        patientPhone: { type: string }
+
+    BookingConfirmation:
+      type: object
+      properties:
+        code: { type: string, example: "PQ-8492" }
+        doctorName: { type: string }
+        hospitalName: { type: string }
+        when: { type: string }
+        fee: { type: integer }
+        whatsappLink: { type: string }
+
+    Booking:
+      type: object
+      properties:
+        code: { type: string }
+        doctor: { type: string }
+        hospital: { type: string }
+        when: { type: string }
+        patientName: { type: string }
+        patientPhone: { type: string }
+        fee: { type: integer }
+
+    Medicine:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        form: { type: string }
+        category: { type: string }
+        tabletsPerStrip: { type: integer }
+        requiresPrescription: { type: boolean }
+        sideEffects: { type: string }
+        precautions: { type: string }
+        urgentHelp: { type: string }
+
+    Pharmacy:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        area: { type: string }
+        hours: { type: string }
+        deliveryFee: { type: integer }
+        deliveryTime: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+
+    StockItem:
+      type: object
+      properties:
+        medicineId: { type: integer }
+        inStock: { type: boolean }
+        unitPrice: { type: integer }
+        packPrice: { type: integer }
+
+    MedicineOrderRequest:
+      type: object
+      required: [pharmacyId, patientName, patientPhone, address, area, items]
+      properties:
+        pharmacyId: { type: string }
+        patientName: { type: string }
+        patientPhone: { type: string }
+        address: { type: string }
+        area: { type: string }
+        prescriptionUrl: { type: string, nullable: true }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              medicineId: { type: integer }
+              mode: { type: string, enum: [u, p] } # unit or pack
+              qty: { type: integer }
+
+    MedicineOrderConfirmation:
+      type: object
+      properties:
+        orderId: { type: string }
+        pharmacyName: { type: string }
+        totalAmount: { type: integer }
+        deliveryNotice: { type: string }
+
+    Procedure:
+      type: object
+      properties:
+        id: { type: integer }
+        category: { type: string }
+        name: { type: string }
+        stay: { type: string }
+        anesthesia: { type: string }
+        loEstimate: { type: integer }
+        hiEstimate: { type: integer }
+
+    SurgeryRequestPayload:
+      type: object
+      required: [procedureId, surgeonId, hospitalId, patientName, patientPhone]
+      properties:
+        procedureId: { type: integer }
+        surgeonId: { type: integer }
+        hospitalId: { type: string }
+        patientName: { type: string }
+        patientPhone: { type: string }
+        preferredTime: { type: string, enum: [morning, afternoon, evening] }
+        notes: { type: string }
+        reportUrl: { type: string, nullable: true }
+
+    SurgeryRequestResponse:
+      type: object
+      properties:
+        requestId: { type: string }
+        status: { type: string }
+        message: { type: string }
