@@ -64,7 +64,8 @@ export const ABOUT: AboutData = {
         {
           name: "Aimen Durrani",
           role: "Frontend developer and UI/UX designer",
-          ini: "AD"
+          ini: "AD",
+          photo: "assets/frontend_developer.jpeg"
         }
       ]
     },
