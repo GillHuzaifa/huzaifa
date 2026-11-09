@@ -40,21 +40,21 @@ const SAY: Record<string, string> = {
     <header class="wrap">
       <div class="nav">
         <!-- Brand Logo on Top Left -->
-        <a class="logo" routerLink="/" aria-label="PulseQ home">
-          <img src="assets/logo.png" alt="PulseQ logo" class="logo-mark" loading="eager" width="46" height="46">
+        <a class="logo" routerLink="/" (click)="closeMobileMenu()" aria-label="PulseQ home">
+          <img src="assets/logo.svg" alt="PulseQ logo" class="logo-mark" loading="eager" width="46" height="46">
           <span>PulseQ</span>
         </a>
 
-        <!-- Middle Navigation with Dropdowns -->
+        <!-- Middle Navigation with Dropdowns (Desktop >= 900px) -->
         <nav class="nav-links" aria-label="Main">
           <div class="nav-item-dropdown" (mouseenter)="showDocDrop = true" (mouseleave)="showDocDrop = false">
             <a routerLink="/find-doctors" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-with-arrow">
               <span>Find doctors</span>
-              <span class="chevron" aria-hidden="true">
+              <button type="button" class="chevron" (click)="toggleDocDrop($event)" aria-label="Toggle specialties dropdown">
                 <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 6l4 4 4-4"/>
                 </svg>
-              </span>
+              </button>
             </a>
             <div class="nav-dropdown" [class.show]="showDocDrop">
               <span class="dd-title">Top Specialties</span>
@@ -73,11 +73,11 @@ const SAY: Record<string, string> = {
           <div class="nav-item-dropdown" (mouseenter)="showHospDrop = true" (mouseleave)="showHospDrop = false">
             <a routerLink="/hospitals" routerLinkActive="active" class="nav-link-with-arrow">
               <span>Hospitals</span>
-              <span class="chevron" aria-hidden="true">
+              <button type="button" class="chevron" (click)="toggleHospDrop($event)" aria-label="Toggle hospitals dropdown">
                 <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M4 6l4 4 4-4"/>
                 </svg>
-              </span>
+              </button>
             </a>
             <div class="nav-dropdown" [class.show]="showHospDrop">
               <span class="dd-title">By City</span>
@@ -96,11 +96,80 @@ const SAY: Record<string, string> = {
           <a routerLink="/clinics" routerLinkActive="active">For clinics</a>
         </nav>
 
-        <!-- Right Action Button -->
+        <!-- Right Action Button & Mobile Hamburger -->
         <div class="nav-cta">
-          <a class="btn btn-ink" routerLink="/find-doctors">Book now</a>
+          <a class="btn btn-ink desk-book" routerLink="/find-doctors">Book now</a>
+          <button
+            class="hamburger-btn"
+            type="button"
+            (click)="toggleMobileMenu()"
+            [attr.aria-expanded]="mobileMenuOpen"
+            aria-label="Toggle navigation menu">
+            <svg *ngIf="!mobileMenuOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+            <svg *ngIf="mobileMenuOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
       </div>
+
+      <!-- Mobile Navigation Drawer (< 900px) -->
+      <nav class="mobile-nav-drawer" *ngIf="mobileMenuOpen" aria-label="Mobile Navigation">
+        <!-- Find Doctors Accordion -->
+        <div class="mob-item">
+          <div class="mob-item-head">
+            <a routerLink="/find-doctors" (click)="closeMobileMenu()" class="mob-link">Find doctors</a>
+            <button type="button" class="mob-chevron-btn" (click)="toggleMobileDoc($event)" [attr.aria-expanded]="mobileDocOpen" aria-label="Toggle specialties">
+              <svg [class.rot]="mobileDocOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="mob-sub" *ngIf="mobileDocOpen">
+            <span class="mob-sub-title">Top Specialties</span>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'heart'}" (click)="closeMobileMenu()">Cardiologists</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'skin'}" (click)="closeMobileMenu()">Dermatologists</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'child'}" (click)="closeMobileMenu()">Paediatricians</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'general'}" (click)="closeMobileMenu()">General physicians</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'bones'}" (click)="closeMobileMenu()">Orthopaedic surgeons</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'neuro'}" (click)="closeMobileMenu()">Neurologists</a>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'eye'}" (click)="closeMobileMenu()">Eye specialists</a>
+            <a routerLink="/find-doctors" (click)="closeMobileMenu()" class="mob-all">Browse all doctors →</a>
+          </div>
+        </div>
+
+        <!-- Hospitals Accordion -->
+        <div class="mob-item">
+          <div class="mob-item-head">
+            <a routerLink="/hospitals" (click)="closeMobileMenu()" class="mob-link">Hospitals</a>
+            <button type="button" class="mob-chevron-btn" (click)="toggleMobileHosp($event)" [attr.aria-expanded]="mobileHospOpen" aria-label="Toggle cities">
+              <svg [class.rot]="mobileHospOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div class="mob-sub" *ngIf="mobileHospOpen">
+            <span class="mob-sub-title">By City</span>
+            <a routerLink="/hospitals" [queryParams]="{city: 'lahore'}" (click)="closeMobileMenu()">Lahore Hospitals</a>
+            <a routerLink="/hospitals" [queryParams]="{city: 'karachi'}" (click)="closeMobileMenu()">Karachi Hospitals</a>
+            <a routerLink="/hospitals" [queryParams]="{city: 'islamabad'}" (click)="closeMobileMenu()">Islamabad Hospitals</a>
+            <a routerLink="/hospitals" [queryParams]="{city: 'rawalpindi'}" (click)="closeMobileMenu()">Rawalpindi Hospitals</a>
+            <a routerLink="/hospitals" (click)="closeMobileMenu()" class="mob-all">Browse all hospitals →</a>
+          </div>
+        </div>
+
+        <a routerLink="/" fragment="conditions" (click)="closeMobileMenu()" class="mob-link-flat">Conditions</a>
+        <a routerLink="/surgery" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Surgery</a>
+        <a routerLink="/medicine" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Medicine</a>
+        <a routerLink="/clinics" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">For clinics</a>
+        <a routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">About us</a>
+        <a routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Contact us</a>
+
+        <div class="mob-cta">
+          <a class="btn btn-ink" style="width:100%;min-height:48px;justify-content:center" routerLink="/find-doctors" (click)="closeMobileMenu()">Book appointment</a>
+        </div>
+      </nav>
 
       <!-- HERO AND TRUST (Home Route Only) -->
       <ng-container *ngIf="isHome()">
@@ -262,6 +331,42 @@ export class HeaderComponent implements OnInit, OnDestroy {
   showDocDrop = false;
   showHospDrop = false;
 
+  mobileMenuOpen = false;
+  mobileDocOpen = false;
+  mobileHospOpen = false;
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    this.mobileDocOpen = false;
+    this.mobileHospOpen = false;
+  }
+
+  toggleDocDrop(e?: Event): void {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    this.showDocDrop = !this.showDocDrop;
+    if (this.showDocDrop) this.showHospDrop = false;
+  }
+
+  toggleHospDrop(e?: Event): void {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    this.showHospDrop = !this.showHospDrop;
+    if (this.showHospDrop) this.showDocDrop = false;
+  }
+
+  toggleMobileDoc(e?: Event): void {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    this.mobileDocOpen = !this.mobileDocOpen;
+  }
+
+  toggleMobileHosp(e?: Event): void {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    this.mobileHospOpen = !this.mobileHospOpen;
+  }
+
   // Search Tabs
   activeTab: 'doctors' | 'hospitals' | 'conditions' = 'doctors';
   searchQuery = '';
@@ -293,6 +398,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     ).subscribe((e: any) => {
       const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
       this.isHome.set(url === '/' || url === '');
+      this.closeMobileMenu();
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PulseAiService } from '../../services/pulse-ai.service';
 import { ModalService } from '../../services/modal.service';
@@ -174,7 +174,7 @@ import { ToastService } from '../../services/toast.service';
     }
   `
 })
-export class PulseAiComponent {
+export class PulseAiComponent implements OnDestroy {
   ai = inject(PulseAiService);
   modal = inject(ModalService);
   doctorsService = inject(DoctorsService);
@@ -183,6 +183,32 @@ export class PulseAiComponent {
 
   userInput = '';
   selectedLang = 'en-PK';
+
+  constructor() {
+    if (typeof document !== 'undefined') {
+      document.addEventListener('focusin', this.handleFocusIn);
+      document.addEventListener('focusout', this.handleFocusOut);
+    }
+  }
+
+  ngOnDestroy() {
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('focusin', this.handleFocusIn);
+      document.removeEventListener('focusout', this.handleFocusOut);
+      document.body.classList.remove('input-focused');
+    }
+  }
+
+  private handleFocusIn = (e: FocusEvent) => {
+    const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') {
+      document.body.classList.add('input-focused');
+    }
+  };
+
+  private handleFocusOut = () => {
+    document.body.classList.remove('input-focused');
+  };
   showSuggestions = signal<boolean>(true);
   showUrduKeyboard = false;
 

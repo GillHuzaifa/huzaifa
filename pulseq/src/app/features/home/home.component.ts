@@ -624,7 +624,7 @@ export class HomeComponent implements OnInit {
   urduKeysRow4 = ['و', 'ہ', 'ھ', 'ء', 'ی', 'ے', '،', '؟'];
 
   constructor() {
-    this.seo.setPage('PulseQ — Skip the waiting room. See the right doctor.');
+    this.seo.setPage('PulseQ — Your health, one tap away.');
   }
 
   ngOnInit() {
