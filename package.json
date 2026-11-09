@@ -1,0 +1,11 @@
+{
+  "name": "pulseq-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PulseQ Healthcare Platform",
+  "scripts": {
+    "postinstall": "npm --prefix pulseq install",
+    "build": "npm --prefix pulseq run build",
+    "start": "npm --prefix pulseq run start"
+  }
+}
