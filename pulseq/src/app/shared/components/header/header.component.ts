@@ -42,7 +42,10 @@ const SAY: Record<string, string> = {
       <div class="nav">
         <!-- Brand Logo on Top Left -->
         <a class="logo" routerLink="/" (click)="closeMobileMenu()" aria-label="PulseQ home">
-          <img src="assets/logo.svg" alt="PulseQ logo" class="logo-mark" loading="eager" width="46" height="46">
+          <svg class="logo-mark" viewBox="0 0 48 48" width="46" height="46" fill="none" aria-hidden="true">
+            <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#1D6FE0" stroke-width="2"/>
+            <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" stroke="#1D6FE0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span>PulseQ</span>
         </a>
 
