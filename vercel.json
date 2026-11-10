@@ -3,13 +3,10 @@
   "buildCommand": "cd pulseq && npm install && npm run build",
   "outputDirectory": "pulseq/dist/pulseq/browser",
   "cleanUrls": true,
-  "routes": [
+  "rewrites": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

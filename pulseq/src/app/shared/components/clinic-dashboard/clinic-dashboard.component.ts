@@ -287,6 +287,21 @@ import { SPEC } from '../../../data/specialties.data';
         <div class="base"></div>
       </div>
     </div>
+
+    <!-- Fixed Mobile Bottom Tab Bar for Clinic OS (< 900px) -->
+    <nav class="clinic-mobile-nav" aria-label="Clinic OS Navigation">
+      @for (r of railItems; track r[0]) {
+        <button
+          class="clinic-mob-tab"
+          [class.active]="state.tab === r[0]"
+          (click)="setTab(r[0])"
+          type="button"
+          [attr.aria-current]="state.tab === r[0] ? 'page' : 'false'">
+          <span class="mob-tab-icon" [innerHTML]="r[2]"></span>
+          <span class="mob-tab-lbl">{{ r[1] }}</span>
+        </button>
+      }
+    </nav>
   `
 })
 export class ClinicDashboardComponent {

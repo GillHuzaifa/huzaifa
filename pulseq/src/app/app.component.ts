@@ -1,5 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { RouterOutlet, Router, NavigationEnd, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
@@ -11,7 +12,10 @@ import { PulseAiComponent } from './shared/components/pulse-ai/pulse-ai.componen
   selector: 'app-root',
   standalone: true,
   imports: [
+    CommonModule,
     RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     HeaderComponent,
     FooterComponent,
     ToastComponent,

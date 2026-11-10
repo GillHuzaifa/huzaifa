@@ -8,10 +8,11 @@
   --t1:#DBEAFE; --t2:#E0F2FE; --t3:#DCFCE7; --t4:#FEF3C7; --t5:#E0E7FF;
   color-scheme:light; --disp:'Bricolage Grotesque','DM Sans',system-ui,sans-serif; --body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth;margin:0;padding:0;width:100%}
+*, *::before, *::after{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;max-width:100%;min-height:100dvh;overflow-x:hidden}
+html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-body{margin:0;padding:0;width:100%;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 app-root,#top{display:block;margin:0;padding:0;width:100%}
 h1,h2,h3,p{margin:0}
 h1,h2,h3{font-family:var(--disp);font-weight:800;letter-spacing:-0.02em;line-height:1.05;text-wrap:balance}
@@ -359,9 +360,9 @@ textarea.inp{padding:14px 16px;min-height:110px;resize:vertical;font:inherit}
 @media (prefers-reduced-motion:reduce){.hslide{animation:none}.hbar{display:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* Minimal header: white, one accent, less clutter per PulseQ (9).html */
-#top{overflow-x:clip}
-app-header{display:block;width:100%;background:#fff;position:relative;z-index:120}
-header.wrap{position:relative;background:#fff;padding-bottom:12px;margin-bottom:0}
+#top{overflow:visible}
+app-header{display:block;width:100%;background:#fff;position:relative;z-index:900;overflow:visible!important}
+header.wrap{position:relative;background:#fff;padding-bottom:12px;margin-bottom:0;overflow:visible!important}
 header.wrap .hero-l>svg,#hBubble,.hcard-wrap .confirmed,header.wrap .hbar{display:none!important}
 header.wrap .hero{gap:56px;padding-block:48px 24px}
 header.wrap .hero-l{gap:20px}
@@ -1175,69 +1176,193 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Laptop dashboard on /clinics adapted gracefully to mobile */
+  /* Clinic dashboard on /clinics: completely fluid mobile app card, no laptop bezel */
   .laptop-box {
     max-width: 100% !important;
     width: 100% !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
+    overflow-x: visible !important;
     padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    border: 0 !important;
   }
   .laptop {
     min-width: 100% !important;
     max-width: 100% !important;
+    width: 100% !important;
     margin: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    background: transparent !important;
   }
   .lid {
-    padding: 8px !important;
-    border-radius: 18px !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: 0 !important;
   }
   .base {
     display: none !important;
   }
   .screen {
-    flex-direction: column !important;
-    border-radius: 12px !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    border-radius: 20px !important;
+    border: 1.5px solid #D6E6FB !important;
+    background: #ffffff !important;
+    box-shadow: 0 10px 30px -10px rgba(12,45,94,0.08) !important;
+    overflow: hidden !important;
   }
   .rail {
-    width: 100% !important;
-    flex-direction: row !important;
-    overflow-x: auto !important;
-    padding: 8px 10px !important;
-    gap: 6px !important;
-    justify-content: flex-start !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  .rail button {
-    width: auto !important;
-    min-width: 64px !important;
-    padding: 6px 10px !important;
-    font-size: 11px !important;
-    min-height: 38px !important;
-    flex-direction: row !important;
-    gap: 5px !important;
+    display: none !important;
   }
   .dmain {
-    padding: 12px 10px !important;
+    padding: 14px 12px 20px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
   .dtop {
-    flex-wrap: wrap !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
     gap: 8px !important;
+    padding: 10px 12px !important;
+    border-bottom: 1px solid #E2E8F0 !important;
+    margin: -14px -12px 14px -12px !important;
+    background: #F8FAFC !important;
+    scrollbar-width: none !important;
+  }
+  .dtop::-webkit-scrollbar {
+    display: none !important;
+  }
+  .dtop .dpill {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
   }
   .dtop .dsearch {
-    width: 100% !important;
-    order: 3 !important;
+    flex: 1 1 160px !important;
+    min-width: 140px !important;
+    width: auto !important;
+  }
+  .dtop .sm-btn {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+    min-height: 38px !important;
+    padding: 0 14px !important;
   }
   .dcols {
+    display: flex !important;
     flex-direction: column !important;
-    gap: 12px !important;
+    gap: 14px !important;
+    width: 100% !important;
   }
   .dnext {
-    padding: 14px 12px !important;
+    padding: 16px 14px !important;
+    border-radius: 18px !important;
+    width: 100% !important;
   }
   .dnext .big {
-    font-size: 28px !important;
+    font-size: 32px !important;
     line-height: 1.1 !important;
+    font-weight: 800 !important;
+  }
+  .dlist {
+    width: 100% !important;
+  }
+  .dlist .row, .dsec .row {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 6px !important;
+    padding: 12px 14px !important;
+    background: #F8FAFC !important;
+    border-radius: 14px !important;
+    border: 1px solid #E2E8F0 !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+  .dlist .row .t, .dsec .row .t {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #1D6FE0 !important;
+    width: 100% !important;
+  }
+  .dlist .row .p, .dsec .row .p {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #102A43 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+  .dlist .row .d, .dsec .row .d {
+    font-size: 13px !important;
+    color: #526477 !important;
+    width: 100% !important;
+  }
+  .dlist .row .st, .dsec .row .st {
+    min-height: 42px !important;
+    border-radius: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 0 16px !important;
+    margin-top: 4px !important;
+  }
+  .dlist .row button.st, .dsec .row button.st {
+    width: 100% !important;
+    cursor: pointer !important;
+  }
+  .drow {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 12px 14px !important;
+    background: #F8FAFC !important;
+    border-radius: 14px !important;
+    border: 1px solid #E2E8F0 !important;
+    margin-bottom: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .drow .av {
+    align-self: flex-start !important;
+  }
+  .drow .sm-btn {
+    width: 100% !important;
+    min-height: 42px !important;
+    margin-top: 4px !important;
+  }
+  .dform {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    padding: 14px !important;
+    border-radius: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .dform input, .dform select, .dform button {
+    width: 100% !important;
+    min-height: 44px !important;
+    box-sizing: border-box !important;
   }
 
   /* Contact page forms & capacity columns */
@@ -1260,12 +1385,24 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     grid-template-columns: 1fr !important;
   }
 
-  /* Modals & Dialogs fit 320px - 412px comfortably */
+  /* Modals as bottom sheets on phones */
+  .modal {
+    align-items: flex-end !important;
+    padding: 0 !important;
+  }
   .panel {
     width: 100% !important;
-    max-width: calc(100vw - 20px) !important;
-    padding: 18px 14px !important;
-    border-radius: 24px !important;
+    max-width: 100% !important;
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 90dvh !important;
+    overflow-y: auto !important;
+    padding: 22px 18px calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+    box-shadow: 0 -10px 40px rgba(7,24,42,0.3) !important;
+    animation: slideUp 0.22s ease-out !important;
+  }
+  .panel .btn, .panel button[type="submit"] {
+    width: 100% !important;
+    min-height: 48px !important;
   }
 
   /* 3D and 2D Body Map stays scaled down without spilling */
@@ -1286,23 +1423,98 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     gap: 24px !important;
   }
 
-  /* Floating fab size on phones */
+  /* Floating fab positioned cleanly above bottom tab bar */
   .botfab {
-    width: 48px !important;
-    height: 48px !important;
-    right: max(12px, env(safe-area-inset-right, 0px)) !important;
-    bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+    width: 50px !important;
+    height: 50px !important;
+    right: max(14px, env(safe-area-inset-right, 0px)) !important;
+    bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+    z-index: 1050 !important;
   }
   .botfab svg {
-    width: 24px !important;
-    height: 24px !important;
+    width: 25px !important;
+    height: 25px !important;
   }
   .botlbl {
     display: none !important;
   }
 
   body {
-    padding-bottom: 64px !important;
+    padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+/* Fixed Bottom Navigation Bars (< 900px) */
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.public-mobile-nav, .clinic-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 899px) {
+  .public-mobile-nav, .clinic-mobile-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+    background: #ffffff !important;
+    border-top: 1px solid #E2E8F0 !important;
+    z-index: 1000 !important;
+    box-shadow: 0 -4px 18px rgba(16,42,67,0.06) !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+  }
+
+  .pub-mob-tab, .clinic-mob-tab {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 3px !important;
+    min-height: 48px !important;
+    padding: 4px 2px !important;
+    text-decoration: none !important;
+    color: #526477 !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    border: 0 !important;
+    cursor: pointer !important;
+    transition: color 0.15s ease !important;
+  }
+
+  .pub-mob-tab svg, .clinic-mob-tab svg {
+    width: 20px !important;
+    height: 20px !important;
+    stroke: currentColor !important;
+  }
+
+  .pub-mob-tab.active, .clinic-mob-tab.active {
+    color: #1D6FE0 !important;
+    font-weight: 700 !important;
+  }
+
+  .pub-mob-tab.active svg, .clinic-mob-tab.active svg {
+    stroke: #1D6FE0 !important;
+  }
+
+  .mob-tab-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+  }
+
+  .mob-tab-lbl {
+    font-size: 11px !important;
+    line-height: 1.1 !important;
   }
 }
 
