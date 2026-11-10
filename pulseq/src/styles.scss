@@ -421,8 +421,8 @@ header.wrap .btn-line{box-shadow:inset 0 0 0 1.5px currentColor!important}
 .botpanel .log{flex:1;min-height:0;max-height:none}
 .botx{width:44px;height:44px;border-radius:50%;border:0;background:var(--dk-surface2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none}
 .bub a{color:#fff;font-weight:700;text-decoration:underline}
-@media(max-width:767px){
-  .botfab{width:54px;height:54px;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));box-shadow:0 0 0 2.5px #fff,0 12px 24px -8px rgba(21,88,184,.65)}
+@media(max-width:1023px){
+  .botfab{width:54px;height:54px;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(68px + env(safe-area-inset-bottom,0px))!important;box-shadow:0 0 0 2.5px #fff,0 12px 24px -8px rgba(21,88,184,.65)}
   .botfab svg{width:26px;height:26px}
   .botlbl{display:none!important}
   .botpanel{right:0;left:0;bottom:0;width:100%;height:min(88vh,calc(100vh - 12px));border-radius:24px 24px 0 0}
@@ -1021,6 +1021,10 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
 
 /* 4. Small Devices, Phones & Tablets (< 1024px: 320px to 1023px) */
 @media (max-width: 1023px) {
+  main#content, #content {
+    padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
   /* Container padding respecting notches */
   .wrap {
     padding-left: max(14px, env(safe-area-inset-left, 0px)) !important;
@@ -1775,6 +1779,11 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 .kym{position:fixed;inset:0;z-index:60;background:rgba(7,24,42,.62);display:flex;align-items:center;justify-content:center;padding:16px}
 .kym[hidden]{display:none}
 .kyp{background:#fff;color:var(--fg);width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:22px;padding:22px 22px 20px;box-shadow:0 24px 60px rgba(7,24,42,.35);outline:none}
+@media(max-width:1023px){
+  .kym{align-items:flex-end!important;padding:0!important}
+  .kyp{width:100%!important;max-width:100%!important;border-radius:24px 24px 0 0!important;max-height:90dvh!important;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px))!important;animation:slideUp 0.22s ease-out!important}
+  .kyl span{min-height:44px!important;padding:8px 16px!important}
+}
 .kyp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .kyp h3{font-size:24px}
 .kyp-x{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-size:20px;line-height:1;flex:none}

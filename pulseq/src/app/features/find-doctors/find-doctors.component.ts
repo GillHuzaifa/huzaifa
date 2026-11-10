@@ -71,7 +71,10 @@ import { Doctor, Place, Slot } from '../../shared/models';
       <div class="fdlayout">
         <!-- Sidebar Filters -->
         <aside class="fdside" [class.open]="sidebarOpen">
-          <h3>Filters</h3>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 style="margin:0">Filters</h3>
+            <button class="icon-btn" type="button" (click)="sidebarOpen = false" aria-label="Close filters" style="width:36px;height:36px">✕</button>
+          </div>
 
           <div>
             <span class="lbl">City</span>
@@ -169,7 +172,10 @@ import { Doctor, Place, Slot } from '../../shared/models';
             </div>
           </div>
 
-          <button class="btn btn-line" type="button" (click)="resetFilters()">Reset filters</button>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button class="btn btn-ink" style="flex:1" type="button" (click)="sidebarOpen = false">Apply filters</button>
+            <button class="btn btn-line" type="button" (click)="resetFilters()">Reset</button>
+          </div>
         </aside>
 
         <!-- Main Doctor Results List -->
