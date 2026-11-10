@@ -37,61 +37,22 @@ const SAY: Record<string, string> = {
       </div>
     </div>
 
-    <!-- Header Container per PulseQ (9).html -->
+    <!-- Header Container per PulseQ (14).html -->
     <header class="wrap">
       <div class="nav">
         <!-- Brand Logo on Top Left -->
         <a class="logo" routerLink="/" (click)="closeMobileMenu()" aria-label="PulseQ home">
-          <img src="/assets/logo.png" alt="PulseQ logo" class="logo-mark" loading="eager" width="46" height="46">
+          <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" width="46" height="46" style="flex:none">
+            <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#2381FF" stroke-width="2"/>
+            <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" fill="none" stroke="#2381FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span>PulseQ</span>
         </a>
 
-        <!-- Middle Navigation with Dropdowns (Desktop >= 900px) -->
+        <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
-          <div class="nav-item-dropdown" (mouseenter)="showDocDrop = true" (mouseleave)="showDocDrop = false">
-            <a routerLink="/find-doctors" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link-with-arrow">
-              <span>Find doctors</span>
-              <button type="button" class="chevron" (click)="toggleDocDrop($event)" aria-label="Toggle specialties dropdown">
-                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 6l4 4 4-4"/>
-                </svg>
-              </button>
-            </a>
-            <div class="nav-dropdown" [class.show]="showDocDrop">
-              <span class="dd-title">Top Specialties</span>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'heart'}" (click)="showDocDrop = false">Cardiologists</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'skin'}" (click)="showDocDrop = false">Dermatologists</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'child'}" (click)="showDocDrop = false">Paediatricians</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'general'}" (click)="showDocDrop = false">General physicians</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'bones'}" (click)="showDocDrop = false">Orthopaedic surgeons</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'neuro'}" (click)="showDocDrop = false">Neurologists</a>
-              <a routerLink="/find-doctors" [queryParams]="{spec: 'eye'}" (click)="showDocDrop = false">Eye specialists</a>
-              <div class="dd-sep"></div>
-              <a routerLink="/find-doctors" class="dd-all" (click)="showDocDrop = false">Browse all doctors →</a>
-            </div>
-          </div>
-
-          <div class="nav-item-dropdown" (mouseenter)="showHospDrop = true" (mouseleave)="showHospDrop = false">
-            <a routerLink="/hospitals" routerLinkActive="active" class="nav-link-with-arrow">
-              <span>Hospitals</span>
-              <button type="button" class="chevron" (click)="toggleHospDrop($event)" aria-label="Toggle hospitals dropdown">
-                <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M4 6l4 4 4-4"/>
-                </svg>
-              </button>
-            </a>
-            <div class="nav-dropdown" [class.show]="showHospDrop">
-              <span class="dd-title">By City</span>
-              <a routerLink="/hospitals" [queryParams]="{city: 'lahore'}" (click)="showHospDrop = false">Lahore Hospitals</a>
-              <a routerLink="/hospitals" [queryParams]="{city: 'karachi'}" (click)="showHospDrop = false">Karachi Hospitals</a>
-              <a routerLink="/hospitals" [queryParams]="{city: 'islamabad'}" (click)="showHospDrop = false">Islamabad Hospitals</a>
-              <a routerLink="/hospitals" [queryParams]="{city: 'rawalpindi'}" (click)="showHospDrop = false">Rawalpindi Hospitals</a>
-              <div class="dd-sep"></div>
-              <a routerLink="/hospitals" class="dd-all" (click)="showHospDrop = false">Browse all hospitals →</a>
-            </div>
-          </div>
-
-          <a routerLink="/" fragment="conditions">Conditions</a>
+          <a routerLink="/find-doctors" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Find doctors</a>
+          <a routerLink="/hospitals" routerLinkActive="active">Hospitals</a>
           <a routerLink="/surgery" routerLinkActive="active">Surgery</a>
           <a routerLink="/medicine" routerLinkActive="active">Medicine</a>
           <a routerLink="/clinics" routerLinkActive="active">For clinics</a>
@@ -119,48 +80,10 @@ const SAY: Record<string, string> = {
         </div>
       </div>
 
-      <!-- Mobile Navigation Drawer (< 900px) -->
+      <!-- Mobile Navigation Drawer (< 900px) - Exact Clean Links matching PulseQ (14).html -->
       <nav class="mobile-nav-drawer" *ngIf="mobileMenuOpen" aria-label="Mobile Navigation">
-        <!-- Find Doctors Accordion -->
-        <div class="mob-item">
-          <div class="mob-item-head">
-            <a routerLink="/find-doctors" (click)="closeMobileMenu()" class="mob-link">Find doctors</a>
-            <button type="button" class="mob-chevron-btn" (click)="toggleMobileDoc($event)" [attr.aria-expanded]="mobileDocOpen" aria-label="Toggle specialties">
-              <svg [class.rot]="mobileDocOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-          </div>
-          <div class="mob-sub" *ngIf="mobileDocOpen">
-            <span class="mob-sub-title">Top Specialties</span>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'heart'}" (click)="closeMobileMenu()">Cardiologists</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'skin'}" (click)="closeMobileMenu()">Dermatologists</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'child'}" (click)="closeMobileMenu()">Paediatricians</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'general'}" (click)="closeMobileMenu()">General physicians</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'bones'}" (click)="closeMobileMenu()">Orthopaedic surgeons</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'neuro'}" (click)="closeMobileMenu()">Neurologists</a>
-            <a routerLink="/find-doctors" [queryParams]="{spec: 'eye'}" (click)="closeMobileMenu()">Eye specialists</a>
-            <a routerLink="/find-doctors" (click)="closeMobileMenu()" class="mob-all">Browse all doctors →</a>
-          </div>
-        </div>
-
-        <!-- Hospitals Accordion -->
-        <div class="mob-item">
-          <div class="mob-item-head">
-            <a routerLink="/hospitals" (click)="closeMobileMenu()" class="mob-link">Hospitals</a>
-            <button type="button" class="mob-chevron-btn" (click)="toggleMobileHosp($event)" [attr.aria-expanded]="mobileHospOpen" aria-label="Toggle cities">
-              <svg [class.rot]="mobileHospOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </button>
-          </div>
-          <div class="mob-sub" *ngIf="mobileHospOpen">
-            <span class="mob-sub-title">By City</span>
-            <a routerLink="/hospitals" [queryParams]="{city: 'lahore'}" (click)="closeMobileMenu()">Lahore Hospitals</a>
-            <a routerLink="/hospitals" [queryParams]="{city: 'karachi'}" (click)="closeMobileMenu()">Karachi Hospitals</a>
-            <a routerLink="/hospitals" [queryParams]="{city: 'islamabad'}" (click)="closeMobileMenu()">Islamabad Hospitals</a>
-            <a routerLink="/hospitals" [queryParams]="{city: 'rawalpindi'}" (click)="closeMobileMenu()">Rawalpindi Hospitals</a>
-            <a routerLink="/hospitals" (click)="closeMobileMenu()" class="mob-all">Browse all hospitals →</a>
-          </div>
-        </div>
-
-        <a routerLink="/" fragment="conditions" (click)="closeMobileMenu()" class="mob-link-flat">Conditions</a>
+        <a routerLink="/find-doctors" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Find doctors</a>
+        <a routerLink="/hospitals" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Hospitals</a>
         <a routerLink="/surgery" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Surgery</a>
         <a routerLink="/medicine" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Medicine</a>
         <a routerLink="/clinics" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">For clinics</a>
@@ -168,7 +91,7 @@ const SAY: Record<string, string> = {
         <a routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Contact us</a>
 
         <div class="mob-cta">
-          <a class="btn btn-ink" style="width:100%;min-height:48px;justify-content:center" routerLink="/find-doctors" (click)="closeMobileMenu()">Book appointment</a>
+          <a class="btn btn-ink" style="width:100%;min-height:48px;justify-content:center" routerLink="/find-doctors" (click)="closeMobileMenu()">Book now</a>
         </div>
       </nav>
 
@@ -419,8 +342,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   tabConfigs = {
     doctors: { label: 'Doctor or specialty', placeholder: 'Doctor name or specialty', btnText: 'Find doctors' },
-    hospitals: { label: 'Hospital or clinic', placeholder: 'Hospital name, e.g. Lakeview', btnText: 'Find hospital' },
-    conditions: { label: 'Condition or symptom', placeholder: 'e.g. chest pain, fever, back pain', btnText: 'Find care' }
+    hospitals: { label: 'Hospital or clinic', placeholder: 'Hospital or clinic name', btnText: 'Find hospitals' },
+    conditions: { label: 'Symptom or condition', placeholder: 'Symptom, e.g. migraine', btnText: 'Find a specialist' }
   };
 
   // Carousel

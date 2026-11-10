@@ -38,7 +38,10 @@ import { ToastService } from '../../services/toast.service';
       <section class="botpanel" role="dialog" aria-label="PulseQ assistant">
         <div class="chat" style="flex:1;min-height:0;border-radius:0;box-shadow:none">
           <div class="chat-head">
-            <span class="eyebrow" style="color:var(--mint)">PulseQ AI</span>
+            <span style="width:34px;height:34px;border-radius:10px;background:#fff;display:inline-flex;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1.5px #BFD9FF;flex:none">
+              <svg width="20" height="20" viewBox="0 0 36 36"><path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="#2381FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="eyebrow" style="color:var(--mint);font-weight:700;letter-spacing:.08em">PULSEQ AI</span>
             <span class="grow"></span>
             <select class="lang" [(ngModel)]="selectedLang" (change)="onLangChange()" aria-label="Language">
               <option value="en-PK">English</option>

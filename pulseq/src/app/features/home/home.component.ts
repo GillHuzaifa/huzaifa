@@ -242,63 +242,6 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
       </div>
     </section>
 
-    <!-- CONDITIONS & SYMPTOMS SECTION -->
-    <section class="sec tint home" id="conditions" style="padding-top:64px">
-      <div class="wrap">
-        <div class="sec-head">
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <span class="eyebrow">Search by condition <span class="ur" lang="ur">· علامات سے ڈھونڈیں</span></span>
-            <h2>Not sure who to see? Start with <span class="mk">how you feel.</span></h2>
-          </div>
-          <p class="muted" style="max-width:380px">Pick a concern and we show the right specialists. Or describe it to Pulse and it will point you to the right one.</p>
-        </div>
-        <div class="symbox">
-          <div class="field wide">
-            <label for="sym">Search by symptoms</label>
-            <input id="sym" type="text" placeholder="e.g. headache and blurry vision, skin rash, back pain" [(ngModel)]="symptomQuery" (keydown.enter)="searchSymptoms()" autocomplete="off">
-          </div>
-          <button class="btn btn-ink" id="symBtn" style="flex:1 1 220px;min-height:62px" (click)="searchSymptoms()">Find the right specialist</button>
-        </div>
-        <p class="muted sm" id="symNote" aria-live="polite" style="min-height:22px;margin-bottom:20px">{{ symptomNote }}</p>
-
-        <!-- 8 EXACT CONDITION TILES WITH ORIGINAL SVGS -->
-        <div class="cond-grid">
-          <button class="cond" (click)="filterBySpecialty('heart')">
-            <span class="ic t2"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"></path></svg></span>
-            <span><b>Heart and blood pressure</b><small>Chest pain, palpitations</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('skin')">
-            <span class="ic t3"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3s6 6.2 6 10.5a6 6 0 0 1-12 0C6 9.2 12 3 12 3z"></path></svg></span>
-            <span><b>Skin and hair</b><small>Acne, rash, hair fall</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('bones')">
-            <span class="ic t4"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6-6"></path><circle cx="6.5" cy="17.5" r="2.5"></circle><circle cx="17.5" cy="6.5" r="2.5"></circle></svg></span>
-            <span><b>Bones and joints</b><small>Back pain, knee pain</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('child')">
-            <span class="ic t1"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9 10h.01M15 10h.01M8.5 14a4.5 4.5 0 0 0 7 0"></path></svg></span>
-            <span><b>Children</b><small>Fever, growth, vaccines</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('eye')">
-            <span class="ic t5"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"></path><circle cx="12" cy="12" r="3"></circle></svg></span>
-            <span><b>Eyes</b><small>Blurry vision, eye pain</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('neuro')">
-            <span class="ic t2"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z"></path></svg></span>
-            <span><b>Head and nerves</b><small>Migraine, numbness</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('general')">
-            <span class="ic t3"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h11a3 3 0 1 0-3-3M3 14h15a3 3 0 1 1-3 3M3 19h7"></path></svg></span>
-            <span><b>Fever, cough and flu</b><small>General physician</small></span>
-          </button>
-          <button class="cond" (click)="filterBySpecialty('dental')">
-            <span class="ic t4"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4C5 4 4 6 4 8c0 3 1.5 4 2 8 .3 2 1.2 4 2.5 4s1.5-2.5 2-4c.5 1.5.7 4 2 4s2.2-2 2.5-4c.5-4 2-5 2-8 0-2-1-4-3.5-4-1.8 0-2.4 1-4.5 1-1.5 0-2-1-3-1z"></path></svg></span>
-            <span><b>Teeth and gums</b><small>Toothache, braces</small></span>
-          </button>
-        </div>
-      </div>
-    </section>
-
     <!-- DOCTORS SECTION -->
     <section class="sec home" id="doctors">
       <div class="wrap">
@@ -507,43 +450,6 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
               </button>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- HOSPITALS SECTION -->
-    <section class="sec tint home" id="hospitals">
-      <div class="wrap">
-        <div class="sec-head">
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <span class="eyebrow">Hospitals and clinics <span class="ur" lang="ur">· ہسپتال اور کلینک</span></span>
-            <h2>Book the hospital, not just the doctor.</h2>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
-            <div class="chips" role="group" aria-label="Show hospitals by city">
-              <button class="chip" [class.on]="hospCity === 'all'" (click)="hospCity = 'all'">All cities</button>
-              <button *ngFor="let c of cities" class="chip" [class.on]="hospCity === c" (click)="hospCity = c">{{ c }}</button>
-            </div>
-            <p class="muted sm" aria-live="polite">{{ filteredHospitals().length }} hospitals and clinics in {{ hospCity === 'all' ? 'Pakistan' : hospCity }}</p>
-          </div>
-        </div>
-        <div class="hosp-grid">
-          <article *ngFor="let h of filteredHospitals()" class="hosp">
-            <div class="hosp-top t{{ h.t }}">{{ h.name[0] }}</div>
-            <div class="hosp-body">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-                <div>
-                  <h3><a class="dlink" [routerLink]="['/hospital', h.id]">{{ h.name }}</a></h3>
-                  <p class="muted sm">{{ h.city }}</p>
-                </div>
-                <span *ngIf="h.badge" class="tag">{{ h.badge }}</span>
-              </div>
-              <p class="muted sm" style="margin-top:6px">{{ h.depts }}</p>
-              <div style="margin-top:auto;padding-top:14px">
-                <a class="btn btn-line full" [routerLink]="['/hospital', h.id]">View doctors</a>
-              </div>
-            </div>
-          </article>
         </div>
       </div>
     </section>
@@ -1150,6 +1056,10 @@ export class HomeComponent implements OnInit {
 
   // AI
   openPulseAi() {
+    this.pulseAi.open();
+  }
+
+  openFloatingChat(): void {
     this.pulseAi.open();
   }
 
