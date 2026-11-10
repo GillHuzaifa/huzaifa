@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { Doctor, Place, Slot } from '../../models';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
+import { ReviewsService } from '../../services/reviews.service';
 import { ModalService } from '../../services/modal.service';
 import { SPEC } from '../../../data/specialties.data';
 
@@ -44,6 +45,13 @@ import { SPEC } from '../../../data/specialties.data';
         </div>
 
         <div class="dc-meta">
+          <a class="rt" [routerLink]="['/doctor', doctor.id]" fragment="reviews" (click)="$event.stopPropagation()">
+            <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            <b>{{ getDocRating(doctor.id).avg.toFixed(1) }}</b>
+            <span>· {{ getDocRating(doctor.id).n }} reviews</span>
+          </a>
           <span class="tag">{{ P.mode }}</span>
           <span class="dc-avail" [class.on]="today">
             {{ today ? 'Free today' : (ns.length ? 'Free this week' : 'Fully booked') }}
@@ -108,11 +116,16 @@ export class DoctorCardComponent {
   router = inject(Router);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
+  reviewsService = inject(ReviewsService);
   modalService = inject(ModalService);
+
+  getDocRating(id: number) {
+    return this.reviewsService.getDocStats(id);
+  }
 
   onCardClick(e: MouseEvent): void {
     const target = e.target as HTMLElement;
-    if (target.closest('button, input, select, label, .slot, .dc-pl, .btn')) {
+    if (target.closest('button, a, input, select, textarea, label, summary, details, .slot, .dc-pl, .btn')) {
       return;
     }
     if (this.doctor) {

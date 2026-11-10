@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
+import { ReviewsService } from '../../shared/services/reviews.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { SPEC, SPEC_PLURAL, CITIES } from '../../data/specialties.data';
@@ -205,7 +206,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 @let today = ns.length > 0 && ns[0].o === 0;
                 @let places = doctorsService.placesOf(d);
 
-                <article class="frow">
+                <article class="frow" (click)="openDoctor(d.id, $event)" style="cursor:pointer">
                   <div class="fr-id">
                     <div class="dc-ava t{{ d.t }}">
                       @if (d.photo) {
@@ -224,7 +225,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                         {{ (d.deg || []).join(', ') }}{{ d.exp ? ' · ' + d.exp + ' yrs' : '' }}
                       </p>
                       @if (places.length <= 1 && h) {
-                        <a class="linkbtn" [routerLink]="['/hospital', h.id]">
+                        <a class="linkbtn" [routerLink]="['/hospital', h.id]" (click)="$event.stopPropagation()">
                           {{ h.name }} · {{ h.city }}
                         </a>
                       }
@@ -232,6 +233,13 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </div>
 
                   <div class="fr-meta">
+                    <a class="rt" [routerLink]="['/doctor', d.id]" fragment="reviews" (click)="$event.stopPropagation()">
+                      <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                      </svg>
+                      <b>{{ getDocRating(d.id).avg.toFixed(1) }}</b>
+                      <span>· {{ getDocRating(d.id).n }} reviews</span>
+                    </a>
                     <span class="tag">{{ P.mode }}</span>
                     <span class="dc-avail" [class.on]="today">
                       {{ today ? 'Free today' : (ns.length ? 'Free this week' : 'Fully booked') }}
@@ -300,8 +308,10 @@ import { Doctor, Place, Slot } from '../../shared/models';
   `]
 })
 export class FindDoctorsComponent implements OnInit {
+  router = inject(Router);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
+  reviewsService = inject(ReviewsService);
   modalService = inject(ModalService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
@@ -319,6 +329,18 @@ export class FindDoctorsComponent implements OnInit {
   maxFee = 0;
   sortOption = 'soon';
   sidebarOpen = false;
+
+  getDocRating(id: number) {
+    return this.reviewsService.getDocStats(id);
+  }
+
+  openDoctor(id: number, e: MouseEvent): void {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, a, input, select, textarea, label, summary, details, .slot, .dc-pl, .btn')) {
+      return;
+    }
+    this.router.navigate(['/doctor', id]);
+  }
 
   ngOnInit(): void {
     this.seo.setPage('Find Doctors');

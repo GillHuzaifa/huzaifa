@@ -282,6 +282,14 @@ export class HospitalDetailComponent implements OnInit {
         }
       }
     });
+    this.route.fragment.subscribe(fragment => {
+      if (fragment) {
+        setTimeout(() => {
+          const el = document.getElementById(fragment);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      }
+    });
   }
 
   doctors(): Doctor[] {

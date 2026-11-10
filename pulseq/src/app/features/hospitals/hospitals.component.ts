@@ -3,6 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { DoctorsService } from '../../shared/services/doctors.service';
+import { ReviewsService } from '../../shared/services/reviews.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { CITIES } from '../../data/specialties.data';
 import { Hospital } from '../../shared/models';
@@ -123,6 +124,13 @@ import { Hospital } from '../../shared/models';
               <div class="hosp-body">
                 <h3 style="font-size:22px"><a [routerLink]="['/hospital', h.id]" style="color:inherit;text-decoration:none">{{ h.name }}</a></h3>
                 <p class="muted sm">{{ h.city }}</p>
+                <a class="rt" [routerLink]="['/hospital', h.id]" fragment="hreviews">
+                  <svg class="pulse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                  <b>{{ getHospRating(h.id).avg.toFixed(1) }}</b>
+                  <span>· {{ getHospRating(h.id).n }} reviews</span>
+                </a>
                 <div class="deptpills">
                   @for (part of h.depts.split(' · '); track part) {
                     <span>{{ part }}</span>
@@ -158,6 +166,7 @@ export class HospitalsComponent implements OnInit {
   router = inject(Router);
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
+  reviewsService = inject(ReviewsService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
 
@@ -166,6 +175,10 @@ export class HospitalsComponent implements OnInit {
   selectedCity = 'all';
   selectedDept = 'all';
   emergencyOnly = false;
+
+  getHospRating(id: string) {
+    return this.reviewsService.getHospStats(id);
+  }
 
   openHospital(id: string, e: MouseEvent): void {
     const target = e.target as HTMLElement;
