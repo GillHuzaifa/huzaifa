@@ -242,45 +242,18 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
       </div>
     </section>
 
-    <!-- DOCTORS SECTION -->
-    <section class="sec home" id="doctors">
+    <!-- My Bookings List (if any) -->
+    <section *ngIf="myBookings().length > 0" class="sec home" id="my-bookings">
       <div class="wrap">
-        <div class="sec-head">
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <span class="eyebrow">Doctors <span class="ur" lang="ur">· ڈاکٹر</span></span>
-            <h2>Free slots, <span class="mk">right now.</span></h2>
-            <p class="hand hnote" aria-hidden="true">
-              slots are live, no phone calls needed
-              <svg width="34" height="26" viewBox="0 0 34 26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4c10-3 22 2 26 16M28 20l-8-2M28 20l1-8"/></svg>
-            </p>
-          </div>
-          <div class="chips" role="group" aria-label="Filter by specialty">
-            <button class="chip" [class.on]="docFilterSpec === 'all'" (click)="docFilterSpec = 'all'">All</button>
-            <button *ngFor="let k of docSpecKeys" class="chip" [class.on]="docFilterSpec === k" (click)="docFilterSpec = k">{{ specMap[k] }}</button>
-          </div>
+        <div class="sec-head" style="margin-bottom:20px">
+          <h2 style="font-size:clamp(26px,3.0vw,30px)">Your appointments</h2>
         </div>
-        <div class="filterbar" aria-live="polite">
-          <span class="muted sm">Showing {{ filteredDoctors().length }} doctors with free slots</span>
-        </div>
-        <div class="doc-grid">
-          <app-doctor-card *ngFor="let d of visibleDoctors()" [doctor]="d"></app-doctor-card>
-        </div>
-        <div *ngIf="filteredDoctors().length > docLimit" style="display:flex;justify-content:center;margin-top:28px">
-          <button class="btn btn-ink" (click)="docLimit = docLimit + 6">Show more doctors</button>
-        </div>
-
-        <!-- My Bookings List (if any) -->
-        <div *ngIf="myBookings().length > 0" style="margin-top:56px">
-          <div class="sec-head" style="margin-bottom:20px">
-            <h2 style="font-size:clamp(26px,3.0vw,30px)">Your appointments</h2>
-          </div>
-          <div class="mine">
-            <div *ngFor="let b of myBookings()" class="bk">
-              <code>{{ b.code }}</code>
-              <b>{{ b.doctor }}</b>
-              <span class="muted sm">{{ b.hospital }} · {{ b.when }}</span>
-              <button class="btn btn-line sm" style="align-self:flex-start;min-height:36px;margin-top:8px" (click)="cancelMyBooking(b.code)">Cancel booking</button>
-            </div>
+        <div class="mine">
+          <div *ngFor="let b of myBookings()" class="bk">
+            <code>{{ b.code }}</code>
+            <b>{{ b.doctor }}</b>
+            <span class="muted sm">{{ b.hospital }} · {{ b.when }}</span>
+            <button class="btn btn-line sm" style="align-self:flex-start;min-height:36px;margin-top:8px" (click)="cancelMyBooking(b.code)">Cancel booking</button>
           </div>
         </div>
       </div>

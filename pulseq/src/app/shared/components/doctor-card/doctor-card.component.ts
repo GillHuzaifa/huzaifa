@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Doctor, Place, Slot } from '../../models';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
@@ -18,7 +18,7 @@ import { SPEC } from '../../../data/specialties.data';
       @let today = isFreeToday();
       @let places = allPlaces();
 
-      <article class="doc dcard">
+      <article class="doc dcard" (click)="onCardClick($event)" style="cursor:pointer">
         <div class="dc-head">
           <div class="dc-ava t{{ doctor.t }}">
             @if (doctor.photo) {
@@ -105,9 +105,20 @@ import { SPEC } from '../../../data/specialties.data';
 export class DoctorCardComponent {
   @Input({ required: true }) doctor!: Doctor;
 
+  router = inject(Router);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   modalService = inject(ModalService);
+
+  onCardClick(e: MouseEvent): void {
+    const target = e.target as HTMLElement;
+    if (target.closest('button, input, select, label, .slot, .dc-pl, .btn')) {
+      return;
+    }
+    if (this.doctor) {
+      this.router.navigate(['/doctor', this.doctor.id]);
+    }
+  }
 
   selectedPlaceIndex = 0;
 

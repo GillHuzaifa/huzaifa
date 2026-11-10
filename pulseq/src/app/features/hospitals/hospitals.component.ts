@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { DoctorsService } from '../../shared/services/doctors.service';
@@ -113,7 +113,7 @@ import { Hospital } from '../../shared/models';
             @let n = hospitalsService.getDoctorsAtHospital(h.id).length;
             @let free = hospitalsService.getFreeTodayCount(h.id);
 
-            <article class="hosp hpc">
+            <article class="hosp hpc" (click)="openHospital(h.id, $event)" style="cursor:pointer">
               <div class="hosp-top t{{ h.t }}">
                 <span class="big">{{ h.name[0] }}</span>
                 @if (h.badge) {
@@ -121,7 +121,7 @@ import { Hospital } from '../../shared/models';
                 }
               </div>
               <div class="hosp-body">
-                <h3 style="font-size:22px">{{ h.name }}</h3>
+                <h3 style="font-size:22px"><a [routerLink]="['/hospital', h.id]" style="color:inherit;text-decoration:none">{{ h.name }}</a></h3>
                 <p class="muted sm">{{ h.city }}</p>
                 <div class="deptpills">
                   @for (part of h.depts.split(' · '); track part) {
@@ -155,6 +155,7 @@ import { Hospital } from '../../shared/models';
   `]
 })
 export class HospitalsComponent implements OnInit {
+  router = inject(Router);
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
   seo = inject(SeoService);
@@ -165,6 +166,14 @@ export class HospitalsComponent implements OnInit {
   selectedCity = 'all';
   selectedDept = 'all';
   emergencyOnly = false;
+
+  openHospital(id: string, e: MouseEvent): void {
+    const target = e.target as HTMLElement;
+    if (target.closest('a, button')) {
+      return;
+    }
+    this.router.navigate(['/hospital', id]);
+  }
 
   ngOnInit(): void {
     this.seo.setPage('Hospitals and Clinics');
