@@ -307,9 +307,13 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
         <div style="flex:1 1 460px;min-width:0">
           <div class="chat" id="homeAiBlock" style="border-radius:28px;padding:20px;box-shadow:0 0 0 1px var(--dk-line), 0 24px 60px -20px rgba(7,24,42,.65)">
             <div class="chat-head" style="padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08)">
-              <span style="width:38px;height:38px;border-radius:12px;background:var(--dk-bg);display:flex;align-items:center;justify-content:center;flex:none">
-                <svg width="22" height="22" viewBox="0 0 36 36" aria-hidden="true"><path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="#5FA3FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-              </span>
+              <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" width="36" height="36" style="flex:none;border-radius:10px">
+                <rect width="48" height="48" rx="14" fill="#2381FF"/>
+                <path d="M6 26h7l3-9 4.500 17 5-22 4.500 15 2-1h10" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="15" cy="11" r="1.700" fill="#fff"/>
+                <circle cx="31" cy="38" r="1.700" fill="#fff"/>
+                <circle cx="38" cy="12" r="1.700" fill="#fff"/>
+              </svg>
               <div class="grow">
                 <span class="eyebrow" style="color:var(--mint);font-size:11px;letter-spacing:.12em;display:block">PULSEQ AI</span>
                 <p class="xs muted" style="margin:0">Answers, support and booking</p>

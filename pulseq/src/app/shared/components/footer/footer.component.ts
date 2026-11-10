@@ -13,8 +13,11 @@ import { PulseAiService } from '../../services/pulse-ai.service';
           <div style="max-width:320px;flex:1 1 260px">
             <div style="display:flex;align-items:center;gap:12px">
               <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" width="40" height="40" style="flex:none">
-                <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#2381FF" stroke-width="2"/>
-                <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" fill="none" stroke="#2381FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect width="48" height="48" rx="14" fill="#2381FF"/>
+                <path d="M6 26h7l3-9 4.500 17 5-22 4.500 15 2-1h10" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="15" cy="11" r="1.700" fill="#fff"/>
+                <circle cx="31" cy="38" r="1.700" fill="#fff"/>
+                <circle cx="38" cy="12" r="1.700" fill="#fff"/>
               </svg>
               <p style="font-family:var(--disp);font-weight:800;font-size:30px;color:#fff;margin:0">PulseQ</p>
             </div>

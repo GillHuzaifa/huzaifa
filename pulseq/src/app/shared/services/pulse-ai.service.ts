@@ -38,6 +38,7 @@ export class PulseAiService {
   private doctorsService = inject(DoctorsService);
 
   isOpen = signal<boolean>(false);
+  language = signal<string>('en-PK');
   messages = signal<ChatMessage[]>([]);
   isListening = signal<boolean>(false);
   context = signal<ConversationContext>({
@@ -67,6 +68,10 @@ export class PulseAiService {
 
   open(): void {
     this.isOpen.set(true);
+  }
+
+  setLanguage(lang: string): void {
+    this.language.set(lang);
   }
 
   close(): void {

@@ -43,8 +43,11 @@ const SAY: Record<string, string> = {
         <!-- Brand Logo on Top Left -->
         <a class="logo" routerLink="/" (click)="closeMobileMenu()" aria-label="PulseQ home">
           <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" width="46" height="46" style="flex:none">
-            <rect x="1" y="1" width="46" height="46" rx="14" fill="#DBEAFE" stroke="#2381FF" stroke-width="2"/>
-            <path d="M8 25h8l3.5-8 5 17 4.5-13 2.5 4H40" fill="none" stroke="#2381FF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect width="48" height="48" rx="14" fill="#2381FF"/>
+            <path d="M6 26h7l3-9 4.500 17 5-22 4.500 15 2-1h10" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="15" cy="11" r="1.700" fill="#fff"/>
+            <circle cx="31" cy="38" r="1.700" fill="#fff"/>
+            <circle cx="38" cy="12" r="1.700" fill="#fff"/>
           </svg>
           <span>PulseQ</span>
         </a>
@@ -342,8 +345,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   tabConfigs = {
     doctors: { label: 'Doctor or specialty', placeholder: 'Doctor name or specialty', btnText: 'Find doctors' },
-    hospitals: { label: 'Hospital or clinic', placeholder: 'Hospital or clinic name', btnText: 'Find hospitals' },
-    conditions: { label: 'Symptom or condition', placeholder: 'Symptom, e.g. migraine', btnText: 'Find a specialist' }
+    hospitals: { label: 'Hospital or clinic', placeholder: 'Hospital or clinic name, e.g. Crescent', btnText: 'Find hospitals' },
+    conditions: { label: 'Symptom or condition', placeholder: 'Symptom, e.g. fever, headache', btnText: 'Find a specialist' }
   };
 
   // Carousel
@@ -531,14 +534,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   openAiUrdu(): void {
-    if (typeof window !== 'undefined') {
-      const el = document.getElementById('ai');
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-        window.dispatchEvent(new CustomEvent('pulseq:set-urdu-ai'));
-        return;
-      }
-    }
+    this.pulseAi.setLanguage('ur-PK');
     this.pulseAi.open();
   }
 }

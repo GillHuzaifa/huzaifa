@@ -28,11 +28,26 @@ import { PulseAiComponent } from './shared/components/pulse-ai/pulse-ai.componen
 export class AppComponent {
   private router = inject(Router);
   currentView = signal<string>('home');
+  showMoreSheet = false;
+
+  toggleMoreSheet(): void {
+    this.showMoreSheet = !this.showMoreSheet;
+  }
+
+  closeMoreSheet(): void {
+    this.showMoreSheet = false;
+  }
+
+  isMoreActive(): boolean {
+    const v = this.currentView();
+    return ['surgery', 'clinics', 'about', 'privacy', 'terms', 'contact'].includes(v);
+  }
 
   constructor() {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: any) => {
+      this.closeMoreSheet();
       const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
       if (url === '/' || url === '') {
         this.currentView.set('home');
