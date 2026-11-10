@@ -180,8 +180,10 @@ const SAY: Record<string, string> = {
             <h1>Your health, <span class="mk">one tap away.</span></h1>
             <p class="ur ur-hero" lang="ur" dir="rtl" (click)="openAiUrdu()" style="cursor:pointer" title="اردو میں چیٹ کریں">آپ کی صحت، بس ایک ٹیپ کی دوری پر۔</p>
             <div class="hero-ecg-wrap">
-              <svg width="220" height="38" viewBox="0 0 230 44" aria-hidden="true" style="max-width:100%">
-                <path d="M2 24h62l12-18 16 34 14-16h124" fill="none" stroke="#1D6FE0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <svg class="ecg-live" width="230" height="44" viewBox="0 0 230 44" aria-hidden="true" style="margin-top:-6px;max-width:100%;overflow:visible">
+                <path class="ecg-tr" d="M2 24h40l10-16 14 30 12-14h36l10-16 14 30 12-14h66" fill="none" stroke="#DBEAFE" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <path class="ecg-ln" pathLength="100" d="M2 24h40l10-16 14 30 12-14h36l10-16 14 30 12-14h66" fill="none" stroke="#2381FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle class="ecg-dot" r="5.500" fill="#2381FF" style="offset-path:path('M2 24h40l10-16 14 30 12-14h36l10-16 14 30 12-14h66')"/>
               </svg>
             </div>
             <p class="hero-desc">Search a doctor, hospital or symptom, or just tell Pulse.</p>
@@ -210,12 +212,35 @@ const SAY: Record<string, string> = {
               </div>
             </div>
 
-            <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
-              <span class="muted sm">Try:</span>
-              <button class="chip" (click)="trySearch('fever')">Fever</button>
-              <button class="chip" (click)="trySearch('skin rash')">Skin rash</button>
-              <button class="chip" (click)="trySearch('back pain')">Back pain</button>
-              <button class="chip" (click)="trySearch('child check-up')">Child check-up</button>
+            <!-- How do you feel today row from PulseQ (14).html -->
+            <div class="feel">
+              <p class="feel-h">How do you feel today?</p>
+              <div class="feel-g">
+                <button type="button" class="feel-t" (click)="trySearch('fever')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 14.8V4a2 2 0 0 0-4 0v10.8a4 4 0 1 0 4 0zM12 9v7"/></svg></i>
+                  <span>Fever</span>
+                </button>
+                <button type="button" class="feel-t" (click)="trySearch('skin rash')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 3-6 6-10z"/></svg></i>
+                  <span>Skin</span>
+                </button>
+                <button type="button" class="feel-t" (click)="trySearch('back pain')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M9 6h6M8 10h8M9 14h6M10 18h4"/></svg></i>
+                  <span>Back pain</span>
+                </button>
+                <button type="button" class="feel-t" (click)="trySearch('child check-up')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM5 21a7 7 0 0 1 14 0"/></svg></i>
+                  <span>Child</span>
+                </button>
+                <button type="button" class="feel-t" (click)="trySearch('chest pain')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg></i>
+                  <span>Heart</span>
+                </button>
+                <button type="button" class="feel-t" (click)="trySearch('tooth pain')">
+                  <i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4c-2 0-3 2-3 4 0 3 1 4 1.5 7 .4 2.4 1.2 5 2.5 5s1-3 2-3h4c1 0 .7 3 2 3s2.1-2.600 2.500-5C19 12 20 11 20 8c0-2-1-4-3-4-2 0-2.500 1-5 1S9 4 7 4z"/></svg></i>
+                  <span>Dental</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -272,6 +297,20 @@ const SAY: Record<string, string> = {
                   <path d="M5 12.5l4.5 4.5L19 7.5"></path>
                 </svg>
                 Confirmed in seconds
+              </div>
+            </div>
+
+            <!-- Queue Token Tracker from PulseQ (14).html -->
+            <div class="qt" aria-label="Example of your live queue token">
+              <div class="qt-l"><small>Your token</small><b>A-12</b></div>
+              <div class="qt-m">
+                <div class="qt-dots">
+                  <i [class.on]="qtAhead >= 1"></i>
+                  <i [class.on]="qtAhead >= 2"></i>
+                  <i [class.on]="qtAhead >= 3"></i>
+                  <i class="you" [class.go]="qtAhead === 0"></i>
+                </div>
+                <p>{{ qtAhead === 0 ? 'Your turn. Walk in.' : qtAhead === 1 ? '1 person ahead of you' : qtAhead + ' people ahead of you' }}</p>
               </div>
             </div>
 
@@ -396,6 +435,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   animating = true;
   private timer: any;
 
+  // Queue token animation
+  qtAhead = 3;
+  private qtTimer: any;
+
   constructor() {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
@@ -412,11 +455,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.updateHeroSlots();
     if (isPlatformBrowser(this.platformId)) {
       this.startCarousel();
+      this.startQtTimer();
     }
   }
 
   ngOnDestroy() {
     this.stopCarousel();
+    this.stopQtTimer();
+  }
+
+  startQtTimer() {
+    this.stopQtTimer();
+    this.qtTimer = setInterval(() => {
+      this.qtAhead = this.qtAhead === 0 ? 3 : this.qtAhead - 1;
+    }, 2200);
+  }
+
+  stopQtTimer() {
+    if (this.qtTimer) {
+      clearInterval(this.qtTimer);
+      this.qtTimer = null;
+    }
   }
 
   currentHeroDoctor(): Doctor | undefined {

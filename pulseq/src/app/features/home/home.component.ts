@@ -15,6 +15,7 @@ import { SPEC, SPEC_PLURAL, CITIES } from '../../data/specialties.data';
 import { SHOPS } from '../../data/pharmacies.data';
 import { SITE } from '../../data/site.data';
 import { BM_AREAS, BM_CHILD } from '../../data/body-map.data';
+import { ABOUT } from '../../data/about.data';
 import { Doctor, Hospital, Slot } from '../../shared/models';
 import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
 
@@ -42,6 +43,101 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
               <span>{{ item.n }}<small>{{ item.s }}</small></span>
             </span>
           </ng-container>
+        </div>
+      </div>
+    </section>
+
+    <!-- KNOW YOUR SIGNS (from PulseQ 14.html) -->
+    <section class="ky home" id="knowsigns" aria-label="Heart and breast self-checks">
+      <div class="wrap">
+        <div class="ky-in">
+          <div class="ky-lead">
+            <span class="eyebrow">Know your signs</span>
+            <h2>Two quick checks that can save a life.</h2>
+            <p>Heart disease is the world’s leading cause of death, and breast cancer is the most common cancer in women. Both are far easier to treat when caught early.</p>
+          </div>
+          <button class="ky-t ky-h" type="button" (click)="openKy('heart')">
+            <span class="ky-ic">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 20.5C5 15.5 3 12 3 8.8A4.8 4.8 0 0 1 12 6.5a4.8 4.8 0 0 1 9 2.3c0 3.200-2 6.700-9 11.700z" fill="#FEECEC"/>
+                <path class="ky-ecg" d="M5 12h3.500l1.500-3 2.500 6 1.500-3H19"/>
+              </svg>
+            </span>
+            <span>
+              <b>Heart attack check</b>
+              <small>Warning signs and your risk</small>
+            </span>
+            <span class="ky-go">2 min →</span>
+          </button>
+          <button class="ky-t ky-b" type="button" (click)="openKy('breast')">
+            <span class="ky-ic">
+              <svg class="ky-rib" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.500c2.600 0 4.200 1.800 4.200 4 0 2.200-1.700 3.700-3.200 5.200l3.800 6.800c.5.900 1.300 1.500 2.400 1.700l-.4 1.600c-1.700-.2-3-1-3.900-2.400L12 14.200l-2.900 4.700c-.9 1.400-2.200 2.200-3.900 2.400l-.4-1.600c1.100-.2 1.900-.8 2.400-1.700L11 11.700C9.500 10.200 7.800 8.700 7.800 6.500c0-2.200 1.600-4 4.200-4z"/>
+              </svg>
+            </span>
+            <span>
+              <b>Breast health check</b>
+              <small>Self-exam guide and warning signs</small>
+            </span>
+            <span class="ky-go">2 min →</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES (from PulseQ 14.html) -->
+    <section class="sec home" id="services">
+      <div class="wrap">
+        <div class="sec-head">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <span class="eyebrow">What PulseQ does</span>
+            <h2>One place for your whole visit.</h2>
+          </div>
+          <p class="muted" style="max-width:380px">From finding a doctor to collecting your medicine, every step happens here.</p>
+        </div>
+        <div class="svc">
+          <a class="svc-t" routerLink="/find-doctors">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+            </span>
+            <b>Doctors</b>
+            <small>See live free slots and book in seconds.</small>
+          </a>
+          <a class="svc-t" routerLink="/hospitals">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 10h6v11M8 9h2M8 13h2M8 17h2"/></svg>
+            </span>
+            <b>Hospitals</b>
+            <small>Browse hospitals and clinics and their doctors.</small>
+          </a>
+          <a class="svc-t" routerLink="/surgery">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>
+            </span>
+            <b>Surgery</b>
+            <small>Plan a consultation and compare price ranges.</small>
+          </a>
+          <a class="svc-t" routerLink="/medicine">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M10.5 8.5l3 4"/></svg>
+            </span>
+            <b>Medicine</b>
+            <small>Order from partner pharmacies near you.</small>
+          </a>
+          <a class="svc-t" href="javascript:void(0)" (click)="pulseAi.open()">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+            </span>
+            <b>PulseQ AI</b>
+            <small>Speak or type in Urdu or English.</small>
+          </a>
+          <a class="svc-t" routerLink="/clinics">
+            <span class="svc-i">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+            </span>
+            <b>For clinics</b>
+            <small>Run your whole day on one dashboard.</small>
+          </a>
         </div>
       </div>
     </section>
@@ -494,6 +590,48 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
       </div>
     </section>
 
+    <!-- ABOUT ON HOME (from PulseQ 14.html) -->
+    <section class="sec tint home" id="hm-about">
+      <div class="wrap">
+        <div class="sec-head">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <span class="eyebrow">About PulseQ</span>
+            <h2>Built because patients should not lose a day to waiting.</h2>
+          </div>
+          <a class="btn btn-line" routerLink="/about">Read our full story</a>
+        </div>
+        <div class="hm-story">
+          @for (c of aboutData.story; track c[0]; let i = $index) {
+            <div class="hm-ch">
+              <span class="hm-n">{{ i + 1 }}</span>
+              <h3>{{ c[0] }}</h3>
+              <p>{{ getFirstSentence(c[1]) }}</p>
+            </div>
+          }
+        </div>
+        <div class="hm-team">
+          <p class="eyebrow">Led by</p>
+          <div class="hm-people">
+            @for (m of aboutData.team; track m.name) {
+              <a class="hm-p" routerLink="/about">
+                <span class="hm-av">
+                  @if (m.photo) {
+                    <img [src]="m.photo" [alt]="m.name">
+                  } @else {
+                    <span>{{ m.short }}</span>
+                  }
+                </span>
+                <div>
+                  <b>{{ m.name }}</b>
+                  <small>{{ m.role }}</small>
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- PULSEQ IN NUMBERS & NEWS -->
     <section class="sec home" id="impact">
       <div class="wrap">
@@ -559,6 +697,36 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
         </div>
       </div>
     </section>
+
+    <!-- KY MODAL (from PulseQ 14.html) -->
+    <div class="kym" [hidden]="!kyModalOpen" (click)="closeKyOnBackdrop($event)">
+      <div class="kyp" role="dialog" aria-modal="true" tabindex="-1">
+        <div class="kyp-top">
+          <div>
+            <h3>{{ kyCurData.t }}</h3>
+            <p class="muted sm" style="margin-top:4px">{{ kyCurData.s }}</p>
+          </div>
+          <button class="kyp-x" type="button" (click)="closeKy()" aria-label="Close">×</button>
+        </div>
+        <div id="kyBody">
+          @for (group of kyCurData.g; track group.title; let gi = $index) {
+            <h4>{{ group.title }}</h4>
+            <div class="kyl">
+              @for (item of group.items; track item; let ii = $index) {
+                <label>
+                  <input type="checkbox" [checked]="kyChecked[gi + '_' + ii]" (change)="toggleKyItem(gi, ii)">
+                  <span>{{ item }}</span>
+                </label>
+              }
+            </div>
+          }
+          @if (kyResultHtml) {
+            <div [innerHTML]="kyResultHtml" (click)="handleKyResultClick($event)"></div>
+          }
+        </div>
+        <p class="kyn">This is an awareness tool, not a diagnosis. Nothing you tick is saved or sent anywhere.</p>
+      </div>
+    </div>
   `
 })
 export class HomeComponent implements OnInit {
@@ -611,6 +779,158 @@ export class HomeComponent implements OnInit {
 
   // My Bookings
   myBookings = this.bookingsService.bookings;
+
+  // Home About Data from PulseQ (14).html
+  aboutData = ABOUT;
+
+  getFirstSentence(text: string): string {
+    const parts = text.split(/(?<=[.!?])\s/);
+    return parts[0] || text;
+  }
+
+  // Know your signs logic from PulseQ (14).html
+  kyModalOpen = false;
+  kyCur: 'heart' | 'breast' = 'heart';
+  kyChecked: Record<string, boolean> = {};
+
+  KY_CONFIG: Record<'heart' | 'breast', {
+    t: string;
+    s: string;
+    spec: string;
+    g: { title: string; items: string[]; type: string }[];
+  }> = {
+    heart: {
+      t: "Heart attack check",
+      s: "Tick anything that applies. The result updates as you go.",
+      spec: "heart",
+      g: [
+        {
+          title: "Happening right now",
+          items: [
+            "Chest pain, pressure or tightness",
+            "Pain spreading to the left arm, jaw, neck or back",
+            "Short of breath, even when resting",
+            "Cold sweat, nausea or feeling faint"
+          ],
+          type: "u"
+        },
+        {
+          title: "Your risk factors",
+          items: [
+            "Age 40 or over",
+            "Smoker",
+            "High blood pressure",
+            "Diabetes",
+            "High cholesterol",
+            "Heart disease in the family",
+            "Little exercise"
+          ],
+          type: "r"
+        }
+      ]
+    },
+    breast: {
+      t: "Breast health check",
+      s: "Tick any change you have noticed. A few minutes each month is enough.",
+      spec: "general",
+      g: [
+        {
+          title: "Changes you have noticed",
+          items: [
+            "A new lump or thickened area",
+            "Lump or swelling in the underarm",
+            "Change in size or shape",
+            "Dimpling, redness or skin like an orange peel",
+            "Nipple turned inward, rash or scaling",
+            "Nipple discharge, especially bloody",
+            "Pain in one spot that does not go away"
+          ],
+          type: "u"
+        },
+        {
+          title: "About you",
+          items: [
+            "Age 40 or over",
+            "Breast or ovarian cancer in the family",
+            "Have never had a breast check"
+          ],
+          type: "r"
+        }
+      ]
+    }
+  };
+
+  get kyCurData() {
+    return this.KY_CONFIG[this.kyCur];
+  }
+
+  openKy(type: 'heart' | 'breast') {
+    this.kyCur = type;
+    this.kyChecked = {};
+    this.kyModalOpen = true;
+  }
+
+  closeKy() {
+    this.kyModalOpen = false;
+  }
+
+  closeKyOnBackdrop(e: MouseEvent) {
+    if ((e.target as HTMLElement).classList.contains('kym')) {
+      this.closeKy();
+    }
+  }
+
+  toggleKyItem(gi: number, ii: number) {
+    const key = gi + '_' + ii;
+    this.kyChecked[key] = !this.kyChecked[key];
+  }
+
+  get kyResultHtml(): string {
+    const cur = this.kyCurData;
+    let uCount = 0;
+    let rCount = 0;
+    cur.g[0].items.forEach((_, ii: number) => { if (this.kyChecked['0_' + ii]) uCount++; });
+    cur.g[1].items.forEach((_, ii: number) => { if (this.kyChecked['1_' + ii]) rCount++; });
+
+    if (uCount === 0 && rCount === 0) return '';
+
+    const isHeart = this.kyCur === 'heart';
+    if (isHeart && uCount > 0) {
+      return `<div class="kyr kyr-u">
+        <b>Call 1122 now.</b>
+        <p>These can be signs of a heart attack. Do not wait and do not drive yourself.</p>
+        <ol>
+          <li>Call 1122 (or your local emergency number).</li>
+          <li>Sit down, stay calm and loosen tight clothes.</li>
+          <li>Chew one adult aspirin (300 mg) unless allergic.</li>
+        </ol>
+      </div>`;
+    }
+    if (!isHeart && uCount > 0) {
+      return `<div class="kyr kyr-a">
+        <b>See a doctor soon.</b>
+        <p>Most breast changes are not cancer, but a specialist needs to check them to be sure.</p>
+        <button class="btn btn-coral" style="margin-top:10px" data-action="book">Book a doctor now</button>
+      </div>`;
+    }
+    if (rCount > 0) {
+      return `<div class="kyr kyr-g">
+        <b>No red flags ticked.</b>
+        <p>You have ${rCount} factor${rCount > 1 ? 's' : ''} that make a routine check-up worthwhile.</p>
+        <button class="btn btn-coral" style="margin-top:10px" data-action="book">Book a ${isHeart ? 'cardiologist' : 'check-up'} now</button>
+      </div>`;
+    }
+    return '';
+  }
+
+  handleKyResultClick(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    if (target && target.getAttribute('data-action') === 'book') {
+      const spec = this.kyCur === 'heart' ? 'heart' : 'general';
+      this.closeKy();
+      this.router.navigate(['/find-doctors'], { queryParams: { spec } });
+    }
+  }
 
   // Inline AI Assistant in section
   aiLang = 'en-US';
