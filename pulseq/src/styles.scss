@@ -1461,6 +1461,21 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
   .ct-stats {
     grid-template-columns: 1fr !important;
   }
+  .ct-tabs {
+    display: flex !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 4px !important;
+    padding: 5px !important;
+    margin: 22px 0 24px !important;
+  }
+  .ct-tabs .ct-tab {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding-inline: 10px !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
 
   /* Modals as bottom sheets on phones */
   .modal {
