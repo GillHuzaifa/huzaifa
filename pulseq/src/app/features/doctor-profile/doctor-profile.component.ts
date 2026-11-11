@@ -272,14 +272,14 @@ export class DoctorProfileComponent implements OnInit {
     const scroll = (attempt = 0): void => {
       const el = document.getElementById(fragment);
       if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        requestAnimationFrame(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }));
         return;
       }
-      if (attempt < 8) {
-        setTimeout(() => scroll(attempt + 1), 75);
+      if (attempt < 30) {
+        setTimeout(() => scroll(attempt + 1), 100);
       }
     };
-    setTimeout(() => scroll(), 0);
+    setTimeout(() => scroll(), 50);
   }
 
   stats(): ReviewStats | null {
