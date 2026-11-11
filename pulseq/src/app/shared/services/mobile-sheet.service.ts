@@ -104,7 +104,7 @@ export class MobileSheetService {
       if (!target) return;
       const tag = target.tagName;
       if ((tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') &&
-          target.closest('.panel, .kyp, .botpanel, .more-sheet-panel')) {
+          target.closest('.panel, .kyp, .more-sheet-panel')) {
         setTimeout(() => {
           target.scrollIntoView({ block: 'center', behavior: 'smooth' });
         }, 180);
