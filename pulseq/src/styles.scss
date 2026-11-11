@@ -1631,7 +1631,8 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
 .dcard::before,.pghead::before,.ab-hero::before,.pv-hero::before,.dp-head::before,.bm::before,.bm-stage.bm-3d::before{display:none!important}
 .pghead,.ab-hero,.pv-hero,.dp-head{background:#2381FF!important;box-shadow:none!important}
 .bm{background:#2381FF!important}
-.ab-photo{background:#2381FF!important}.ab-story::before{background:#BBD8FF!important}
+.ab-photo{background:#fff!important;height:240px!important;padding:0!important}.ab-photo::after{display:none!important}.ab-photo img{width:100%!important;height:100%!important;border-radius:0!important;object-fit:contain!important;object-position:center!important;box-shadow:none!important}
+.ab-story::before{background:#BBD8FF!important}
 .ct-done{background:#EAF3FF!important}
 .pack{background:#EEF2F7!important}
 .botfab{background:#2381FF!important;box-shadow:0 0 0 3px #fff,0 6px 14px rgba(16,42,67,.25)!important}
