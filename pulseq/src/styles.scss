@@ -1825,3 +1825,16 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 @keyframes ecgdot{0%{offset-distance:0%;opacity:1}65%{offset-distance:100%;opacity:1}66%,100%{offset-distance:100%;opacity:0}}
 @media(prefers-reduced-motion:reduce){.ecg-ln{animation:none;stroke-dashoffset:0}.ecg-dot{display:none}}
 header.wrap .hero-l>svg.ecg-live{display:block!important;margin-top:-10px}header.wrap .hero-l>svg.ecg-live path.ecg-tr{stroke:#DBEAFE}
+
+/* Prevent background page scrolling while modals or overlays are open */
+html:has(.kym:not([hidden]), .modal:not([hidden]), .more-sheet-backdrop),
+body:has(.kym:not([hidden]), .modal:not([hidden]), .more-sheet-backdrop) {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+.modal, .kym, .more-sheet-backdrop {
+  overscroll-behavior: contain;
+}
+.panel, .kyp, .botpanel, .botpanel .log {
+  overscroll-behavior: contain;
+}
