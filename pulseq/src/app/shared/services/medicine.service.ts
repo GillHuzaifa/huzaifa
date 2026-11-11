@@ -30,6 +30,7 @@ export class MedicineService {
   whereOpen = signal<Record<number, boolean>>({});
 
   orders = signal<MedicineOrder[]>([]);
+  activeOrder = computed(() => this.orders().find(order => order.status !== 'delivered') || null);
 
   selectedShop = computed(() => {
     const id = this.selectedShopId();
@@ -172,10 +173,16 @@ export class MedicineService {
   }
 
   addOrder(order: MedicineOrder): void {
-    const updated = [order, ...this.orders()];
+    const updated = [{ ...order, status: order.status || 'placed' as const }, ...this.orders()];
     this.orders.set(updated);
     this.storage.setItem(ORD_KEY, updated);
     this.cart.set({});
+  }
+
+  updateOrderStatus(code: string, status: MedicineOrder['status']): void {
+    const updated = this.orders().map(order => order.code === code ? { ...order, status } : order);
+    this.orders.set(updated);
+    this.storage.setItem(ORD_KEY, updated);
   }
 
   cancelOrder(code: string): void {

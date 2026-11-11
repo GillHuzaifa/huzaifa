@@ -104,6 +104,7 @@ export interface MedicineOrder {
   shop: string;
   items: string;
   phone: string;
+  status?: 'placed' | 'confirmed' | 'out-for-delivery' | 'delivered';
 }
 
 export interface SurgeryCategory {

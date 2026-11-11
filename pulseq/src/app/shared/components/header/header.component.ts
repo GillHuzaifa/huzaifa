@@ -3,12 +3,12 @@ import { Router, RouterLink, RouterLinkActive, NavigationEnd } from '@angular/ro
 import { CommonModule, isPlatformBrowser, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs/operators';
-import { BookingsService } from '../../services/bookings.service';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
+import { MedicineService } from '../../services/medicine.service';
 import { ModalService } from '../../services/modal.service';
 import { PulseAiService } from '../../services/pulse-ai.service';
-import { Doctor, Booking } from '../../models';
+import { Doctor, MedicineOrder } from '../../models';
 import { SPEC, CITIES } from '../../../data/specialties.data';
 
 const HIDS = [1, 2, 3, 4, 5, 6, 9, 10];
@@ -28,14 +28,14 @@ const SAY: Record<string, string> = {
   standalone: true,
   imports: [CommonModule, DatePipe, FormsModule, RouterLink, RouterLinkActive],
   template: `
-    <!-- Top Appointment Bar -->
-    <div *ngIf="nextAppt() as appt" class="apptbar" id="apptBar">
+    <!-- Medicine order notification -->
+    <button *ngIf="orderNotification() as order" class="apptbar order-notification" type="button" (click)="openOrderSummary(order)" [attr.aria-label]="'View order ' + order.code + ' summary'">
       <div class="wrap apptbar-in">
         <span class="live"></span>
-        <span>Your appointment: <b>{{ appt.when }}</b> with {{ appt.doctor }} · {{ appt.code }}</span>
-        <a class="apptbtn" target="_blank" rel="noopener" [href]="getWaLink(appt)">Get number on WhatsApp</a>
+        <span>Medicine order: <b>{{ order.code }}</b> · {{ orderStatusLabel(order) }}</span>
+        <span class="apptbtn">View order summary</span>
       </div>
-    </div>
+    </button>
 
     <!-- Header Container per PulseQ (14).html -->
     <header class="wrap">
@@ -273,12 +273,104 @@ const SAY: Record<string, string> = {
         </div>
       </ng-container>
     </header>
+
+    <div *ngIf="orderSummary() as order" class="order-modal" role="presentation" (click)="closeOrderSummaryOnBackdrop($event)">
+      <section class="order-panel" role="dialog" aria-modal="true" aria-labelledby="orderSummaryTitle">
+        <div class="order-panel-head">
+          <div>
+            <span class="eyebrow">Medicine order</span>
+            <h2 id="orderSummaryTitle">{{ order.code }}</h2>
+          </div>
+          <button class="icon-btn" type="button" aria-label="Close order summary" (click)="closeOrderSummary()">×</button>
+        </div>
+        <div class="order-status"><span class="live"></span>{{ orderStatusLabel(order) }}</div>
+        <div class="order-summary-row"><span>Pharmacy</span><b>{{ order.shop }}</b></div>
+        <div class="order-summary-row"><span>Items</span><b>{{ order.items }}</b></div>
+        <div class="order-summary-row"><span>Contact number</span><b>{{ order.phone }}</b></div>
+        <button class="btn btn-ink full" type="button" (click)="closeOrderSummary()">Done</button>
+      </section>
+    </div>
   `,
   styles: [`
     :host {
       display: block;
       margin: 0;
       padding: 0;
+    }
+    .order-notification {
+      display: block;
+      width: 100%;
+      border: 0;
+      padding: 0;
+      text-align: left;
+      cursor: pointer;
+    }
+    .order-notification .apptbar-in {
+      width: 100%;
+    }
+    .order-notification:hover .apptbtn {
+      background: #fff;
+      color: #0c2d5e;
+    }
+    .order-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(7, 24, 42, .62);
+    }
+    .order-panel {
+      width: min(100%, 520px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding: 26px;
+      border-radius: 28px;
+      background: #fff;
+      color: #102a43;
+      box-shadow: 0 24px 70px rgba(7, 24, 42, .3);
+    }
+    .order-panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .order-panel h2 {
+      margin-top: 4px;
+      font-size: 30px;
+    }
+    .order-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #eaf3ff;
+      color: #1558b8;
+      font-weight: 700;
+    }
+    .order-status .live {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #2381ff;
+    }
+    .order-summary-row {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .order-summary-row span {
+      color: #526477;
+    }
+    .order-summary-row b {
+      overflow-wrap: anywhere;
     }
     .nav-links a.active {
       text-decoration: underline;
@@ -291,13 +383,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   readonly logoDataUri = 'data:image/png;base64,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';
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
-  bookingsService = inject(BookingsService);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
+  medicineService = inject(MedicineService);
   modalService = inject(ModalService);
   pulseAi = inject(PulseAiService);
 
-  nextAppt: Signal<Booking | null> = this.bookingsService.nextAppointment;
+  orderNotification: Signal<MedicineOrder | null> = this.medicineService.activeOrder;
+  orderSummary = signal<MedicineOrder | null>(null);
   isHome = signal<boolean>(true);
   showDocDrop = false;
   showHospDrop = false;
@@ -530,9 +623,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  getWaLink(appt: Booking): string {
-    const text = `Hello PulseQ, please send my appointment number.\nCode: ${appt.code}\nDoctor: ${appt.doctor}, ${appt.hospital}\nWhen: ${appt.when}\nPatient: ${appt.name}`;
-    return `https://wa.me/?text=${encodeURIComponent(text)}`;
+  openOrderSummary(order: MedicineOrder): void {
+    this.orderSummary.set(order);
+  }
+
+  closeOrderSummary(): void {
+    this.orderSummary.set(null);
+  }
+
+  closeOrderSummaryOnBackdrop(event: MouseEvent): void {
+    if (event.target === event.currentTarget) {
+      this.closeOrderSummary();
+    }
+  }
+
+  orderStatusLabel(order: MedicineOrder): string {
+    switch (order.status) {
+      case 'confirmed': return 'Order confirmed';
+      case 'out-for-delivery': return 'Out for delivery';
+      case 'delivered': return 'Delivered';
+      default: return 'Order placed';
+    }
   }
 
   openAiUrdu(): void {
