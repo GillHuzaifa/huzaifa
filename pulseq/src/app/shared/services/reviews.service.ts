@@ -39,6 +39,41 @@ export const HOSP_ASPECTS: ReviewAspect[] = [
   { key: 'c', label: 'Facilities', chip: 'Great facilities' }
 ];
 
+export function buildEcgPoints(stats: ReviewStats): string {
+  const ks: ReviewAspectKey[] = ['w', 'l', 'c'];
+  const cx = [50, 150, 250];
+  let pts = '0,52 ';
+  ks.forEach((k, i) => {
+    const a = 6 + (stats[k] / 5) * 34;
+    const c = cx[i];
+    pts += `${c - 26},52 ${c - 18},52 ${c - 14},47 ${c - 10},52 ${c - 5},52 ${c - 3},57 ${c},${(52 - a).toFixed(1)} ${c + 4},60 ${c + 7},52 `;
+  });
+  return pts + '300,52';
+}
+
+export function buildReviewChips(stats: ReviewStats, aspects: ReviewAspect[]): string[] {
+  const out: string[] = [];
+  for (const a of aspects) {
+    if (stats[a.key] >= 4.2) {
+      out.push(a.chip);
+    }
+  }
+  const happy = stats.list.filter(r => (r.w + r.l + r.c) / 3 >= 4).length;
+  out.push(`${happy} of ${stats.n} would visit again`);
+  return out;
+}
+
+export function reviewInitial(name: string): string {
+  const stripped = String(name || 'P').replace(/^Patient\s*/, '').charAt(0) || 'P';
+  return stripped.toUpperCase();
+}
+
+export function scoreTagClass(val: number): string {
+  if (val >= 4) return 'vhi';
+  if (val === 3) return 'vmid';
+  return 'vlo';
+}
+
 const REVSAMPLE: [number, number, number, string][] = [
   [5, 5, 5, 'Short wait and the doctor explained everything clearly.'],
   [5, 4, 5, 'Booked in under a minute and was seen on time.'],

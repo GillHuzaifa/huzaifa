@@ -1,8 +1,19 @@
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ModalService } from '../../services/modal.service';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
+import {
+  ReviewsService,
+  ReviewStats,
+  DOC_ASPECTS,
+  buildEcgPoints,
+  buildReviewChips,
+  reviewInitial,
+  scoreTagClass
+} from '../../services/reviews.service';
+import { Doctor, Place } from '../../models';
 import { SPEC } from '../../../data/specialties.data';
 
 @Component({
@@ -19,7 +30,7 @@ import { SPEC } from '../../../data/specialties.data';
                 <div class="panel-head">
                   <div class="avatar t{{ d.t }}">{{ getInitials(d.name) }}</div>
                   <div class="min0">
-                    <h3 id="mTitle" style="font-size:24px">Book</h3>
+                    <h3 id="mTitle" style="font-size:24px">{{ d.name }}</h3>
                     <p class="muted sm">
                       {{ getSpec(d.spec) }} · {{ getHospName(d.h) }} · Rs {{ d.fee.toLocaleString('en-US') }}
                     </p>
@@ -30,6 +41,61 @@ import { SPEC } from '../../../data/specialties.data';
                     </svg>
                   </button>
                 </div>
+
+                @if (docStats(d); as s) {
+                  <details class="mrev" id="mRev">
+                    <summary class="mr-sum">
+                      <span class="pb-ring" [style.--p]="ringDeg(s)" style="--z:52px"><b>{{ s.avg.toFixed(1) }}</b></span>
+                      <span class="mr-mid">
+                        <b>{{ reviewsService.mood(s.avg, 'doctor') }}</b>
+                        <span>{{ s.avg.toFixed(1) }} · {{ s.n }} patient reviews</span>
+                      </span>
+                      <span class="rv-more">Read</span>
+                    </summary>
+                    <div class="pb">
+                      <svg class="pb-ecg" viewBox="0 0 300 70" preserveAspectRatio="none" aria-hidden="true">
+                        <polyline class="b" [attr.points]="ecgPoints(s)" />
+                        <polyline class="g" pathLength="100" [attr.points]="ecgPoints(s)" />
+                      </svg>
+                      <div class="pb-lbl">
+                        @for (a of docAspects; track a.key) {
+                          <span>{{ a.label }}<b>{{ s[a.key].toFixed(1) }}</b></span>
+                        }
+                      </div>
+                      <div class="pb-chips">
+                        @for (chip of reviewChips(s); track chip) {
+                          <span>{{ chip }}</span>
+                        }
+                      </div>
+                    </div>
+                    <ul class="rv-list">
+                      @for (r of s.list.slice(0, 2); track $index) {
+                        <li class="rv">
+                          <span class="rv-av" aria-hidden="true">{{ initial(r.n) }}</span>
+                          <div class="rv-bd">
+                            <div class="rv-top">
+                              <b>{{ r.n }}</b>
+                              @if (r.ver) {
+                                <em class="rv-ver">Booked on PulseQ</em>
+                              } @else if (r.sample) {
+                                <em class="rv-smp">Sample</em>
+                              } @else {
+                                <em class="rv-smp">Patient review</em>
+                              }
+                            </div>
+                            <p>“{{ r.t }}”</p>
+                            <div class="rv-tags">
+                              @for (a of docAspects; track a.key) {
+                                <span [class]="tagClass(r[a.key])">{{ a.label }} {{ r[a.key] }}/5</span>
+                              }
+                            </div>
+                          </div>
+                        </li>
+                      }
+                    </ul>
+                    <a class="rv-all" href="javascript:void(0)" (click)="goToAllReviews(d)">See all reviews on profile</a>
+                  </details>
+                }
 
                 <div>
                   <span class="lbl">Day</span>
@@ -113,9 +179,46 @@ export class ModalComponent {
   modal = inject(ModalService);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
+  reviewsService = inject(ReviewsService);
+  router = inject(Router);
 
+  docAspects = DOC_ASPECTS;
   patientName = '';
   patientPhone = '';
+
+  baseDocId(d: Doctor | Place): number {
+    return ('base' in d && d.base) ? d.base : Number(d.id);
+  }
+
+  docStats(d: Doctor | Place): ReviewStats {
+    return this.reviewsService.getDocStats(this.baseDocId(d));
+  }
+
+  ringDeg(s: ReviewStats): string {
+    return `${((s.avg / 5) * 360).toFixed(0)}deg`;
+  }
+
+  ecgPoints(s: ReviewStats): string {
+    return buildEcgPoints(s);
+  }
+
+  reviewChips(s: ReviewStats): string[] {
+    return buildReviewChips(s, this.docAspects);
+  }
+
+  initial(name: string): string {
+    return reviewInitial(name);
+  }
+
+  tagClass(val: number): string {
+    return scoreTagClass(val);
+  }
+
+  goToAllReviews(d: Doctor | Place): void {
+    const id = this.baseDocId(d);
+    this.modal.close();
+    this.router.navigate(['/doctor', id], { fragment: 'reviews' });
+  }
 
   getInitials(name: string): string {
     return name.replace('Dr. ', '').split(' ').map(w => w[0]).slice(0, 2).join('');

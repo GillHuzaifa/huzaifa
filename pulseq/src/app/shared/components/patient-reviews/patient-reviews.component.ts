@@ -6,7 +6,11 @@ import {
   PatientReview,
   ReviewAspect,
   ReviewAspectKey,
-  ReviewsService
+  ReviewsService,
+  buildEcgPoints,
+  buildReviewChips,
+  reviewInitial,
+  scoreTagClass
 } from '../../services/reviews.service';
 
 export interface SubmittedReview {
@@ -175,38 +179,19 @@ export class PatientReviewsComponent {
   }
 
   ecgPoints(): string {
-    const ks: ReviewAspectKey[] = ['w', 'l', 'c'];
-    const cx = [50, 150, 250];
-    let pts = '0,52 ';
-    ks.forEach((k, i) => {
-      const a = 6 + (this.stats[k] / 5) * 34;
-      const c = cx[i];
-      pts += `${c - 26},52 ${c - 18},52 ${c - 14},47 ${c - 10},52 ${c - 5},52 ${c - 3},57 ${c},${(52 - a).toFixed(1)} ${c + 4},60 ${c + 7},52 `;
-    });
-    return pts + '300,52';
+    return buildEcgPoints(this.stats);
   }
 
   chips(): string[] {
-    const out: string[] = [];
-    for (const a of this.aspects) {
-      if (this.stats[a.key] >= 4.2) {
-        out.push(a.chip);
-      }
-    }
-    const happy = this.stats.list.filter(r => (r.w + r.l + r.c) / 3 >= 4).length;
-    out.push(`${happy} of ${this.stats.n} would visit again`);
-    return out;
+    return buildReviewChips(this.stats, this.aspects);
   }
 
   initial(name: string): string {
-    const stripped = String(name || 'P').replace(/^Patient\s*/, '').charAt(0) || 'P';
-    return stripped.toUpperCase();
+    return reviewInitial(name);
   }
 
   tagClass(val: number): string {
-    if (val >= 4) return 'vhi';
-    if (val === 3) return 'vmid';
-    return 'vlo';
+    return scoreTagClass(val);
   }
 
   onSubmit(e: Event): void {
