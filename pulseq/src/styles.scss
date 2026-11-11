@@ -111,6 +111,11 @@ button,input,select{font-family:inherit;font-size:16px;color:inherit}
 .chat-head .grow{flex:1;min-width:0}
 .lang{min-height:44px;border-radius:999px;border:1.5px solid var(--dk-line);background:transparent;color:var(--dk-fg);padding:0 12px}
 .lang option{color:#102A43}
+.lang-switch{display:inline-flex;flex:0 0 auto;align-items:center;gap:2px;padding:3px;border:1px solid #BFD9FF;border-radius:999px;background:#F3F8FF}
+.lang-option{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:40px;padding:0 9px;border:0;border-radius:999px;background:transparent;color:#526477;font:inherit;font-size:13px;font-weight:700;cursor:pointer;touch-action:manipulation;transition:background .15s ease,color .15s ease,box-shadow .15s ease}
+.lang-option.active{background:#2381FF;color:#fff;box-shadow:0 2px 6px rgba(21,88,184,.2)}
+.lang-option:focus-visible{outline:2px solid #1558B8;outline-offset:2px}
+.lang-option.urdu{font-family:"Noto Nastaliq Urdu",serif;line-height:1.8}
 .log{display:flex;flex-direction:column;gap:10px;max-height:430px;overflow-y:auto;padding:4px 2px}
 .bub{max-width:90%;padding:12px 16px;font-size:15px;line-height:1.45;overflow-wrap:anywhere}
 .bot{background:var(--dk-surface2);color:var(--dk-fg);border-radius:20px 20px 20px 6px;align-self:flex-start}
@@ -3178,9 +3183,89 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 
   .botpanel {
     z-index: 1063 !important;
-    height: min(80dvh, 640px, var(--vv-sheet-height, 80dvh)) !important;
-    max-height: min(80dvh, 640px, var(--vv-sheet-height, 80dvh)) !important;
+    height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh)) !important;
+    max-height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh)) !important;
     bottom: var(--vv-kb, 0px) !important;
+  }
+
+  .botpanel .chat-head {
+    gap: 7px !important;
+  }
+
+  .botpanel .chat-head .grow {
+    flex: 1 1 40px !important;
+  }
+
+  .botpanel .lang-switch {
+    min-width: 0 !important;
+    gap: 1px !important;
+    padding: 2px !important;
+  }
+
+  .botpanel .lang-option {
+    min-width: 38px !important;
+    min-height: 40px !important;
+    padding-inline: 7px !important;
+    font-size: 13px !important;
+  }
+
+  .botpanel .urdu-quick-wrap {
+    border-top: 1px solid #E2EFFF !important;
+  }
+
+  .botpanel .urdu-quick-wrap > div:first-child {
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .botpanel .urdu-kb-toggle-btn {
+    min-height: 40px !important;
+    padding: 0 12px !important;
+    border: 1px solid #BFD9FF !important;
+    border-radius: 999px !important;
+    background: #EAF3FF !important;
+    color: #1558B8 !important;
+    font: inherit !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    touch-action: manipulation;
+  }
+
+  .botpanel .urdu-kb-toggle-btn.active {
+    border-color: #2381FF !important;
+    background: #2381FF !important;
+    color: #fff !important;
+  }
+
+  .botpanel .urdu-chip {
+    min-height: 44px !important;
+    padding: 5px 13px !important;
+    border: 1px solid #BFD9FF !important;
+    border-radius: 999px !important;
+    background: #F3F8FF !important;
+    color: #1558B8 !important;
+    font-size: 14px !important;
+    touch-action: manipulation;
+  }
+
+  .botpanel .urdu-chip:active {
+    background: #DBEAFE !important;
+  }
+
+  .botpanel .sug {
+    border-width: 1px !important;
+    background: #fff !important;
+    color: #1558B8 !important;
+    box-shadow: 0 1px 3px rgba(16, 42, 67, .06);
+    touch-action: manipulation;
+  }
+
+  .botpanel .sug:active {
+    background: #EAF3FF !important;
+    border-color: #2381FF !important;
   }
 
   .pgsearch {
@@ -3237,5 +3322,12 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     min-height: 44px !important;
     padding-inline: 12px !important;
     font-size: 14px !important;
+  }
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  .botpanel {
+    height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+    max-height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
   }
 }

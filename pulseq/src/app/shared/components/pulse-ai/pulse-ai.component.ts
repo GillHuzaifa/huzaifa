@@ -49,10 +49,26 @@ import { ToastService } from '../../services/toast.service';
               <b>PulseQ</b>
               <p class="xs muted" style="margin:0">Answers, support and booking</p>
             </div>
-            <select class="lang" [(ngModel)]="selectedLang" (change)="onLangChange()" aria-label="Language">
-              <option value="en-PK">English</option>
-              <option value="ur-PK">اردو</option>
-            </select>
+            <div class="lang-switch" role="group" aria-label="Choose chat language">
+              <button
+                class="lang-option"
+                [class.active]="selectedLang === 'en-PK'"
+                [attr.aria-pressed]="selectedLang === 'en-PK'"
+                type="button"
+                (click)="selectedLang = 'en-PK'"
+                aria-label="Use English">
+                EN
+              </button>
+              <button
+                class="lang-option urdu"
+                [class.active]="selectedLang === 'ur-PK'"
+                [attr.aria-pressed]="selectedLang === 'ur-PK'"
+                type="button"
+                (click)="selectedLang = 'ur-PK'"
+                aria-label="اردو استعمال کریں">
+                اردو
+              </button>
+            </div>
             <button class="botx" type="button" aria-label="Close assistant" (click)="ai.close()">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
                 <path d="M6 6l12 12M18 6L6 18"/>
@@ -160,11 +176,6 @@ import { ToastService } from '../../services/toast.service';
           }
 
           <div class="composer">
-            @if (selectedLang === 'ur-PK') {
-              <button type="button" class="urdu-kb-toggle-btn" [class.active]="showUrduKeyboard" (click)="showUrduKeyboard = !showUrduKeyboard" title="آن اسکرین کی بورڈ">
-                ⌨️
-              </button>
-            }
             <input
               type="text"
               enterkeyhint="send"
@@ -358,11 +369,7 @@ export class PulseAiComponent implements OnDestroy {
   }
 
   onLangChange(): void {
-    if (this.selectedLang === 'ur-PK') {
-      this.showUrduKeyboard = true;
-    } else {
-      this.showUrduKeyboard = false;
-    }
+    this.showUrduKeyboard = false;
   }
 
   isUrduText(text: string): boolean {
