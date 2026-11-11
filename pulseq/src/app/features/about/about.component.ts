@@ -91,7 +91,7 @@ import { SeoService } from '../../shared/services/seo.service';
                 }
                 <div class="crew">
                   @for (m of g.people; track m.name) {
-                    <div class="crew-m">
+                    <div class="crew-m crew-person">
                       <span class="crew-av">
                         @if (m.photo) {
                           <img [src]="m.photo" [alt]="m.name" loading="lazy" width="48" height="48">
