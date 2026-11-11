@@ -562,8 +562,8 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .fd-actions{grid-area:action;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;min-width:112px;white-space:nowrap}
 .fd-actions .fee-caption{color:#71849A;font-size:11px;font-weight:600;line-height:1.1;text-align:right}
 .fd-actions .dc-fee{margin:0}
-.fd-actions .dc-fee{font-size:17px;line-height:1.15;text-align:right}
-.fd-actions .btn{min-height:44px;padding:0 22px;justify-content:center}
+.fd-actions .dc-fee{display:block;width:100%;box-sizing:border-box;font-size:17px;line-height:1.15;text-align:center}
+.fd-actions .btn{width:100%;min-height:44px;padding:0 22px;justify-content:center}
 .pgback{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px 0 12px;border-radius:999px;border:1.5px solid #BBD8FF;background:#fff;color:#1558B8;font-weight:700;cursor:pointer;margin-bottom:18px}
 .pgback,.pgback:hover{text-decoration:none}
 .pgback:hover{background:#1D6FE0;color:#fff;border-color:#1D6FE0}
@@ -594,7 +594,7 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
  .fdcard{grid-template-columns:minmax(0,1fr);grid-template-areas:"doctor" "meta" "slots" "action";padding:14px}
  .fd-actions{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;width:100%;min-width:0;padding-top:4px;border-top:1px solid #E8F0F9}
  .fd-actions .fee-caption{display:none}
- .fd-actions .dc-fee{text-align:left}
+ .fd-actions .dc-fee{width:auto;min-width:100px;text-align:left}
  .fd-actions .btn{min-width:112px}
  .fd-slots{width:100%}
 }

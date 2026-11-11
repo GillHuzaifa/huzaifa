@@ -285,7 +285,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </a>
 
                   <div class="fd-meta">
-                    <a class="rt" [routerLink]="['/doctor', d.id]" fragment="reviews" (click)="$event.stopPropagation()">
+                    <a class="rt" [routerLink]="['/doctor', d.id]" [fragment]="'reviews'" (click)="$event.stopPropagation()">
                       <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                       </svg>

@@ -263,12 +263,23 @@ export class DoctorProfileComponent implements OnInit {
     });
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
-        setTimeout(() => {
-          const el = document.getElementById(fragment);
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 300);
+        this.scrollToFragment(fragment);
       }
     });
+  }
+
+  private scrollToFragment(fragment: string): void {
+    const scroll = (attempt = 0): void => {
+      const el = document.getElementById(fragment);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      if (attempt < 8) {
+        setTimeout(() => scroll(attempt + 1), 75);
+      }
+    };
+    setTimeout(() => scroll(), 0);
   }
 
   stats(): ReviewStats | null {
