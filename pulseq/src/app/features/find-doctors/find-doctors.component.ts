@@ -264,7 +264,14 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 @let today = ns.length > 0 && ns[0].o === 0;
                 @let places = doctorsService.placesOf(d);
 
-                <article class="fdcard">
+                <article
+                  class="fdcard"
+                  role="link"
+                  tabindex="0"
+                  [attr.aria-label]="'View reviews for ' + d.name"
+                  (click)="openReviews($event, d.id)"
+                  (keydown.enter)="openReviews($event, d.id)"
+                  (keydown.space)="openReviews($event, d.id)">
                   <a class="fd-doc" [routerLink]="['/doctor', d.id]">
                     <div class="dc-ava t{{ d.t }}">
                       @if (d.photo) {
@@ -319,7 +326,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                         <button
                           class="slot"
                           type="button"
-                          (click)="modalService.openBooking(P.id, s.o, s.t)">
+                          (click)="$event.stopPropagation(); modalService.openBooking(P.id, s.o, s.t)">
                           {{ s.o === 0 ? 'Today' : doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
                         </button>
                       }
@@ -328,7 +335,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                           class="fd-all-slots"
                           type="button"
                           [attr.aria-expanded]="expandedSlots.has(d.id)"
-                          (click)="toggleSlots(d.id)">
+                          (click)="$event.stopPropagation(); toggleSlots(d.id)">
                           {{ expandedSlots.has(d.id) ? 'Show fewer' : 'All ' + ns.length + ' times' }}
                           <span aria-hidden="true">{{ expandedSlots.has(d.id) ? '▴' : '▾' }}</span>
                         </button>
@@ -345,7 +352,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                       class="btn btn-ink"
                       type="button"
                       [disabled]="!ns.length"
-                      (click)="ns.length && modalService.openBooking(P.id, ns[0].o, ns[0].t)">
+                      (click)="$event.stopPropagation(); ns.length && modalService.openBooking(P.id, ns[0].o, ns[0].t)">
                       Book
                     </button>
                   </div>
