@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal, OnDestroy, ViewChild, ElementRef, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PulseAiService } from '../../services/pulse-ai.service';
 import { ModalService } from '../../services/modal.service';
@@ -38,15 +38,15 @@ import { ToastService } from '../../services/toast.service';
       <section class="botpanel" role="dialog" aria-label="PulseQ assistant">
         <div class="chat" style="flex:1;min-height:0;border-radius:0;box-shadow:none">
           <div class="chat-head">
-            <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true" width="34" height="34" style="flex:none;border-radius:10px">
-              <rect width="48" height="48" rx="14" fill="#2381FF"/>
-              <path d="M6 26h7l3-9 4.500 17 5-22 4.500 15 2-1h10" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/>
-              <circle cx="15" cy="11" r="1.700" fill="#fff"/>
-              <circle cx="31" cy="38" r="1.700" fill="#fff"/>
-              <circle cx="38" cy="12" r="1.700" fill="#fff"/>
-            </svg>
-            <span class="eyebrow" style="color:var(--mint);font-weight:700;letter-spacing:.08em">PULSEQ AI</span>
-            <span class="grow"></span>
+            <span style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none">
+              <svg width="22" height="22" viewBox="0 0 36 36" aria-hidden="true">
+                <path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+            <div class="grow">
+              <b>PulseQ</b>
+              <p class="xs muted" style="margin:0">Answers, support and booking</p>
+            </div>
             <select class="lang" [(ngModel)]="selectedLang" (change)="onLangChange()" aria-label="Language">
               <option value="en-PK">English</option>
               <option value="ur-PK">اردو</option>
@@ -188,6 +188,8 @@ export class PulseAiComponent implements OnDestroy {
   hospitalsService = inject(HospitalsService);
   toast = inject(ToastService);
 
+  @ViewChild('logEl') logEl?: ElementRef<HTMLElement>;
+
   userInput = '';
   get selectedLang(): string {
     return this.ai.language();
@@ -201,6 +203,20 @@ export class PulseAiComponent implements OnDestroy {
     if (typeof document !== 'undefined') {
       document.addEventListener('focusin', this.handleFocusIn);
       document.addEventListener('focusout', this.handleFocusOut);
+    }
+    effect(() => {
+      const open = this.ai.isOpen();
+      const len = this.ai.messages().length;
+      if (open && len > 0) {
+        setTimeout(() => this.scrollLogToBottom(), 30);
+      }
+    });
+  }
+
+  private scrollLogToBottom(): void {
+    const el = this.logEl?.nativeElement;
+    if (el) {
+      el.scrollTop = el.scrollHeight;
     }
   }
 
