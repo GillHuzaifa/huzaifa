@@ -33,15 +33,6 @@ export class AppComponent {
   showMoreSheet = false;
   private touchStartY = 0;
 
-  toggleMoreSheet(): void {
-    if (this.showMoreSheet) {
-      this.closeMoreSheet();
-    } else {
-      this.showMoreSheet = true;
-      this.mobileSheet.open('more', () => { this.showMoreSheet = false; });
-    }
-  }
-
   closeMoreSheet(): void {
     if (!this.showMoreSheet) return;
     this.showMoreSheet = false;
@@ -59,16 +50,10 @@ export class AppComponent {
     }
   }
 
-  isMoreActive(): boolean {
-    const v = this.currentView();
-    return ['surgery', 'clinics', 'about', 'privacy', 'terms', 'contact'].includes(v);
-  }
-
   constructor() {
     this.router.events.pipe(
       filter(e => e instanceof NavigationEnd)
     ).subscribe((e: any) => {
-      this.closeMoreSheet();
       const url = e.urlAfterRedirects.split('?')[0].split('#')[0];
       if (url === '/' || url === '') {
         this.currentView.set('home');
