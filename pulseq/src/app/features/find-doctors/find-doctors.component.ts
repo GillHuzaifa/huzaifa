@@ -1,6 +1,5 @@
-import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
@@ -190,17 +189,14 @@ import { Doctor, Place, Slot } from '../../shared/models';
               Filters
             </button>
             <div class="cnt" aria-live="polite">
-              @if (filteredDoctors().length > visibleLimit) {
-                Showing <b>{{ visibleLimit }}</b> of <b>{{ filteredDoctors().length }}</b> doctors
-              } @else {
-                <b>{{ filteredDoctors().length }}</b>
-                {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
-              }
+              <b>{{ filteredDoctors().length }}</b>
+              {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
               @if (filterDescription()) {
                 <span class="muted">· {{ filterDescription() }}</span>
               }
             </div>
-            <select [(ngModel)]="sortOption" aria-label="Sort doctors">
+            <label class="muted sm" for="fdSort">Sort by</label>
+            <select id="fdSort" [(ngModel)]="sortOption" aria-label="Sort doctors">
               <option value="soon">Earliest available</option>
               <option value="low">Fee: low to high</option>
               <option value="high">Fee: high to low</option>
@@ -223,15 +219,15 @@ import { Doctor, Place, Slot } from '../../shared/models';
           <div class="fdlist" id="fdList">
             @let docs = filteredDoctors();
             @if (docs.length > 0) {
-              @for (d of docs.slice(0, visibleLimit); track d.id) {
+              @for (d of docs; track d.id) {
                 @let P = doctorsService.selectedPlace(d);
                 @let h = hospitalsService.getHospitalById(P.h);
-                @let ns = doctorsService.nextSlots(P, 4);
+                @let ns = getAvailableSlots(P);
                 @let today = ns.length > 0 && ns[0].o === 0;
                 @let places = doctorsService.placesOf(d);
 
-                <article class="frow" (click)="openDoctor(d.id, $event)" style="cursor:pointer">
-                  <div class="fr-id">
+                <article class="fdcard">
+                  <a class="fd-doc" [routerLink]="['/doctor', d.id]">
                     <div class="dc-ava t{{ d.t }}">
                       @if (d.photo) {
                         <img [src]="d.photo" [alt]="d.name">
@@ -242,21 +238,15 @@ import { Doctor, Place, Slot } from '../../shared/models';
                         <i class="dc-on" title="Free today"></i>
                       }
                     </div>
-                    <div class="min0">
-                      <h3><a class="dlink" [routerLink]="['/doctor', d.id]">{{ d.name }}</a></h3>
-                      <p class="dc-spec">{{ specMap[d.spec] }}</p>
-                      <p class="dc-deg">
-                        {{ (d.deg || []).join(', ') }}{{ d.exp ? ' · ' + d.exp + ' yrs' : '' }}
-                      </p>
-                      @if (places.length <= 1 && h) {
-                        <a class="linkbtn" [routerLink]="['/hospital', h.id]" (click)="$event.stopPropagation()">
-                          {{ h.name }} · {{ h.city }}
-                        </a>
-                      }
-                    </div>
-                  </div>
+                    <span class="fd-doc-copy">
+                      <b class="fd-doc-name">{{ d.name }}</b>
+                      <span class="fd-doc-sub">
+                        {{ specMap[d.spec] }} · {{ h?.name || 'Clinic' }}{{ h?.city ? ', ' + h?.city : '' }}{{ places.length > 1 ? ' · +' + (places.length - 1) + ' more place' + (places.length > 2 ? 's' : '') : '' }}
+                      </span>
+                    </span>
+                  </a>
 
-                  <div class="fr-meta">
+                  <div class="fd-meta">
                     <a class="rt" [routerLink]="['/doctor', d.id]" fragment="reviews" (click)="$event.stopPropagation()">
                       <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
@@ -265,58 +255,44 @@ import { Doctor, Place, Slot } from '../../shared/models';
                       <span>· {{ getDocRating(d.id).n }} reviews</span>
                     </a>
                     <span class="tag">{{ P.mode }}</span>
-                    <span class="dc-avail" [class.on]="today">
-                      {{ today ? 'Free today' : (ns.length ? 'Free this week' : 'Fully booked') }}
-                    </span>
-                    <b class="dc-fee">Rs {{ P.fee.toLocaleString('en-US') }}</b>
                   </div>
 
-                  <div class="fr-slots">
-                    @if (places.length > 1) {
-                      <div class="dc-places" role="radiogroup">
-                        <span class="dc-pl-tag">Sits at {{ places.length }} places · choose one</span>
-                        @for (p of places; track p.id; let idx = $index) {
-                          @let ph = hospitalsService.getHospitalById(p.h);
-                          <button
-                            type="button"
-                            class="dc-pl"
-                            [class.on]="p.id === P.id"
-                            (click)="doctorsService.selectPlace(d.id, idx)">
-                            <b>{{ ph ? ph.name : p.h }} · {{ ph ? ph.city : '' }}</b>
-                            <span>Rs {{ p.fee.toLocaleString('en-US') }}</span>
-                          </button>
-                        }
-                      </div>
-                    }
-
-                    <p class="muted xs" style="margin-top:12px">Next free{{ places.length > 1 && h ? ' at ' + h.name : '' }}</p>
-                    <div class="slots">
-                      @if (ns.length) {
-                        @for (s of ns; track s.o + s.t) {
-                          <button
-                            class="slot"
-                            (click)="modalService.openBooking(P.id, s.o, s.t)">
-                            {{ s.o === 0 ? 'Today' : doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
-                          </button>
-                        }
-                      } @else {
-                        <span class="muted sm">No free slots this week</span>
+                  <div class="fd-slots">
+                    @if (ns.length) {
+                      @for (s of expandedSlots.has(d.id) ? ns : ns.slice(0, 2); track s.o + s.t) {
+                        <button
+                          class="slot"
+                          type="button"
+                          (click)="modalService.openBooking(P.id, s.o, s.t)">
+                          {{ s.o === 0 ? 'Today' : doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
+                        </button>
                       }
-                    </div>
+                      @if (ns.length > 2) {
+                        <button
+                          class="fd-all-slots"
+                          type="button"
+                          [attr.aria-expanded]="expandedSlots.has(d.id)"
+                          (click)="toggleSlots(d.id)">
+                          {{ expandedSlots.has(d.id) ? 'Show fewer' : 'All ' + ns.length + ' times' }}
+                          <span aria-hidden="true">{{ expandedSlots.has(d.id) ? '▴' : '▾' }}</span>
+                        </button>
+                      }
+                    } @else {
+                      <span class="muted sm">No free slots this week</span>
+                    }
                   </div>
 
-                  <button
-                    class="btn btn-ink"
-                    [disabled]="!ns.length"
-                    (click)="modalService.openBooking(P.id, ns[0].o, ns[0].t)">
-                    Book appointment
-                  </button>
+                  <div class="fd-actions">
+                    <b class="dc-fee">Rs {{ P.fee.toLocaleString('en-US') }}</b>
+                    <button
+                      class="btn btn-ink"
+                      type="button"
+                      [disabled]="!ns.length"
+                      (click)="ns.length && modalService.openBooking(P.id, ns[0].o, ns[0].t)">
+                      Book
+                    </button>
+                  </div>
                 </article>
-              }
-              @if (docs.length > visibleLimit) {
-                <div #loadMoreTrigger style="padding:12px 0;text-align:center">
-                  <button class="btn btn-line" type="button" (click)="showMore()">Load more doctors ({{ docs.length - visibleLimit }} more)</button>
-                </div>
               }
             } @else {
               <div class="empty">
@@ -336,33 +312,8 @@ import { Doctor, Place, Slot } from '../../shared/models';
     .pg-find { display: block !important; }
   `]
 })
-export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
-  router = inject(Router);
-  private platformId = inject(PLATFORM_ID);
-  @ViewChild('loadMoreTrigger') loadMoreTrigger?: ElementRef<HTMLElement>;
-  visibleLimit = 10;
-  private io?: IntersectionObserver;
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId) && typeof IntersectionObserver !== 'undefined') {
-      this.io = new IntersectionObserver((entries) => {
-        if (entries.some(e => e.isIntersecting)) {
-          this.showMore();
-        }
-      }, { rootMargin: '200px' });
-      if (this.loadMoreTrigger?.nativeElement) {
-        this.io.observe(this.loadMoreTrigger.nativeElement);
-      }
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.io?.disconnect();
-  }
-
-  showMore(): void {
-    this.visibleLimit += 10;
-  }
+export class FindDoctorsComponent implements OnInit {
+  expandedSlots = new Set<number>();
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);
@@ -386,14 +337,6 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getDocRating(id: number) {
     return this.reviewsService.getDocStats(id);
-  }
-
-  openDoctor(id: number, e: MouseEvent): void {
-    const target = e.target as HTMLElement;
-    if (target.closest('button, a, input, select, textarea, label, summary, details, .slot, .dc-pl, .btn')) {
-      return;
-    }
-    this.router.navigate(['/doctor', id]);
   }
 
   ngOnInit(): void {
@@ -474,6 +417,24 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getInitials(name: string): string {
     return name.replace('Dr. ', '').split(' ').map(w => w[0]).slice(0, 2).join('');
+  }
+
+  getAvailableSlots(place: Place): Slot[] {
+    const available: Slot[] = [];
+    for (let offset = 0; offset < 5; offset++) {
+      for (const time of this.doctorsService.slots(place, offset)) {
+        available.push({ o: offset, t: time });
+      }
+    }
+    return available;
+  }
+
+  toggleSlots(doctorId: number): void {
+    if (this.expandedSlots.has(doctorId)) {
+      this.expandedSlots.delete(doctorId);
+    } else {
+      this.expandedSlots.add(doctorId);
+    }
   }
 
   filteredDoctors(): Doctor[] {
