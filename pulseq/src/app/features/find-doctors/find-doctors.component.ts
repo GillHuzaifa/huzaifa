@@ -284,7 +284,14 @@ import { Doctor, Place, Slot } from '../../shared/models';
                     </span>
                   </a>
 
-                  <div class="fd-meta">
+                  <div
+                    class="fd-meta fd-reviews-target"
+                    role="link"
+                    tabindex="0"
+                    [attr.aria-label]="'View reviews for ' + d.name"
+                    (click)="openReviews($event, d.id)"
+                    (keydown.enter)="openReviews($event, d.id)"
+                    (keydown.space)="openReviews($event, d.id)">
                     <a
                       class="rt fd-reviews-link"
                       [routerLink]="['/doctor', d.id]"

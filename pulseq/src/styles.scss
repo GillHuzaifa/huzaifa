@@ -550,6 +550,8 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .fd-doc-name{display:block;font-size:18px;line-height:1.25;color:var(--fg)}
 .fd-doc-sub{display:block;margin-top:3px;color:var(--muted);font-size:14px;line-height:1.35}
 .fd-meta{grid-area:meta;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}
+.fd-reviews-target{cursor:pointer;border-radius:12px;padding:4px;margin:-4px;transition:background .15s ease}
+.fd-reviews-target:hover,.fd-reviews-target:focus-visible{background:#F3F8FF}
 .fd-meta .rt{white-space:nowrap}
 .doctor-mode{display:inline-flex;align-items:center;gap:6px;min-height:32px;max-width:100%;padding:5px 10px;border:1px solid #D9E7F7;border-radius:999px;background:#F7FAFF;color:#526477;font-size:12px;font-weight:700;line-height:1.2;white-space:normal}
 .doctor-mode.video{border-color:#BFD9FF;background:#EAF3FF;color:#1558B8}
