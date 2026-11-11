@@ -19,6 +19,26 @@ export interface ReviewStats {
   list: PatientReview[];
 }
 
+export type ReviewAspectKey = 'w' | 'l' | 'c';
+
+export interface ReviewAspect {
+  key: ReviewAspectKey;
+  label: string;
+  chip: string;
+}
+
+export const DOC_ASPECTS: ReviewAspect[] = [
+  { key: 'w', label: 'Wait time', chip: 'Short waits' },
+  { key: 'l', label: 'Listening', chip: 'Listens well' },
+  { key: 'c', label: 'Clear advice', chip: 'Clear advice' }
+];
+
+export const HOSP_ASPECTS: ReviewAspect[] = [
+  { key: 'w', label: 'Cleanliness', chip: 'Spotless' },
+  { key: 'l', label: 'Staff care', chip: 'Caring staff' },
+  { key: 'c', label: 'Facilities', chip: 'Great facilities' }
+];
+
 const REVSAMPLE: [number, number, number, string][] = [
   [5, 5, 5, 'Short wait and the doctor explained everything clearly.'],
   [5, 4, 5, 'Booked in under a minute and was seen on time.'],
@@ -32,9 +52,13 @@ const REVSAMPLE: [number, number, number, string][] = [
 
 const HREVSAMPLE: [number, number, number, string][] = [
   [5, 5, 4, 'Clean wards and very helpful reception staff.'],
-  [4, 5, 5, 'Smooth admission process and attentive nurses.'],
-  [4, 4, 5, 'Good facilities, doctors were on time.'],
-  [5, 4, 4, 'Clean diagnostic centre, reports delivered on WhatsApp.']
+  [4, 5, 5, 'Smooth check-in with my booking code. The staff were kind.'],
+  [3, 4, 4, 'Good care, but the waiting area was crowded.'],
+  [5, 4, 5, 'Modern equipment and clear signs. Easy to find the department.'],
+  [4, 4, 4, 'Parking was easy and the staff explained every step.'],
+  [5, 5, 5, 'Spotless and calm. I felt cared for from start to finish.'],
+  [3, 4, 3, 'Care was good, but billing took a while.'],
+  [4, 5, 4, 'The nurses were patient and answered all my questions.']
 ];
 
 @Injectable({
@@ -64,7 +88,7 @@ export class ReviewsService {
             c: r.c,
             t: r.t,
             n: r.n || 'Patient',
-            ver: r.ver !== false
+            ver: r.ver === true
           });
         }
         this.localDocReviews.set(map);
@@ -85,7 +109,7 @@ export class ReviewsService {
             c: r.c,
             t: r.t,
             n: r.n || 'Patient',
-            ver: r.ver !== false
+            ver: r.ver === true
           });
         }
         this.localHospReviews.set(mapH);
@@ -131,15 +155,15 @@ export class ReviewsService {
   getHospReviews(id: string): PatientReview[] {
     const out: PatientReview[] = [];
     const numericId = id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const count = 3 + (numericId % 2);
+    const count = 3 + (numericId % 3);
     for (let i = 0; i < count; i++) {
-      const sample = HREVSAMPLE[(numericId + i) % HREVSAMPLE.length];
+      const sample = HREVSAMPLE[(numericId + i * 3) % HREVSAMPLE.length];
       out.push({
         w: sample[0],
         l: sample[1],
         c: sample[2],
         t: sample[3],
-        n: 'Patient ' + String.fromCharCode(65 + ((numericId + i) % 26)) + '.',
+        n: 'Patient ' + String.fromCharCode(65 + ((numericId + i * 2) % 26)) + '.',
         sample: true
       });
     }
@@ -163,7 +187,7 @@ export class ReviewsService {
     return { w, l, c, avg, n: list.length, list };
   }
 
-  addDocReview(docId: number, review: { w: number; l: number; c: number; t: string; n?: string }) {
+  addDocReview(docId: number, review: { w: number; l: number; c: number; t: string; n?: string; ver?: boolean }) {
     const current = this.localDocReviews();
     const docList = current[docId] ? [...current[docId]] : [];
     const newRev: PatientReview = {
@@ -172,7 +196,7 @@ export class ReviewsService {
       c: review.c,
       t: review.t || 'Good consultation and professional care.',
       n: review.n || 'Patient',
-      ver: true
+      ver: review.ver === true
     };
     docList.unshift(newRev);
     this.localDocReviews.set({ ...current, [docId]: docList });
@@ -195,7 +219,7 @@ export class ReviewsService {
       c: review.c,
       t: review.t || 'Clean facility and polite staff.',
       n: review.n || 'Patient',
-      ver: true
+      ver: false
     };
     hospList.unshift(newRev);
     this.localHospReviews.set({ ...current, [hospId]: hospList });
@@ -209,8 +233,8 @@ export class ReviewsService {
     }
   }
 
-  mood(avg: number): string {
-    if (avg >= 4.5) return 'Exceptional care';
+  mood(avg: number, word: 'doctor' | 'hospital' = 'doctor'): string {
+    if (avg >= 4.5) return `Patients love this ${word}`;
     if (avg >= 4.0) return 'Highly rated by patients';
     if (avg >= 3.5) return 'Well reviewed';
     return 'Reviewed by patients';

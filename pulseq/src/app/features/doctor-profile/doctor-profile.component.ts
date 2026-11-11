@@ -1,20 +1,20 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
-import { ReviewsService, ReviewStats } from '../../shared/services/reviews.service';
+import { ReviewsService, ReviewStats, DOC_ASPECTS } from '../../shared/services/reviews.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { PatientReviewsComponent, SubmittedReview } from '../../shared/components/patient-reviews/patient-reviews.component';
 import { Doctor, Place } from '../../shared/models';
 import { SPEC } from '../../data/specialties.data';
 
 @Component({
   selector: 'app-doctor-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, RouterLink, PatientReviewsComponent],
   template: `
     <section class="sec pg-doctor" id="page-doctor">
       <div class="wrap" id="dpRoot">
@@ -92,110 +92,16 @@ import { SPEC } from '../../data/specialties.data';
               </div>
             }
 
-            <!-- Patient Reviews Section per user prompt & 16.html -->
-            <div class="dp-card" id="reviews" *ngIf="stats() as s">
-              <h3>Patient reviews</h3>
-              <div class="rv-sum pbs">
-                <div class="pbs-l">
-                  <div class="pb-ring" style="width:84px;height:84px;border-radius:50%;background:#EFF6FF;border:4px solid #2381FF;display:flex;align-items:center;justify-content:center">
-                    <b style="font-size:26px;color:#102A43">{{ s.avg.toFixed(1) }}</b>
-                  </div>
-                  <b class="pbs-mood">{{ reviewsService.mood(s.avg) }}</b>
-                  <span class="muted xs">PulseQ patient score from {{ s.n }} reviews</span>
-                </div>
-                <div class="pbs-r" style="display:flex;flex-direction:column;gap:12px">
-                  <div class="rv-asp" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                    <span style="font-size:14px;color:#526477">Wait time</span>
-                    <div style="flex:1;height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden">
-                      <div [style.width.%]="(s.w / 5) * 100" style="height:100%;background:#2381FF;border-radius:999px"></div>
-                    </div>
-                    <b>{{ s.w.toFixed(1) }}</b>
-                  </div>
-                  <div class="rv-asp" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                    <span style="font-size:14px;color:#526477">Listening</span>
-                    <div style="flex:1;height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden">
-                      <div [style.width.%]="(s.l / 5) * 100" style="height:100%;background:#2381FF;border-radius:999px"></div>
-                    </div>
-                    <b>{{ s.l.toFixed(1) }}</b>
-                  </div>
-                  <div class="rv-asp" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-                    <span style="font-size:14px;color:#526477">Clear advice</span>
-                    <div style="flex:1;height:8px;background:#E2E8F0;border-radius:999px;overflow:hidden">
-                      <div [style.width.%]="(s.c / 5) * 100" style="height:100%;background:#2381FF;border-radius:999px"></div>
-                    </div>
-                    <b>{{ s.c.toFixed(1) }}</b>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Reviews List -->
-              <ul class="rv-list" style="margin-top:20px;list-style:none;padding:0;display:flex;flex-direction:column;gap:14px">
-                @for (r of s.list; track r.n + r.t) {
-                  <li class="rv" style="background:#F8FAFC;border:1px solid #E2E8F0;border-radius:18px;padding:16px;display:flex;gap:14px">
-                    <span class="rv-av" style="width:40px;height:40px;border-radius:12px;background:#DBEAFE;color:#1558B8;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none">
-                      {{ r.n[0] || 'P' }}
-                    </span>
-                    <div style="flex:1;min-width:0">
-                      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-                        <b>{{ r.n }}</b>
-                        <span class="tag" style="background:#DCFCE7;color:#166534;font-size:11px" *ngIf="r.ver">Verified patient</span>
-                        <span class="tag" style="background:#FEF3C7;color:#78350F;font-size:11px" *ngIf="r.sample">Sample review</span>
-                      </div>
-                      <p style="margin:6px 0 0;font-size:14.5px;color:#102A43">“{{ r.t }}”</p>
-                    </div>
-                  </li>
-                }
-              </ul>
-
-              <!-- Add Your Review Form with 5 large rating buttons per question -->
-              <form class="rv-form" (submit)="submitReview($event)" style="margin-top:24px;background:#F8FAFC;border:1px solid #E2E8F0;border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:16px">
-                <h4 style="margin:0;font-size:18px;color:#102A43">Add your review</h4>
-                <div>
-                  <label class="lbl" for="newRevName">Your name (optional)</label>
-                  <input class="inp" id="newRevName" type="text" [(ngModel)]="revName" name="revName" placeholder="e.g. Ali K.">
-                </div>
-
-                <div>
-                  <span class="lbl">Wait time (1 to 5)</span>
-                  <div style="display:flex;gap:8px;margin-top:6px">
-                    @for (star of [1,2,3,4,5]; track star) {
-                      <button type="button" class="btn" [class.btn-ink]="revWait === star" [class.btn-line]="revWait !== star" (click)="revWait = star" style="flex:1;min-height:44px;font-weight:700">
-                        {{ star }}★
-                      </button>
-                    }
-                  </div>
-                </div>
-
-                <div>
-                  <span class="lbl">Listening (1 to 5)</span>
-                  <div style="display:flex;gap:8px;margin-top:6px">
-                    @for (star of [1,2,3,4,5]; track star) {
-                      <button type="button" class="btn" [class.btn-ink]="revListen === star" [class.btn-line]="revListen !== star" (click)="revListen = star" style="flex:1;min-height:44px;font-weight:700">
-                        {{ star }}★
-                      </button>
-                    }
-                  </div>
-                </div>
-
-                <div>
-                  <span class="lbl">Clear advice (1 to 5)</span>
-                  <div style="display:flex;gap:8px;margin-top:6px">
-                    @for (star of [1,2,3,4,5]; track star) {
-                      <button type="button" class="btn" [class.btn-ink]="revAdvice === star" [class.btn-line]="revAdvice !== star" (click)="revAdvice = star" style="flex:1;min-height:44px;font-weight:700">
-                        {{ star }}★
-                      </button>
-                    }
-                  </div>
-                </div>
-
-                <div>
-                  <label class="lbl" for="newRevText">Your experience</label>
-                  <textarea class="inp" id="newRevText" [(ngModel)]="revComment" name="revComment" rows="3" placeholder="How was your visit? (timings, doctor's response)"></textarea>
-                </div>
-
-                <button class="btn btn-coral full" type="submit" style="min-height:48px">Post review</button>
-              </form>
-            </div>
+            <!-- Patient Reviews Section per PulseQ (16).html -->
+            @if (stats(); as s) {
+              <app-patient-reviews
+                [stats]="s"
+                [aspects]="docAspects"
+                entityType="doctor"
+                sectionId="reviews"
+                (reviewSubmitted)="submitReview($event)">
+              </app-patient-reviews>
+            }
 
             <p class="dp-sample" style="margin-top:20px">
               <b>Verified profile.</b> Degrees, experience and timings come from the doctor and are checked before a profile goes live.
@@ -330,13 +236,7 @@ export class DoctorProfileComponent implements OnInit {
   doctor: Doctor | null = null;
   specMap = SPEC;
   weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-  // Review Form
-  revName = '';
-  revWait = 5;
-  revListen = 5;
-  revAdvice = 5;
-  revComment = '';
+  docAspects = DOC_ASPECTS;
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
@@ -364,18 +264,10 @@ export class DoctorProfileComponent implements OnInit {
     return this.reviewsService.getDocStats(this.doctor.id);
   }
 
-  submitReview(e: Event) {
-    e.preventDefault();
+  submitReview(rev: SubmittedReview) {
     if (!this.doctor) return;
-    this.reviewsService.addDocReview(this.doctor.id, {
-      w: this.revWait,
-      l: this.revListen,
-      c: this.revAdvice,
-      t: this.revComment.trim(),
-      n: this.revName.trim() || 'Patient'
-    });
-    this.revComment = '';
-    this.toast.show('Thank you! Your review has been posted.');
+    this.reviewsService.addDocReview(this.doctor.id, rev);
+    this.toast.show('Thank you. Your review is posted.');
   }
 
   places(): (Doctor | Place)[] {
