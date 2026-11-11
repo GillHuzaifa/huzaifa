@@ -61,28 +61,113 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     } @else if (viewMode === 'procedure-detail') {
       <section class="sec pg-scat">
         <div class="wrap catalog-page">
-          <a class="pgback" routerLink="/surgery/procedures">Back to procedure catalog</a>
+          <a class="pgback" routerLink="/surgery/procedures">‹ &nbsp; All procedures</a>
           @if (getRouteProcedure(); as pr) {
             <article class="procedure-detail">
-              <span class="eyebrow">{{ procedureCategoryName(pr.c) }}</span>
               <h2>{{ pr.n }}</h2>
-              <p class="muted" style="font-size:18px">{{ pr.d }}</p>
-              <div class="procedure-stats">
-                <span><small>Estimated cost</small><b>{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</b></span>
+              <p class="muted">{{ pr.d }}</p>
+              <div class="surgery-detail-stats">
                 <span><small>Typical hospital stay</small><b>{{ pr.stay }}</b></span>
                 <span><small>Typical recovery</small><b>{{ pr.rec }}</b></span>
+                <span><small>Estimated cost</small><b>{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</b></span>
               </div>
               <div class="procedure-detail-note">
-                <h3>What happens next?</h3>
-                <p class="muted">Meet a surgeon first. The hospital will assess your situation and provide a written quote listing exactly what is included before you decide.</p>
+                <b>Usually included in your quote</b>
                 <ul class="sinc">@for (inc of surgeryService.inclusions; track inc) { <li>{{ inc }}</li> }</ul>
               </div>
               <div class="procedure-detail-actions">
-                <button class="btn btn-ink" type="button" (click)="browseSurgeonsForProc(pr.id)">Find surgeons for this procedure</button>
-                <a class="btn btn-line" routerLink="/surgery">Open surgery planner</a>
+                <button class="btn btn-line" type="button" (click)="browseSurgeonsForProc(pr.id)">See all surgeons for this</button>
               </div>
-              <p class="muted xs catalog-disclaimer">Sample estimates only. Your surgeon provides a written quote after a consultation. This page is not medical advice.</p>
+              <p class="muted xs catalog-disclaimer">Sample estimates for this demo. Your surgeon gives a written quote after the consultation, and it lists exactly what is included.</p>
             </article>
+
+            <section class="procedure-hospitals" aria-labelledby="procedureHospitalsTitle">
+              <span class="eyebrow">Step 2</span>
+              <h3 id="procedureHospitalsTitle">Choose a hospital and surgeon</h3>
+              <p class="muted sm" style="margin-bottom:14px">
+                {{ currentHosps().length }} {{ currentHosps().length === 1 ? 'hospital offers ' : 'hospitals offer ' }}{{ pr.n.toLowerCase() }}. Tap Compare on two to see them side by side.
+              </p>
+
+              @if (availableSurgeryCities().length > 1) {
+                <div class="chips" role="group" aria-label="Hospital city" style="margin-bottom:12px">
+                  <button class="chip" [class.on]="selectedCity === 'all'" [attr.aria-pressed]="selectedCity === 'all'" type="button" (click)="selectedCity = 'all'">All cities</button>
+                  @for (city of availableSurgeryCities(); track city) {
+                    <button class="chip" [class.on]="selectedCity === city" [attr.aria-pressed]="selectedCity === city" type="button" (click)="selectedCity = city">{{ city }}</button>
+                  }
+                </div>
+              }
+
+              <div class="sgrid">
+                @for (h of currentHosps(); track h.id) {
+                  @let on = isComparing(h.id);
+                  @let r = surgeryService.hrange(pr, h.id);
+                  @let ss = surgeryService.surgsAt(h.id, pr.id);
+                  <article class="shosp" [class.on]="on">
+                    <div class="row-between">
+                      <div>
+                        <h4>{{ h.name }}</h4>
+                        <p class="muted sm">{{ h.city }}</p>
+                      </div>
+                      <button class="chip" [class.on]="on" [attr.aria-pressed]="on" type="button" (click)="toggleCompare(h.id)">
+                        {{ on ? 'Comparing' : 'Compare' }}
+                      </button>
+                    </div>
+                    <p>
+                      <span class="xs muted">Estimated cost here</span><br>
+                      <b style="font-size:18px">{{ surgeryService.formatRange(r) }}</b>
+                    </p>
+                    @for (s of ss; track s.id) {
+                      <div class="srow">
+                        <span class="avatar t{{ s.tint }}">{{ getInitials(s.n) }}</span>
+                        <div class="min0" style="flex:1 1 140px">
+                          <b>{{ s.n }}</b>
+                          <span class="xs muted" style="display:block">{{ s.t }} · {{ s.x }} years · consultation {{ surgeryService.formatMoney(s.fee) }}</span>
+                        </div>
+                        <button class="btn btn-ink" type="button" (click)="openBooking(s, pr.id)">Book consultation</button>
+                      </div>
+                    }
+                  </article>
+                }
+                @if (currentHosps().length === 0) {
+                  <div class="empty" style="grid-column:1/-1">
+                    <h3>No hospitals listed for this procedure yet</h3>
+                    <p class="muted">Browse all surgeons to see available consultation options.</p>
+                    <button class="btn btn-ink" type="button" (click)="browseSurgeonsForProc(pr.id)">See all surgeons</button>
+                  </div>
+                }
+              </div>
+
+              <div aria-live="polite">
+                @if (comparedHosps.length === 2) {
+                  @let A = getHospital(comparedHosps[0]);
+                  @let B = getHospital(comparedHosps[1]);
+                  @if (A && B) {
+                    @let ca = getHospitalCol(A, pr);
+                    @let cb = getHospitalCol(B, pr);
+                    <div class="cmpwrap" tabindex="0" role="group" aria-label="Hospital comparison">
+                      <table class="cmp">
+                        <thead>
+                          <tr>
+                            <th scope="col"><span class="xs muted">{{ pr.n }}</span></th>
+                            <th scope="col">{{ A.name }}</th>
+                            <th scope="col">{{ B.name }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr><th scope="row">City</th><td>{{ A.city }}</td><td>{{ B.city }}</td></tr>
+                          <tr><th scope="row">Estimated cost</th><td>{{ ca.r }}</td><td>{{ cb.r }}</td></tr>
+                          <tr><th scope="row">Surgeons</th><td>{{ ca.s }}</td><td>{{ cb.s }}</td></tr>
+                          <tr><th scope="row">Most experienced</th><td>{{ ca.x }}</td><td>{{ cb.x }}</td></tr>
+                          <tr><th scope="row">Consultation fee</th><td>{{ ca.f }}</td><td>{{ cb.f }}</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  }
+                } @else if (comparedHosps.length === 1) {
+                  <p class="muted sm" style="margin-top:12px">Pick one more hospital to compare.</p>
+                }
+              </div>
+            </section>
           } @else {
             <div class="empty"><h2>Procedure not found</h2><p class="muted">Choose a procedure from the catalog.</p></div>
           }
@@ -542,8 +627,16 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     .procedure-more { display: flex; justify-content: space-between; margin-top: auto; padding-top: 8px; color: #1558B8; font-weight: 800; }
     .procedure-detail { padding: clamp(20px, 4vw, 36px); border-radius: 24px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
     .procedure-detail h2 { margin: 10px 0; font-size: clamp(28px, 4vw, 44px); }
-    .procedure-detail-note { margin-top: 24px; padding: 20px; border-radius: 18px; background: #F5F9FF; }
-    .procedure-detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .procedure-detail > .muted { margin: 0; font-size: 15px; }
+    .surgery-detail-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    .surgery-detail-stats span { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .surgery-detail-stats small { color: var(--muted); }
+    .surgery-detail-stats b { font-size: 14px; }
+    .procedure-detail-note { margin-top: 20px; padding: 16px; border-radius: 18px; background: #F5F9FF; }
+    .procedure-detail-note .sinc { margin-top: 4px; }
+    .procedure-detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+    .procedure-hospitals { margin-top: 32px; }
+    .procedure-hospitals > h3 { margin: 6px 0; font-size: clamp(23px, 3vw, 28px); }
     .catalog-disclaimer { margin-top: 18px; max-width: 700px; }
     .surgery-entry-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; max-width: 640px; }
     .surgery-entry { display: flex; align-items: center; gap: 14px; min-height: 78px; padding: 14px 16px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #DCE8F8, 0 1px 2px rgba(16,42,67,.04); color: #102A43; text-decoration: none; transition: transform .18s, box-shadow .18s; }
@@ -556,6 +649,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     .surgery-entry-primary small { color: rgba(255,255,255,.88); }
     .surgery-entry-go { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #1558B8; background: #EAF3FF; }
     @media (max-width: 760px) {
+      .surgery-detail-stats { grid-template-columns: 1fr; gap: 8px; }
       .prow { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
       .pr-p { white-space: normal; }
       .prow > svg { grid-column: 2; grid-row: 1 / 3; }
@@ -628,6 +722,13 @@ export class SurgeryComponent implements OnInit {
     } else if (path.startsWith('/surgery/procedures/')) {
       this.viewMode = 'procedure-detail';
       this.routeProcedureId = Number(path.split('/').pop());
+      const procedure = this.surgeryService.getProcedureById(this.routeProcedureId);
+      if (procedure) {
+        this.selectedProcId = procedure.id;
+        this.selectedCat = procedure.c;
+      }
+      this.selectedCity = 'all';
+      this.comparedHosps = [];
       this.seo.setPage('Procedure Details');
     } else if (path === '/surgery/surgeons') {
       this.viewMode = 'surgeons';
