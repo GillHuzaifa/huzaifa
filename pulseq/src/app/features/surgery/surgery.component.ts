@@ -22,16 +22,18 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           </div>
           <div class="procedure-filters">
             <label class="sr" for="procedureSearch">Search procedures</label>
-            <input id="procedureSearch" class="inp" type="search" [(ngModel)]="procedureQuery" placeholder="Procedure, e.g. knee, cataract or hernia" autocomplete="off">
+            <input id="procedureSearch" class="inp" type="search" [(ngModel)]="procedureQuery" (ngModelChange)="resetProcedurePage()" placeholder="Procedure, e.g. knee, cataract or hernia" autocomplete="off">
             <div class="chips" role="group" aria-label="Procedure category">
-              <button class="chip" [class.on]="procedureCategory === 'all'" [attr.aria-pressed]="procedureCategory === 'all'" type="button" (click)="procedureCategory = 'all'">All areas</button>
+              <button class="chip" [class.on]="procedureCategory === 'all'" [attr.aria-pressed]="procedureCategory === 'all'" type="button" (click)="procedureCategory = 'all'; resetProcedurePage()">All areas</button>
               @for (cat of surgeryService.categories(); track cat.k) {
-                <button class="chip" [class.on]="procedureCategory === cat.k" [attr.aria-pressed]="procedureCategory === cat.k" type="button" (click)="procedureCategory = cat.k">{{ cat.t }}</button>
+                <button class="chip" [class.on]="procedureCategory === cat.k" [attr.aria-pressed]="procedureCategory === cat.k" type="button" (click)="procedureCategory = cat.k; resetProcedurePage()">{{ cat.t }}</button>
               }
             </div>
           </div>
+          @let procedures = filteredProcedures();
+          <p class="muted" aria-live="polite">Showing {{ Math.min(procedureVisibleLimit, procedures.length) }} of {{ procedures.length }} procedures</p>
           <div class="procedure-grid" aria-live="polite">
-            @for (pr of filteredProcedures(); track pr.id) {
+            @for (pr of procedures.slice(0, procedureVisibleLimit); track pr.id) {
               <a class="procedure-card" [routerLink]="['/surgery/procedures', pr.id]">
                 <span class="eyebrow">{{ procedureCategoryName(pr.c) }}</span>
                 <h3>{{ pr.n }}</h3>
@@ -44,10 +46,15 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
                 <span class="procedure-more">View details <span aria-hidden="true">→</span></span>
               </a>
             }
-            @if (filteredProcedures().length === 0) {
+            @if (procedures.length === 0) {
               <div class="empty" style="grid-column:1/-1"><h3>No procedures match</h3><p class="muted">Try another search or choose a different surgery area.</p></div>
             }
           </div>
+          @if (procedures.length > procedureVisibleLimit) {
+            <div class="load-more-wrap">
+              <button class="load-more-btn" type="button" (click)="loadMoreProcedures()">Load more procedures <span>{{ procedures.length - procedureVisibleLimit }} remaining</span></button>
+            </div>
+          }
           <p class="muted xs catalog-disclaimer">Prices, stays and recovery times are sample estimates for this demo, not a medical quote or advice.</p>
         </div>
       </section>
@@ -323,13 +330,13 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           <div class="symbox">
             <div class="field wide">
               <label for="fq">Search surgeons</label>
-              <input id="fq" type="search" enterkeyhint="search" [(ngModel)]="fQuery" placeholder="Name, hospital or procedure, e.g. knee replacement" autocomplete="off">
+              <input id="fq" type="search" enterkeyhint="search" [(ngModel)]="fQuery" (ngModelChange)="resetSurgeonPage()" placeholder="Name, hospital or procedure, e.g. knee replacement" autocomplete="off">
             </div>
           </div>
 
           <div class="chips" id="fSpec" role="group" aria-label="Surgery area" style="margin-bottom:10px">
             @for (sp of fSpecs; track sp[0]) {
-              <button class="chip" [class.on]="fSpec === sp[0]" [attr.aria-pressed]="fSpec === sp[0]" type="button" (click)="fSpec = sp[0]">
+              <button class="chip" [class.on]="fSpec === sp[0]" [attr.aria-pressed]="fSpec === sp[0]" type="button" (click)="fSpec = sp[0]; resetSurgeonPage()">
                 {{ sp[1] }}
               </button>
             }
@@ -337,14 +344,19 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
 
           <div class="chips" id="fCity" role="group" aria-label="City" style="margin-bottom:12px">
             @for (c of fCities; track c) {
-              <button class="chip" [class.on]="fCity === c" [attr.aria-pressed]="fCity === c" type="button" (click)="fCity = c">
+              <button class="chip" [class.on]="fCity === c" [attr.aria-pressed]="fCity === c" type="button" (click)="fCity = c; resetSurgeonPage()">
                 {{ c === 'all' ? 'All cities' : c }}
               </button>
             }
           </div>
 
+          @let surgeons = filteredSurgeons();
           <div class="filterbar" id="fNote" aria-live="polite">
-            <b>{{ filteredSurgeons().length }} {{ filteredSurgeons().length === 1 ? 'surgeon' : 'surgeons' }}</b>
+            @if (surgeons.length > surgeonVisibleLimit) {
+              <b>Showing {{ surgeonVisibleLimit }} of {{ surgeons.length }} surgeons</b>
+            } @else {
+              <b>{{ surgeons.length }} {{ surgeons.length === 1 ? 'surgeon' : 'surgeons' }}</b>
+            }
             @if (fProc) {
               <span class="muted">· for {{ getProcName(fProc) }}</span>
             }
@@ -354,7 +366,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           </div>
 
           <div class="sgrid" id="fGrid">
-            @for (s of filteredSurgeons(); track s.id) {
+            @for (s of surgeons.slice(0, surgeonVisibleLimit); track s.id) {
               @let h = getHospital(s.h);
               @let pid = (fProc && s.p.indexOf(fProc) > -1) ? fProc : s.p[0];
               <article class="doc">
@@ -378,7 +390,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
                 <button class="btn btn-ink full" type="button" (click)="openBooking(s, pid)">Book consultation</button>
               </article>
             }
-            @if (filteredSurgeons().length === 0) {
+            @if (surgeons.length === 0) {
               <div class="empty" style="grid-column:1/-1">
                 <h3 style="font-size:26px">No surgeons match yet</h3>
                 <p class="muted">Try another city or area, or clear the filters.</p>
@@ -386,6 +398,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
               </div>
             }
           </div>
+          @if (surgeons.length > surgeonVisibleLimit) {
+            <div class="load-more-wrap">
+              <button class="load-more-btn" type="button" (click)="loadMoreSurgeons()">Load more surgeons <span>{{ surgeons.length - surgeonVisibleLimit }} remaining</span></button>
+            </div>
+          }
 
           <div style="margin-top:28px">
             <a class="btn btn-line" routerLink="/surgery">← Back to surgery planner</a>
@@ -547,6 +564,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
   `]
 })
 export class SurgeryComponent implements OnInit {
+  Math = Math;
   surgeryService = inject(SurgeryService);
   hospitalsService = inject(HospitalsService);
   seo = inject(SeoService);
@@ -555,6 +573,7 @@ export class SurgeryComponent implements OnInit {
   viewMode: 'surgery' | 'surgeons' | 'procedures' | 'procedure-detail' = 'surgery';
   procedureQuery = '';
   procedureCategory = 'all';
+  procedureVisibleLimit = 12;
   routeProcedureId: number | null = null;
   selectedCity = 'all';
 
@@ -568,6 +587,7 @@ export class SurgeryComponent implements OnInit {
   fCity = 'all';
   fHosp = 'all';
   fProc: number | null = null;
+  surgeonVisibleLimit = 10;
   fSpecs = [
     ['all', 'All'],
     ['heart', 'Heart'],
@@ -619,6 +639,22 @@ export class SurgeryComponent implements OnInit {
       this.seo.setPage('Surgery & Procedures');
     }
     this.buildDays();
+  }
+
+  resetProcedurePage(): void {
+    this.procedureVisibleLimit = 12;
+  }
+
+  loadMoreProcedures(): void {
+    this.procedureVisibleLimit += 12;
+  }
+
+  resetSurgeonPage(): void {
+    this.surgeonVisibleLimit = 10;
+  }
+
+  loadMoreSurgeons(): void {
+    this.surgeonVisibleLimit += 10;
   }
 
   filteredProcedures(): Procedure[] {
@@ -776,6 +812,7 @@ export class SurgeryComponent implements OnInit {
     this.fCity = 'all';
     this.fHosp = 'all';
     this.fProc = null;
+    this.resetSurgeonPage();
   }
 
   getProcName(id: number): string {

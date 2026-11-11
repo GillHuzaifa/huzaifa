@@ -1,5 +1,4 @@
-import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HospitalsService } from '../../shared/services/hospitals.service';
@@ -32,6 +31,7 @@ import { Hospital } from '../../shared/models';
             enterkeyhint="search"
             placeholder="Hospital, city or department"
             [(ngModel)]="searchQuery"
+            (ngModelChange)="resetHospitalPage()"
             name="q"
             autocomplete="off">
           <button class="btn btn-mint" type="submit">Search</button>
@@ -63,7 +63,7 @@ import { Hospital } from '../../shared/models';
             class="chip"
             [class.on]="selectedCity === 'all'"
             type="button"
-            (click)="selectedCity = 'all'">
+            (click)="selectedCity = 'all'; resetHospitalPage()">
             All cities
           </button>
           @for (c of cities; track c) {
@@ -71,7 +71,7 @@ import { Hospital } from '../../shared/models';
               class="chip"
               [class.on]="selectedCity === c"
               type="button"
-              (click)="selectedCity = c">
+              (click)="selectedCity = c; resetHospitalPage()">
               {{ c }}
             </button>
           }
@@ -79,7 +79,7 @@ import { Hospital } from '../../shared/models';
             class="chip"
             [class.on]="emergencyOnly"
             type="button"
-            (click)="emergencyOnly = !emergencyOnly">
+            (click)="emergencyOnly = !emergencyOnly; resetHospitalPage()">
             Emergency 24/7
           </button>
         </div>
@@ -89,7 +89,7 @@ import { Hospital } from '../../shared/models';
             class="chip"
             [class.on]="selectedDept === 'all'"
             type="button"
-            (click)="selectedDept = 'all'">
+            (click)="selectedDept = 'all'; resetHospitalPage()">
             All departments
           </button>
           @for (d of hospitalsService.depts; track d[0]) {
@@ -97,7 +97,7 @@ import { Hospital } from '../../shared/models';
               class="chip"
               [class.on]="selectedDept === d[0]"
               type="button"
-              (click)="selectedDept = d[0]">
+              (click)="selectedDept = d[0]; resetHospitalPage()">
               {{ d[0] }}
             </button>
           }
@@ -135,8 +135,8 @@ import { Hospital } from '../../shared/models';
             }
           }
           @if (filteredHospitals().length > list.length) {
-            <div #loadMoreHosp class="lz-sent">
-              <button class="btn btn-line" type="button" (click)="showMore()">Load more hospitals ({{ filteredHospitals().length - list.length }} more)</button>
+            <div class="load-more-wrap">
+              <button class="load-more-btn" type="button" (click)="showMore()">Load more hospitals <span>{{ filteredHospitals().length - list.length }} remaining</span></button>
             </div>
           }
         } @else {
@@ -169,28 +169,16 @@ import { Hospital } from '../../shared/models';
     @media (max-width: 1000px) { .hdir { grid-template-columns: 1fr; } }
   `]
 })
-export class HospitalsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class HospitalsComponent implements OnInit {
   router = inject(Router);
-  private platformId = inject(PLATFORM_ID);
-  @ViewChild('loadMoreHosp') loadMoreHosp?: ElementRef<HTMLElement>;
   visibleLimit = 20;
-  private io?: IntersectionObserver;
-
-  ngAfterViewInit(): void {
-    if (isPlatformBrowser(this.platformId) && typeof IntersectionObserver !== 'undefined') {
-      this.io = new IntersectionObserver((entries) => {
-        if (entries.some(e => e.isIntersecting)) this.showMore();
-      }, { rootMargin: '200px' });
-      if (this.loadMoreHosp?.nativeElement) this.io.observe(this.loadMoreHosp.nativeElement);
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.io?.disconnect();
-  }
 
   showMore(): void {
     this.visibleLimit += 20;
+  }
+
+  resetHospitalPage(): void {
+    this.visibleLimit = 20;
   }
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
@@ -242,6 +230,7 @@ export class HospitalsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedCity = 'all';
     this.selectedDept = 'all';
     this.emergencyOnly = false;
+    this.resetHospitalPage();
   }
 
   filteredHospitals(): Hospital[] {

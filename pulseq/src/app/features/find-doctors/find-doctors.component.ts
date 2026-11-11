@@ -33,6 +33,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
               enterkeyhint="search"
               placeholder="Doctor, specialty or symptom, e.g. migraine"
               [(ngModel)]="searchQuery"
+              (ngModelChange)="resetDoctorPage()"
               name="q"
               autocomplete="off">
             <button class="btn btn-mint" type="submit">Search</button>
@@ -84,7 +85,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 class="chip"
                 [class.on]="selectedCity === 'all'"
                 type="button"
-                (click)="selectedCity = 'all'">
+                (click)="selectedCity = 'all'; resetDoctorPage()">
                 Any city
               </button>
               @for (c of cities; track c) {
@@ -92,7 +93,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   class="chip"
                   [class.on]="selectedCity === c"
                   type="button"
-                  (click)="selectedCity = c">
+                  (click)="selectedCity = c; resetDoctorPage()">
                   {{ c }}
                 </button>
               }
@@ -106,21 +107,21 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 class="chip"
                 [class.on]="selectedMode === 'all'"
                 type="button"
-                (click)="selectedMode = 'all'">
+                (click)="selectedMode = 'all'; resetDoctorPage()">
                 Any
               </button>
               <button
                 class="chip"
                 [class.on]="selectedMode === 'clinic'"
                 type="button"
-                (click)="selectedMode = 'clinic'">
+                (click)="selectedMode = 'clinic'; resetDoctorPage()">
                 In clinic
               </button>
               <button
                 class="chip"
                 [class.on]="selectedMode === 'video'"
                 type="button"
-                (click)="selectedMode = 'video'">
+                (click)="selectedMode = 'video'; resetDoctorPage()">
                 Video
               </button>
             </div>
@@ -133,14 +134,14 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 class="chip"
                 [class.on]="!onlyToday"
                 type="button"
-                (click)="onlyToday = false">
+                (click)="onlyToday = false; resetDoctorPage()">
                 Any day
               </button>
               <button
                 class="chip"
                 [class.on]="onlyToday"
                 type="button"
-                (click)="onlyToday = true">
+                (click)="onlyToday = true; resetDoctorPage()">
                 Free today
               </button>
             </div>
@@ -153,21 +154,21 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 class="chip"
                 [class.on]="maxFee === 0"
                 type="button"
-                (click)="maxFee = 0">
+                (click)="maxFee = 0; resetDoctorPage()">
                 Any
               </button>
               <button
                 class="chip"
                 [class.on]="maxFee === 2000"
                 type="button"
-                (click)="maxFee = 2000">
+                (click)="maxFee = 2000; resetDoctorPage()">
                 Up to Rs 2,000
               </button>
               <button
                 class="chip"
                 [class.on]="maxFee === 3000"
                 type="button"
-                (click)="maxFee = 3000">
+                (click)="maxFee = 3000; resetDoctorPage()">
                 Up to Rs 3,000
               </button>
             </div>
@@ -181,6 +182,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
 
         <!-- Main Doctor Results List -->
         <div class="fdmain">
+          @let docs = filteredDoctors();
           <div class="fdbar">
             <button
               class="btn btn-line fdtoggle"
@@ -189,14 +191,18 @@ import { Doctor, Place, Slot } from '../../shared/models';
               Filters
             </button>
             <div class="cnt" aria-live="polite">
-              <b>{{ filteredDoctors().length }}</b>
-              {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
+              @if (docs.length > doctorVisibleLimit) {
+                Showing <b>{{ doctorVisibleLimit }}</b> of <b>{{ docs.length }}</b> doctors
+              } @else {
+                <b>{{ docs.length }}</b>
+                {{ docs.length === 1 ? 'doctor' : 'doctors' }}
+              }
               @if (filterDescription()) {
                 <span class="muted">· {{ filterDescription() }}</span>
               }
             </div>
             <label class="muted sm" for="fdSort">Sort by</label>
-            <select id="fdSort" [(ngModel)]="sortOption" aria-label="Sort doctors">
+            <select id="fdSort" [(ngModel)]="sortOption" (ngModelChange)="resetDoctorPage()" aria-label="Sort doctors">
               <option value="soon">Earliest available</option>
               <option value="low">Fee: low to high</option>
               <option value="high">Fee: high to low</option>
@@ -217,9 +223,8 @@ import { Doctor, Place, Slot } from '../../shared/models';
           </div>
 
           <div class="fdlist" id="fdList">
-            @let docs = filteredDoctors();
             @if (docs.length > 0) {
-              @for (d of docs; track d.id) {
+              @for (d of docs.slice(0, doctorVisibleLimit); track d.id) {
                 @let P = doctorsService.selectedPlace(d);
                 @let h = hospitalsService.getHospitalById(P.h);
                 @let ns = getAvailableSlots(P);
@@ -294,6 +299,11 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </div>
                 </article>
               }
+              @if (docs.length > doctorVisibleLimit) {
+                <div class="load-more-wrap">
+                  <button class="load-more-btn" type="button" (click)="loadMoreDoctors()">Load more doctors <span>{{ docs.length - doctorVisibleLimit }} remaining</span></button>
+                </div>
+              }
             } @else {
               <div class="empty">
                 <h3 style="font-size:26px">No doctors match yet</h3>
@@ -314,6 +324,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
 })
 export class FindDoctorsComponent implements OnInit {
   expandedSlots = new Set<number>();
+  doctorVisibleLimit = 10;
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);
@@ -345,6 +356,7 @@ export class FindDoctorsComponent implements OnInit {
       if (params['spec']) this.selectedSpec = params['spec'];
       if (params['city']) this.selectedCity = params['city'];
       if (params['q']) this.searchQuery = params['q'];
+      this.resetDoctorPage();
     });
   }
 
@@ -365,6 +377,15 @@ export class FindDoctorsComponent implements OnInit {
 
   selectSpec(k: string): void {
     this.selectedSpec = k;
+    this.resetDoctorPage();
+  }
+
+  resetDoctorPage(): void {
+    this.doctorVisibleLimit = 10;
+  }
+
+  loadMoreDoctors(): void {
+    this.doctorVisibleLimit += 10;
   }
 
   onSearch(e: Event): void {
@@ -374,6 +395,7 @@ export class FindDoctorsComponent implements OnInit {
       this.selectedSpec = ds;
       this.searchQuery = '';
     }
+    this.resetDoctorPage();
   }
 
   resetFilters(): void {
@@ -383,6 +405,7 @@ export class FindDoctorsComponent implements OnInit {
     this.selectedMode = 'all';
     this.onlyToday = false;
     this.maxFee = 0;
+    this.resetDoctorPage();
   }
 
   filterDescription(): string {
@@ -413,6 +436,7 @@ export class FindDoctorsComponent implements OnInit {
       case 'today': this.onlyToday = false; break;
       case 'fee': this.maxFee = 0; break;
     }
+    this.resetDoctorPage();
   }
 
   getInitials(name: string): string {

@@ -22,45 +22,46 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
             <p class="muted">Brands, generics and strengths from partner pharmacies.</p>
             <a class="btn btn-ink" routerLink="/medicine/pharmacies">Partner pharmacies</a>
             <label class="sr" for="catalogMedicineSearch">Search medicines</label>
-            <input id="catalogMedicineSearch" class="inp" type="search" [(ngModel)]="catalogQuery" placeholder="Medicine, brand or generic name" autocomplete="off">
+            <input id="catalogMedicineSearch" class="inp" type="search" [(ngModel)]="catalogQuery" (ngModelChange)="resetCatalogPage()" placeholder="Medicine, brand or generic name" autocomplete="off">
           </div>
           <div class="catalog-filters">
             <div class="catalog-letters" role="group" aria-label="Browse medicines by first letter">
-              <button class="catalog-letter" [class.on]="catalogLetter === '#'" type="button" aria-label="Medicines beginning with a number" [disabled]="medicineCountForLetter('#') === 0" [attr.aria-pressed]="catalogLetter === '#'" (click)="catalogLetter = '#'">#</button>
+              <button class="catalog-letter" [class.on]="catalogLetter === '#'" type="button" aria-label="Medicines beginning with a number" [disabled]="medicineCountForLetter('#') === 0" [attr.aria-pressed]="catalogLetter === '#'" (click)="catalogLetter = '#'; resetCatalogPage()">#</button>
               @for (letter of catalogAlphabet; track letter) {
-                <button class="catalog-letter" [class.on]="catalogLetter === letter" type="button" [disabled]="medicineCountForLetter(letter) === 0" [attr.aria-pressed]="catalogLetter === letter" (click)="catalogLetter = letter">{{ letter }}</button>
+                <button class="catalog-letter" [class.on]="catalogLetter === letter" type="button" [disabled]="medicineCountForLetter(letter) === 0" [attr.aria-pressed]="catalogLetter === letter" (click)="catalogLetter = letter; resetCatalogPage()">{{ letter }}</button>
               }
             </div>
             <div class="catalog-filter-row" role="group" aria-label="Filter by medicine type">
               <span class="catalog-filter-label">Type</span>
-              <button class="chip" [class.on]="catalogForm === 'all'" type="button" [attr.aria-pressed]="catalogForm === 'all'" (click)="catalogForm = 'all'">All types</button>
+              <button class="chip" [class.on]="catalogForm === 'all'" type="button" [attr.aria-pressed]="catalogForm === 'all'" (click)="catalogForm = 'all'; resetCatalogPage()">All types</button>
               @for (form of medicineForms(); track form) {
-                <button class="chip" [class.on]="catalogForm === form" type="button" [attr.aria-pressed]="catalogForm === form" (click)="catalogForm = form">{{ form }} ({{ medicineCountForForm(form) }})</button>
+                <button class="chip" [class.on]="catalogForm === form" type="button" [attr.aria-pressed]="catalogForm === form" (click)="catalogForm = form; resetCatalogPage()">{{ form }} ({{ medicineCountForForm(form) }})</button>
               }
             </div>
             <div class="catalog-filter-row" role="group" aria-label="Filter by medicine category">
               <span class="catalog-filter-label">Category</span>
-              <button class="chip" [class.on]="catalogCategory === 'all'" type="button" [attr.aria-pressed]="catalogCategory === 'all'" (click)="catalogCategory = 'all'">All categories</button>
+              <button class="chip" [class.on]="catalogCategory === 'all'" type="button" [attr.aria-pressed]="catalogCategory === 'all'" (click)="catalogCategory = 'all'; resetCatalogPage()">All categories</button>
               @for (category of medicineCategories(); track category.key) {
-                <button class="chip" [class.on]="catalogCategory === category.key" type="button" [attr.aria-pressed]="catalogCategory === category.key" (click)="catalogCategory = category.key">{{ category.label }} ({{ medicineCountForCategory(category.key) }})</button>
+                <button class="chip" [class.on]="catalogCategory === category.key" type="button" [attr.aria-pressed]="catalogCategory === category.key" (click)="catalogCategory = category.key; resetCatalogPage()">{{ category.label }} ({{ medicineCountForCategory(category.key) }})</button>
               }
             </div>
             <div class="catalog-filter-row catalog-rx" role="group" aria-label="Prescription">
-              <button class="chip" [class.on]="catalogRx === 'all'" [attr.aria-pressed]="catalogRx === 'all'" type="button" (click)="catalogRx = 'all'">All</button>
-              <button class="chip" [class.on]="catalogRx === 'rx'" [attr.aria-pressed]="catalogRx === 'rx'" type="button" (click)="catalogRx = 'rx'">Prescription only</button>
-              <button class="chip" [class.on]="catalogRx === 'otc'" [attr.aria-pressed]="catalogRx === 'otc'" type="button" (click)="catalogRx = 'otc'">No prescription</button>
+              <button class="chip" [class.on]="catalogRx === 'all'" [attr.aria-pressed]="catalogRx === 'all'" type="button" (click)="catalogRx = 'all'; resetCatalogPage()">All</button>
+              <button class="chip" [class.on]="catalogRx === 'rx'" [attr.aria-pressed]="catalogRx === 'rx'" type="button" (click)="catalogRx = 'rx'; resetCatalogPage()">Prescription only</button>
+              <button class="chip" [class.on]="catalogRx === 'otc'" [attr.aria-pressed]="catalogRx === 'otc'" type="button" (click)="catalogRx = 'otc'; resetCatalogPage()">No prescription</button>
             </div>
           </div>
           <div class="catalog-results-bar">
-            <p aria-live="polite">Showing {{ filteredCatalogMeds().length }} of {{ medService.medicines().length }} medicines</p>
+            @let catalogMeds = filteredCatalogMeds();
+            <p aria-live="polite">Showing {{ Math.min(catalogVisibleLimit, catalogMeds.length) }} of {{ catalogMeds.length }} medicines</p>
             <label for="catalogMedicineSort">Sort</label>
-            <select id="catalogMedicineSort" [(ngModel)]="catalogSort" aria-label="Sort medicines">
+            <select id="catalogMedicineSort" [(ngModel)]="catalogSort" (ngModelChange)="resetCatalogPage()" aria-label="Sort medicines">
               <option value="az">A to Z</option>
               <option value="za">Z to A</option>
             </select>
           </div>
           <div class="catalog-list" aria-live="polite">
-            @for (m of filteredCatalogMeds(); track m.id) {
+            @for (m of catalogMeds.slice(0, catalogVisibleLimit); track m.id) {
               <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
                 <span class="catalog-row-main">
                   <b>{{ m.n }}</b>
@@ -73,13 +74,18 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 <span class="catalog-arrow" aria-hidden="true">›</span>
               </a>
             }
-            @if (filteredCatalogMeds().length === 0) {
+            @if (catalogMeds.length === 0) {
               <div class="empty">
                 <h3 style="font-size:24px">No medicines match</h3>
                 <p class="muted">Try another medicine name or generic.</p>
               </div>
             }
           </div>
+          @if (catalogMeds.length > catalogVisibleLimit) {
+            <div class="load-more-wrap">
+              <button class="load-more-btn" type="button" (click)="loadMoreCatalog()">Load more medicines <span>{{ catalogMeds.length - catalogVisibleLimit }} remaining</span></button>
+            </div>
+          }
           <p class="muted xs catalog-disclaimer">Sample catalogue for this demo. This information is general and is not medical advice. Follow your doctor’s prescription and the medicine label.</p>
         </div>
       </section>
@@ -687,6 +693,7 @@ export class MedicineComponent implements OnInit {
   catalogLetter = 'all';
   catalogSort: 'az' | 'za' = 'az';
   catalogAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  catalogVisibleLimit = 20;
   pharmacyCity = 'all';
   routeId: number | null = null;
 
@@ -759,6 +766,14 @@ export class MedicineComponent implements OnInit {
         (this.catalogRx === 'all' || (this.catalogRx === 'rx' ? m.rx === 1 : m.rx !== 1))
       )
       .sort((a, b) => this.catalogSort === 'az' ? a.n.localeCompare(b.n) : b.n.localeCompare(a.n));
+  }
+
+  resetCatalogPage(): void {
+    this.catalogVisibleLimit = 20;
+  }
+
+  loadMoreCatalog(): void {
+    this.catalogVisibleLimit += 20;
   }
 
   catalogInitial(name: string): string {
