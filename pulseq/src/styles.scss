@@ -559,11 +559,11 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .fd-slots .slot:hover{border-color:#2381FF;background:#F3F8FF}
 .fd-all-slots{min-height:32px;padding:0 8px;border:0;background:transparent;color:#1558B8;font:inherit;font-size:14px;font-weight:700;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .fd-all-slots span{margin-left:3px;text-decoration:none}
-.fd-actions{grid-area:action;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;min-width:112px;white-space:nowrap}
-.fd-actions .fee-caption{color:#71849A;font-size:11px;font-weight:600;line-height:1.1;text-align:right}
+.fd-actions{grid-area:action;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;width:124px;min-width:124px;white-space:nowrap}
+.fd-actions .fee-caption{color:#71849A;font-size:11px;font-weight:600;line-height:1.1;text-align:center}
 .fd-actions .dc-fee{margin:0}
-.fd-actions .dc-fee{display:block;width:100%;box-sizing:border-box;font-size:17px;line-height:1.15;text-align:center}
-.fd-actions .btn{width:100%;min-height:44px;padding:0 22px;justify-content:center}
+.fd-actions .dc-fee{display:flex;align-items:center;justify-content:center;width:100%;box-sizing:border-box;min-height:32px;padding:6px 10px;font-size:17px;line-height:1.15;text-align:center}
+.fd-actions .btn{width:100%;min-height:44px;padding:0 12px;justify-content:center}
 .pgback{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px 0 12px;border-radius:999px;border:1.5px solid #BBD8FF;background:#fff;color:#1558B8;font-weight:700;cursor:pointer;margin-bottom:18px}
 .pgback,.pgback:hover{text-decoration:none}
 .pgback:hover{background:#1D6FE0;color:#fff;border-color:#1D6FE0}
