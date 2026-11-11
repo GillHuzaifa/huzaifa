@@ -361,7 +361,7 @@ textarea.inp{padding:14px 16px;min-height:110px;resize:vertical;font:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* Minimal header: white, one accent, less clutter per PulseQ (9).html */
 #top{overflow:visible}
-app-header{display:block;width:100%;background:#fff;position:relative;z-index:900;overflow:visible!important}
+app-header{display:block;width:100%;background:#fff;position:relative;z-index:20;overflow:visible!important}
 header.wrap{position:relative;background:#fff;padding-bottom:12px;margin-bottom:0;overflow:visible!important}
 header.wrap .hero-l>svg,#hBubble,.hcard-wrap .confirmed,header.wrap .hbar{display:none!important}
 header.wrap .hero{gap:56px;padding-block:48px 24px}
