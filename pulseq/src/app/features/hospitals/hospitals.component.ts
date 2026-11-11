@@ -153,6 +153,20 @@ import { Hospital } from '../../shared/models';
   styles: [`
     :host { display: block; }
     .pg-hosps { display: block !important; }
+    .hdir { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin-top: 10px; }
+    .hgroup { grid-column: 1 / -1; display: flex; align-items: baseline; gap: 10px; margin: 20px 0 2px; font-size: 22px; }
+    .hgroup:first-child { margin-top: 4px; }
+    .hgroup span { color: var(--muted); font-size: 14px; font-weight: 500; }
+    .hrow { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 14px 18px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #D6E6FB; color: var(--fg); text-decoration: none; }
+    .hrow:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .hrow > svg { flex: none; margin-left: auto; color: #2381FF; }
+    .hr-l { display: flex; flex: none; align-items: center; justify-content: center; width: 52px; height: 52px; border-radius: 14px; background: #2381FF; color: #fff; font-size: 22px; }
+    .hr-n { display: block; font-size: 18px; line-height: 1.25; }
+    .hr-s, .hr-c { display: block; margin-top: 2px; color: var(--muted); font-size: 14px; line-height: 1.4; }
+    .hr-c b { color: #1558B8; }
+    .hr-e { padding: 1px 8px; border-radius: 6px; background: #FEE2E2; color: #B91C1C; font-size: 12px; font-style: normal; }
+    .lz-sent { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 18px 0 6px; text-align: center; }
+    @media (max-width: 1000px) { .hdir { grid-template-columns: 1fr; } }
   `]
 })
 export class HospitalsComponent implements OnInit, AfterViewInit, OnDestroy {
