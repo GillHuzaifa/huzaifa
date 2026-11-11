@@ -81,7 +81,7 @@ export class MobileSheetService {
       const updateViewport = () => {
         const kb = Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)));
         const landscape = window.innerWidth > window.innerHeight;
-        const sheetRatio = landscape ? 0.92 : 0.8;
+        const sheetRatio = landscape ? 0.92 : 0.72;
         const bookingRatio = landscape ? 0.92 : 0.88;
         const root = document.documentElement;
         root.style.setProperty('--vv-kb', `${kb}px`);
