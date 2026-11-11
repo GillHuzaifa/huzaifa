@@ -658,8 +658,8 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:14px}
 .crew-m{display:flex;gap:14px;align-items:center;background:#fff;border-radius:22px;padding:14px 16px;box-shadow:0 0 0 1.5px #D6E6FB;min-width:0}
 .crew-person{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden}
-.crew-av{width:100%;height:180px;border-radius:0;flex:none;background:#fff;color:#1558B8;display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:19px;overflow:hidden}
-.crew-av img{width:100%;height:100%;object-fit:contain;object-position:center}
+.crew-av{display:block;width:100%;height:180px;border-radius:0;flex:none;background:#F8FAFC;color:#1558B8;font-family:var(--disp);font-weight:800;font-size:19px;overflow:hidden}
+.crew-av img{display:block;width:100%;height:100%;object-fit:contain;object-position:center}
 .crew-person>div:not(.crew-av){padding:14px 16px 16px}
 .crew-m b{display:block;font-family:var(--disp);font-size:17px;overflow-wrap:anywhere}
 .crew-m span{color:var(--muted);font-size:14px}
