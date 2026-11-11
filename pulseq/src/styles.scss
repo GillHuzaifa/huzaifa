@@ -1789,6 +1789,12 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 .dcard:hover{box-shadow:inset 0 0 0 1.5px #2381FF,0 18px 36px -28px rgba(35,129,255,.6)}
 .frow:focus-visible,.dcard:focus-visible{outline:3px solid #2381FF;outline-offset:2px}
 .dcard button,.dcard .slot,.dcard .dc-pl,.frow button,.frow .slot,.frow .dc-pl{cursor:pointer}
+.dk .eyebrow{color:#FFFFFF!important}
+.dk .feat .k{color:#FFFFFF}
+.dk h2[style*="color:var(--mint)"]{color:#FFFFFF!important}
+.foot .muted{color:#EAF3FF}
+.dp-head .dp-rating .rt b,.dp-head .dp-rating .rt span{color:#FFFFFF!important}
+.dp-head .dp-rating .rt svg{fill:#FFFFFF!important;stroke:#FFFFFF!important}
 @media(prefers-reduced-motion:reduce){.dcard{transition:none}}
 
 .rt {
