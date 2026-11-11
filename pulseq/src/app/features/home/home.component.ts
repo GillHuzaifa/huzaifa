@@ -259,122 +259,31 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
       </div>
     </section>
 
-    <!-- PULSE AI SECTION (Final UI from uploaded design) -->
-    <section class="sec home" id="ai" style="padding: clamp(32px, 5vw, 64px) 16px; background: transparent;">
-      <div class="wrap" style="max-width: 1120px; margin: 0 auto;">
-        <div class="ai-box" style="background: #fff; border-radius: 36px; padding: clamp(24px, 4vw, 48px); box-shadow: 0 0 0 1.5px #D6E6FB, 0 20px 48px -12px rgba(35, 129, 255, 0.08); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 36px;">
-          
-          <!-- Left text column -->
-          <div class="ai-left" style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
-            <span class="eyebrow" style="font-size: 12px; font-weight: 700; letter-spacing: 0.12em; color: #526477; text-transform: uppercase;">
-              PULSEQ AI ASSISTANT · <a (click)="setUrduAiBlock()" style="color: #2381FF; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;">اردو میں لکھ کر بک کریں</a>
-            </span>
-            <h2 style="font-size: clamp(32px, 4.4vw, 52px); font-weight: 800; color: #102A43; line-height: 1.12; margin: 0;">
-              Ask PulseQ.<br>PulseQ books it.
-            </h2>
-            <p style="font-size: clamp(16px, 1.8vw, 18px); color: #526477; line-height: 1.55; margin: 0; max-width: 440px;">
-              Type in your own words. PulseQ finds a doctor, checks real free slots and holds your visit in one conversation.
-            </p>
+    <!-- PULSE AI SECTION -->
+    <section class="sec dk home" id="ai">
+      <div class="wrap dk-two">
+        <div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:24px">
+          <span class="eyebrow">PulseQ AI assistant</span>
+          <h2 style="font-size:clamp(29px,4.3vw,55px);color:#fff">Type it. PulseQ books it.</h2>
+          <p class="muted" style="font-size:19px;max-width:480px">Type in your own words. PulseQ finds a doctor, checks real free slots and holds your visit in one conversation.</p>
+        </div>
+
+        <div style="flex:1 1 440px;min-width:0">
+          <div class="aicta">
+            <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
+              <path d="M32 8v8" />
+              <circle cx="32" cy="7" r="3" fill="currentColor"/>
+              <rect x="12" y="16" width="40" height="32" rx="12" />
+              <path d="M6 30v8M58 30v8" />
+              <circle cx="24" cy="31" r="3.5" fill="currentColor" stroke="none"/>
+              <circle cx="40" cy="31" r="3.5" fill="currentColor" stroke="none"/>
+              <path d="M24 40c4 3 12 3 16 0"/>
+              <path d="M22 48v6h20v-6"/>
+            </svg>
+            <h3 style="color:#fff;font-size:30px">PulseQ is always one tap away</h3>
+            <p class="muted">Look for the blue robot at the bottom right of every page. Ask a question, get support or book a visit.</p>
+            <button class="btn btn-mint" type="button" (click)="openPulseAi()">Chat with PulseQ</button>
           </div>
-
-          <!-- Right Royal Blue Chat Card -->
-          <div class="ai-card" style="flex: 1 1 440px; max-width: 490px; min-width: 0; background: #2381FF; border-radius: 28px; padding: clamp(20px, 3vw, 26px); color: #fff; box-shadow: 0 16px 36px -10px rgba(35, 129, 255, 0.45); display: flex; flex-direction: column; gap: 14px;">
-            
-            <!-- Blue Card Top Bar -->
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <svg viewBox="0 0 48 48" aria-hidden="true" width="38" height="38" style="flex:none;border-radius:12px">
-                  <rect width="48" height="48" rx="14" fill="#1558B8"/>
-                  <path d="M6 26h7l3-9 4.500 17 5-22 4.500 15 2-1h10" fill="none" stroke="#fff" stroke-width="2.600" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="15" cy="11" r="1.700" fill="#fff"/>
-                  <circle cx="31" cy="38" r="1.700" fill="#fff"/>
-                  <circle cx="38" cy="12" r="1.700" fill="#fff"/>
-                </svg>
-                <div>
-                  <b style="font-size: 13px; font-weight: 800; letter-spacing: 0.08em; display: block; color: #fff;">PULSEQ AI</b>
-                  <span style="font-size: 12px; color: rgba(255, 255, 255, 0.78); display: block;">Answers, support and booking</span>
-                </div>
-              </div>
-              <select [(ngModel)]="aiLang" (change)="onAiLangChange()" style="background: rgba(255, 255, 255, 0.15); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 6px 14px; cursor: pointer; outline: none; appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill=\'white\' height=\'18\' viewBox=\'0 0 24 24\' width=\'18\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M7 10l5 5 5-5z\'/></svg>'); background-repeat: no-repeat; background-position: right 8px center; padding-right: 28px;">
-                <option value="en-US" style="color:#102A43;background:#fff">English</option>
-                <option value="ur-PK" style="color:#102A43;background:#fff">اردو</option>
-              </select>
-            </div>
-
-            <!-- Bot greeting message -->
-            <div style="background: rgba(255, 255, 255, 0.18); border-radius: 18px 18px 18px 4px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px;">
-              <div style="display: flex; align-items: center; gap: 6px;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="11" width="18" height="10" rx="2"></rect>
-                  <circle cx="12" cy="5" r="2"></circle>
-                  <path d="M12 7v4"></path>
-                  <line x1="8" y1="16" x2="8.01" y2="16"></line>
-                  <line x1="16" y1="16" x2="16.01" y2="16"></line>
-                </svg>
-              </div>
-              <p style="font-size: 14px; line-height: 1.45; margin: 0; color: #fff;" [attr.dir]="aiLang === 'ur-PK' ? 'rtl' : 'ltr'">
-                {{ aiLang === 'ur-PK' ? 'السلام علیکم، میں پلس کیو ہوں۔ میں آپ کے سوالات کے جوابات، رہنمائی اور اپائنٹمنٹ بکنگ میں مدد کر سکتا ہوں۔ آپ اردو یا انگلش میں لکھ سکتے ہیں۔' : "Hi, I'm PulseQ. I can answer questions, help with support and book your visit. Tell me what's wrong or who you'd like to see. You can type in English or Urdu." }}
-              </p>
-            </div>
-
-            <!-- Example user bubble -->
-            <div style="align-self: flex-end; background: rgba(255, 255, 255, 0.26); border-radius: 18px 18px 4px 18px; padding: 12px 16px; max-width: 88%;">
-              <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.85; display: block; margin-bottom: 2px;">Example</span>
-              <p style="font-size: 13.5px; line-height: 1.4; margin: 0; color: #fff;">
-                Mujhe do din se bukhar hai, kal shaam ko appointment chahiye.
-              </p>
-            </div>
-
-            <!-- 6 Suggestion Chips (2 cols) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px;">
-              <button type="button" (click)="pickAiSuggestion('Fever since two days')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                Fever since two days
-              </button>
-              <button type="button" (click)="pickAiSuggestion('Skin rash, tomorrow evening')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                Skin rash, tomorrow evening
-              </button>
-              <button type="button" (click)="pickAiSuggestion('Child check-up on Friday')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                Child check-up on Friday
-              </button>
-              <button type="button" (click)="pickAiSuggestion('Dil mein dard, kal subah')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                Dil mein dard, kal subah
-              </button>
-              <button type="button" (click)="pickAiSuggestion('How do I order medicine?')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                How do I order medicine?
-              </button>
-              <button type="button" (click)="pickAiSuggestion('How do I book a surgery?')" style="background: rgba(255, 255, 255, 0.12); border: 1.5px solid rgba(255, 255, 255, 0.35); border-radius: 999px; color: #fff; font-size: 13px; font-weight: 600; padding: 9px 12px; cursor: pointer; text-align: center; transition: all 0.2s;">
-                How do I book a surgery?
-              </button>
-            </div>
-
-            <!-- Helper text -->
-            <p style="font-size: 12px; color: rgba(255, 255, 255, 0.78); text-align: center; margin: 4px 0 0;">
-              {{ aiLang === 'ur-PK' ? 'اپنا سوال یا علامت نیچے لکھیں' : 'Type your question or symptom below' }}
-            </p>
-
-            <!-- Pill Input Box -->
-            <div style="display: flex; align-items: center; background: rgba(0, 0, 0, 0.15); border: 1.5px solid rgba(255, 255, 255, 0.3); border-radius: 999px; padding: 6px 6px 6px 18px; gap: 8px;">
-              <input
-                type="text"
-                [placeholder]="aiLang === 'ur-PK' ? 'اپنی بات یا علامت یہاں لکھیں…' : 'Tell PulseQ what you need...'"
-                [(ngModel)]="aiInput"
-                (keydown.enter)="sendInlineAi()"
-                [attr.dir]="aiLang === 'ur-PK' ? 'rtl' : 'ltr'"
-                style="background: transparent; border: none; outline: none; color: #fff; font-size: 14px; flex: 1; min-width: 0;"
-                autocomplete="off">
-              <button
-                type="button"
-                (click)="sendInlineAi()"
-                aria-label="Send message"
-                style="width: 40px; height: 40px; border-radius: 50%; background: #0C4A9E; border: none; display: flex; align-items: center; justify-content: center; color: #fff; cursor: pointer; flex-shrink: 0; transition: transform 0.15s;">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M4 12l16-8-6 16-3-7z"></path>
-                </svg>
-              </button>
-            </div>
-
-          </div>
-
         </div>
       </div>
     </section>

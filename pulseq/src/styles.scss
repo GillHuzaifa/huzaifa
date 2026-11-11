@@ -1603,22 +1603,24 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 .bm-grid{gap:20px 36px}
 .bm-stage,.bm-stage.bm-3d{width:min(100%,170px)}
 .bm-panel{border-radius:24px;padding:clamp(16px,2.4vw,24px);gap:12px}
-#ai.sec{padding-block:32px}
-#ai .dk-two{align-items:center;gap:20px 40px}
+#ai.sec.dk{background:#fff;color:#102A43;padding-block:36px;border-top:0}
+#ai .eyebrow{color:#526477!important}
+#ai h2{font-size:clamp(24px,3vw,34px)!important;color:#102A43!important}
+#ai .muted{color:#526477!important}
+#ai .dk-two{max-width:1000px;margin-inline:auto;padding:24px 28px;border-radius:28px;background:#F3F8FF;box-shadow:inset 0 0 0 1.5px #DCE8F8;align-items:center;gap:20px 40px}
 #ai .dk-two>div:first-child{gap:12px!important}
-#ai .dk-two>div:first-child>div,#ai .dk-two>div:first-child>p.sm{display:none}
-#ai h2{font-size:clamp(24px,3vw,34px)!important}
+#ai .dk-two>div:first-child>div,#ai .dk-two>div:first-child>p.sm{display:none!important}
 #ai .dk-two>div:first-child>p.muted{font-size:16px!important;max-width:520px!important}
-#ai .aicta{display:none!important}
-
-/* Pulse AI: clean white container per final design */
-#ai.sec{padding-block:clamp(32px, 5vw, 60px)}
-#ai .ai-box{background:#fff;border-radius:36px;box-shadow:0 0 0 1.5px #D6E6FB,0 20px 48px -12px rgba(35,129,255,.08)}
-#ai .ai-card{background:#2381FF;border-radius:28px;box-shadow:0 16px 36px -10px rgba(35,129,255,.45)}
-#ai .ai-card button:hover{background:rgba(255,255,255,.22)!important;border-color:rgba(255,255,255,.6)!important}
+#ai .aicta{display:flex!important;padding:20px 22px;gap:8px;border-radius:24px;background:#fff;box-shadow:inset 0 0 0 1.5px #DCE8F8;color:#2381FF;margin-bottom:0!important}
+#ai .aicta>svg{width:36px;height:36px}
+#ai .aicta h3{font-size:20px!important;color:#102A43!important}
+#ai .aicta p{font-size:14px}
+#ai .aicta .btn{background:#2381FF!important;color:#fff!important}
 @media(max-width:900px){
-  #ai .ai-box{padding:24px 20px!important;gap:24px!important}
-  #ai .ai-card{max-width:100%!important;width:100%!important}
+  #ai.sec.dk{padding:28px 16px!important}
+  #ai .dk-two{padding:20px 18px!important;border-radius:22px!important;gap:18px!important}
+  #ai .aicta{margin-bottom:0!important;width:100%!important}
+  #ai .aicta .btn{min-height:44px}
 }
 
 /* Pulse chat panel: logo colours (light blue, blue, white) */
