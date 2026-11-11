@@ -57,10 +57,10 @@ import { SPEC } from '../../../data/specialties.data';
         }
       </div>
 
-      <a class="clinic-preview-link" href="/clinics#clinic-dashboard">See full demo</a>
+      <a class="clinic-preview-link" href="/clinics#clinic-full-demo">See full demo</a>
     </section>
 
-    <div class="laptop-box">
+    <div class="laptop-box" id="clinic-full-demo">
       <div class="laptop">
         <div class="lid">
           <div class="screen">

@@ -1280,7 +1280,7 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     width: 100% !important;
     overflow-x: visible !important;
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 0 0 24px !important;
     box-shadow: none !important;
     background: transparent !important;
     border: 0 !important;
@@ -1314,6 +1314,10 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
     background: #ffffff !important;
     box-shadow: 0 10px 30px -10px rgba(12,45,94,0.08) !important;
     overflow: hidden !important;
+  }
+  #clinic-full-demo {
+    scroll-margin-top: 16px !important;
+    padding-bottom: 76px !important;
   }
   .rail {
     display: none !important;
@@ -2214,6 +2218,10 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 
 .clinic-preview {
   display: none;
+}
+
+#clinic-full-demo {
+  scroll-margin-top: 20px;
 }
 
 @media (max-width: 760px) {
