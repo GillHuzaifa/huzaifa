@@ -239,11 +239,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           </div>
           <div class="proclist" id="sProcs" role="list" aria-label="Procedures">
             @for (pr of filteredPlannerProcedures(); track pr.id) {
-              <a class="prow" [routerLink]="['/surgery/procedures', pr.id]">
+              <button class="prow" [class.on]="selectedProcId === pr.id" [attr.aria-pressed]="selectedProcId === pr.id" type="button" (click)="selectProc(pr.id)">
                 <span class="pr-t"><b>{{ pr.n }}</b><small>{{ pr.d }}</small></span>
                 <span class="pr-p">{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</span>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
-              </a>
+              </button>
             }
             @if (filteredPlannerProcedures().length === 0) {
               <p class="muted sm" style="padding:14px">No procedure matches. Try another word.</p>
@@ -592,6 +592,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     .procedure-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 14px; }
     .proclist { display: grid; gap: 10px; }
     .prow {
+      width: 100%;
+      border: 0;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto auto;
       gap: 6px 16px;
@@ -604,6 +609,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
       text-decoration: none;
     }
     .prow:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .prow.on { box-shadow: inset 0 0 0 2px #2381FF; background: #F7FAFF; }
     .prow:focus-visible { outline: 3px solid #2381FF; outline-offset: 2px; }
     .pr-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
     .pr-t small {
