@@ -678,7 +678,7 @@ export class SurgeryComponent implements OnInit {
   selectedCity = 'all';
 
   selectedCat = 'general';
-  selectedProcId = 8;
+  selectedProcId: number | null = null;
   comparedHosps: string[] = [];
 
   // Surgeons filters
@@ -810,7 +810,9 @@ export class SurgeryComponent implements OnInit {
   }
 
   currentProc(): Procedure | undefined {
-    return this.surgeryService.getProcedureById(this.selectedProcId);
+    return this.selectedProcId === null
+      ? undefined
+      : this.surgeryService.getProcedureById(this.selectedProcId);
   }
 
   currentHosps(): Hospital[] {
@@ -819,7 +821,7 @@ export class SurgeryComponent implements OnInit {
 
   private allCurrentHosps(): Hospital[] {
     const pr = this.currentProc();
-    if (!pr) return [];
+    if (!pr || this.selectedProcId === null) return [];
     return this.surgeryService.hospsFor(this.selectedProcId).sort((a, b) =>
       this.surgeryService.hrange(pr, a.id)[0] - this.surgeryService.hrange(pr, b.id)[0]
     );
@@ -833,10 +835,7 @@ export class SurgeryComponent implements OnInit {
     this.selectedCat = cat;
     this.procedureQuery = '';
     this.selectedCity = 'all';
-    const procs = this.currentProcedures();
-    if (procs.length > 0) {
-      this.selectedProcId = procs[0].id;
-    }
+    this.selectedProcId = null;
     this.comparedHosps = [];
   }
 
