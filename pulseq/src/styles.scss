@@ -721,7 +721,8 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .photo-in input{max-width:190px;font-size:12px}
 .st-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}
 .st{background:#fff;border-radius:28px;padding:24px;box-shadow:0 0 0 1.5px #D6E6FB;display:flex;flex-direction:column;gap:16px}
-.st:nth-child(2){transform:rotate(.6deg)}.st:nth-child(3){transform:rotate(-.5deg)}
+.st-grid .st:nth-child(2){transform:rotate(.6deg)}.st-grid .st:nth-child(3){transform:rotate(-.5deg)}
+.news .st{transform:none!important;height:100%}
 .st blockquote{margin:0;font-size:18px;line-height:1.55;color:#1B2E44}
 .st footer{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
 .st footer .avatar{width:48px;height:48px;border-radius:50%;font-size:17px}
@@ -1800,10 +1801,13 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 }
 .kyp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
 .kyp h3{font-size:24px}
-.kyp-x{all:unset;cursor:pointer;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-size:20px;line-height:1;flex:none}
+.kyp-x{all:unset;cursor:pointer;width:38px;height:38px;min-height:38px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-size:20px;line-height:1;flex:none}
 .kyp-x:focus-visible{outline:3px solid var(--focus)}
 .kyp h4{font-size:14px;margin:16px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--body);font-weight:800}
 .kyl{display:flex;flex-wrap:wrap;gap:8px}
+.kyl.kyl-rows{flex-direction:column}
+.kyl.kyl-rows label{width:100%;display:block}
+.kyl.kyl-rows span{width:100%;border-radius:14px;padding:10px 16px;justify-content:flex-start}
 .kyl label{position:relative;cursor:pointer}
 .kyl input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
 .kyl span{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);font-size:14.5px;font-weight:600;background:#fff;transition:background .15s,border-color .15s}

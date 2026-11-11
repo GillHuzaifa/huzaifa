@@ -450,7 +450,7 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
         <div id="kyBody">
           @for (group of kyCurData.g; track group.title; let gi = $index) {
             <h4>{{ group.title }}</h4>
-            <div class="kyl">
+            <div class="kyl" [class.kyl-rows]="gi === 0">
               @for (item of group.items; track item; let ii = $index) {
                 <label>
                   <input type="checkbox" [checked]="kyChecked[gi + '_' + ii]" (change)="toggleKyItem(gi, ii)">
@@ -631,8 +631,6 @@ export class HomeComponent implements OnInit {
     cur.g[0].items.forEach((_, ii: number) => { if (this.kyChecked['0_' + ii]) uCount++; });
     cur.g[1].items.forEach((_, ii: number) => { if (this.kyChecked['1_' + ii]) rCount++; });
 
-    if (uCount === 0 && rCount === 0) return '';
-
     const isHeart = this.kyCur === 'heart';
     if (isHeart && uCount > 0) {
       return `<div class="kyr kyr-u">
@@ -640,26 +638,43 @@ export class HomeComponent implements OnInit {
         <p>These can be signs of a heart attack. Do not wait and do not drive yourself.</p>
         <ol>
           <li>Call 1122 (or your local emergency number).</li>
-          <li>Sit down, stay calm and loosen tight clothes.</li>
-          <li>Chew one adult aspirin (300 mg) unless allergic.</li>
+          <li>Sit down, stay calm and loosen tight clothing.</li>
+          <li>Ask someone to stay with you and unlock the door.</li>
         </ol>
+        <a class="btn" href="tel:1122" style="margin-top:12px">Call 1122</a>
       </div>`;
     }
     if (!isHeart && uCount > 0) {
       return `<div class="kyr kyr-a">
-        <b>See a doctor soon.</b>
-        <p>Most breast changes are not cancer, but a specialist needs to check them to be sure.</p>
-        <button class="btn btn-coral" style="margin-top:10px" data-action="book">Book a doctor now</button>
+        <b>Please get this checked within a few days.</b>
+        <p>Most breast changes are not cancer, but only an exam can tell, and early checking gives the best outcome.</p>
+        ${rCount > 0 ? '<p>Because of your background, mention it to the doctor.</p>' : ''}
+        <button class="btn btn-coral" type="button" style="margin-top:12px" data-action="book">Book a doctor now</button>
       </div>`;
     }
-    if (rCount > 0) {
+    if (isHeart && rCount >= 2) {
+      return `<div class="kyr kyr-a">
+        <b>Worth a heart check-up.</b>
+        <p>You have ${rCount} risk factors. A blood pressure, sugar and cholesterol check can show where you stand. Learn the warning signs above: if any appear, call 1122.</p>
+        <button class="btn btn-coral" type="button" style="margin-top:12px" data-action="book">Book a cardiologist now</button>
+      </div>`;
+    }
+    if (isHeart) {
       return `<div class="kyr kyr-g">
-        <b>No red flags ticked.</b>
-        <p>You have ${rCount} factor${rCount > 1 ? 's' : ''} that make a routine check-up worthwhile.</p>
-        <button class="btn btn-coral" style="margin-top:10px" data-action="book">Book a ${isHeart ? 'cardiologist' : 'check-up'} now</button>
+        <b>${rCount > 0 ? 'Low risk for now.' : 'Nothing ticked.'}</b>
+        <p>Keep it that way: walk 30 minutes most days, avoid tobacco, eat less salt and check your blood pressure every year. Women, older adults and people with diabetes can have milder signs such as unusual tiredness, nausea or back or jaw pain.</p>
       </div>`;
     }
-    return '';
+    return `<div class="kyr kyr-g">
+      <b>No changes ticked. Keep checking monthly.</b>
+      <ol>
+        <li><b style="display:inline;font-size:inherit">Look:</b> in a mirror with arms down, then raised, for changes in shape, skin or nipples.</li>
+        <li><b style="display:inline;font-size:inherit">Feel:</b> with flat finger pads in small circles, covering the whole breast and underarm. Lying down helps.</li>
+        <li><b style="display:inline;font-size:inherit">When:</b> about a week after your period ends, or on the same date each month.</li>
+      </ol>
+      ${rCount > 0 ? '<p>Ask a doctor about screening, such as a mammogram, since you ticked a risk factor.</p>' : ''}
+      <button class="btn btn-coral" type="button" style="margin-top:12px" data-action="book">Book a doctor now</button>
+    </div>`;
   }
 
   handleKyResultClick(e: MouseEvent) {
