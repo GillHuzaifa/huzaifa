@@ -53,14 +53,14 @@ import { PulseAiService } from '../../services/pulse-ai.service';
           </div>
         </div>
         <div class="foot-legal">
-          <span class="foot-copy">© 2026 PulseQ</span>
+          <span class="foot-copy">Copyright © 2026 PulseQ. All rights reserved.</span>
           <span class="foot-links">
             <a routerLink="/privacy">Privacy policy</a>
             <span aria-hidden="true">·</span>
             <a routerLink="/terms">Terms of use</a>
           </span>
-          <span class="foot-note">PulseQ helps you book care and does not provide medical advice.</span>
-          <span class="foot-emergency">For a severe emergency, call 1122 immediately.</span>
+          <span class="foot-note">PulseQ does not provide medical advice.</span>
+          <span class="foot-emergency">Emergency: call 1122.</span>
         </div>
       </div>
     </footer>
