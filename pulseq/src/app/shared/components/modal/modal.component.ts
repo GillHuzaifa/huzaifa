@@ -27,22 +27,22 @@ import { SPEC } from '../../../data/specialties.data';
           <div class="sheet-handle" (touchstart)="onHandleTouchStart($event)" (touchend)="onHandleTouchEnd($event)" aria-hidden="true"></div>
           @if (!modal.isDone()) {
             @if (modal.selectedDocOrPlace(); as d) {
-              <div style="display:flex;flex-direction:column;gap:18px">
-                <div class="panel-head">
-                  <div class="avatar t{{ d.t }}">{{ getInitials(d.name) }}</div>
-                  <div class="min0">
-                    <h3 id="mTitle" style="font-size:24px">{{ d.name }}</h3>
-                    <p class="muted sm">
-                      {{ getSpec(d.spec) }} · {{ getHospName(d.h) }} · Rs {{ d.fee.toLocaleString('en-US') }}
-                    </p>
-                  </div>
-                  <button class="icon-btn x" (click)="modal.close()" aria-label="Close">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-                      <path d="M6 6l12 12M18 6L6 18"></path>
-                    </svg>
-                  </button>
+              <div class="panel-head">
+                <div class="avatar t{{ d.t }}">{{ getInitials(d.name) }}</div>
+                <div class="min0">
+                  <h3 id="mTitle" style="font-size:24px">{{ d.name }}</h3>
+                  <p class="muted sm">
+                    {{ getSpec(d.spec) }} · {{ getHospName(d.h) }} · Rs {{ d.fee.toLocaleString('en-US') }}
+                  </p>
                 </div>
+                <button class="icon-btn x" type="button" (click)="modal.close()" aria-label="Close">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+                    <path d="M6 6l12 12M18 6L6 18"></path>
+                  </svg>
+                </button>
+              </div>
 
+              <div class="panel-body">
                 @if (docStats(d); as s) {
                   <details class="mrev" id="mRev">
                     <summary class="mr-sum">
@@ -100,7 +100,7 @@ import { SPEC } from '../../../data/specialties.data';
 
                 <div>
                   <span class="lbl">Day</span>
-                  <div class="chips">
+                  <div class="chips sheet-chip-row">
                     @for (o of [0, 1, 2, 3, 4]; track o) {
                       @let n = doctorsService.slots(d, o).length;
                       <button
@@ -117,7 +117,7 @@ import { SPEC } from '../../../data/specialties.data';
 
                 <div>
                   <span class="lbl">Time</span>
-                  <div class="chips">
+                  <div class="chips sheet-chip-row">
                     @for (t of doctorsService.slots(d, modal.selectedDayOffset()); track t) {
                       <button
                         class="chip"
@@ -141,20 +141,21 @@ import { SPEC } from '../../../data/specialties.data';
                 </div>
 
                 <p class="err" role="alert">{{ modal.errorMessage() }}</p>
-
-                <button class="btn btn-coral full" (click)="submit()">Confirm appointment</button>
+              </div>
+              <div class="panel-footer">
+                <button class="btn btn-coral full" type="button" (click)="submit()">Confirm appointment</button>
               </div>
             }
           } @else {
             @if (modal.lastConfirmed(); as b) {
-              <div style="display:flex;flex-direction:column;gap:16px">
+              <div class="panel-body panel-success" style="display:flex;flex-direction:column;gap:16px">
                 <div style="display:flex;align-items:center;gap:12px">
                   <span style="width:48px;height:48px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex:none">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#102A43" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M5 12.5l4.5 4.5L19 7.5"></path>
                     </svg>
                   </span>
-                  <h3 style="font-size:28px">You’re booked</h3>
+                  <h3 id="mTitle" style="font-size:28px">You’re booked</h3>
                 </div>
 
                 <div class="bk">
@@ -166,8 +167,10 @@ import { SPEC } from '../../../data/specialties.data';
 
                 <p class="muted sm">Get your appointment number on WhatsApp, and show your code at the desk when you arrive. Demo note: appointments here are saved in this browser only.</p>
 
+              </div>
+              <div class="panel-footer">
                 <a class="btn btn-coral full" target="_blank" rel="noopener" [href]="getWaLink(b)">Get your appointment number on WhatsApp</a>
-                <button class="btn btn-ink full" (click)="modal.close()">Done</button>
+                <button class="btn btn-ink full" type="button" (click)="modal.close()">Done</button>
               </div>
             }
           }

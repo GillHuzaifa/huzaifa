@@ -12,6 +12,54 @@ import { SPEC } from '../../../data/specialties.data';
   standalone: true,
   imports: [FormsModule],
   template: `
+    <section class="clinic-preview" id="clinic-dashboard" aria-labelledby="clinic-preview-title">
+      <div class="clinic-preview-heading">
+        <div>
+          <span class="clinic-sample-label">Sample data</span>
+          <h2 id="clinic-preview-title">Clinic dashboard preview</h2>
+        </div>
+      </div>
+      <div class="clinic-preview-chips" aria-label="Clinic">
+        <span class="clinic-preview-chip">Crescent Family Clinic</span>
+        <span class="clinic-preview-chip">Lahore</span>
+      </div>
+
+      <div class="clinic-preview-stats">
+        <article><span>Appointments today</span><strong>{{ clToday().length }}</strong></article>
+        <article><span>Checked in</span><strong>{{ countDone() }}</strong></article>
+        <article><span>Collected</span><strong>Rs {{ totalCash().toLocaleString('en-US') }}</strong></article>
+        <article><span>Clinic time</span><strong>{{ doctorsService.formatTime('17:40') }}</strong></article>
+      </div>
+
+      @let previewUpNext = getUpNextGroup();
+      <article class="clinic-preview-next">
+        <div>
+          <span class="clinic-preview-kicker">Up next</span>
+          @if (previewUpNext.length > 0) {
+            <h3>{{ doctorsService.formatTime(previewUpNext[0].time) }} · {{ dShort(previewUpNext[0].doc) }}</h3>
+            <p>{{ previewUpNext[0].patient }} · {{ previewUpNext.length }} {{ previewUpNext.length === 1 ? 'patient' : 'patients' }} waiting</p>
+          } @else {
+            <h3>No one else waiting</h3>
+            <p>Everyone booked for today has checked in.</p>
+          }
+        </div>
+      </article>
+
+      <div class="clinic-preview-list">
+        <h3>Appointments</h3>
+        @for (a of clToday().slice(0, 3); track a.id) {
+          <div class="clinic-preview-row">
+            <time>{{ doctorsService.formatTime(a.time) }}</time>
+            <span class="clinic-preview-doctor">{{ dShort(a.doc) }}</span>
+            <span class="clinic-preview-patient">{{ a.patient }}</span>
+            <span class="clinic-preview-status">{{ state.done[a.id] ? 'Checked in' : (a.src === 'online' ? 'Online' : 'Upcoming') }}</span>
+          </div>
+        }
+      </div>
+
+      <a class="clinic-preview-link" href="/clinics#clinic-dashboard">See full demo</a>
+    </section>
+
     <div class="laptop-box">
       <div class="laptop">
         <div class="lid">

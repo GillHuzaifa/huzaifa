@@ -35,7 +35,9 @@ import { ToastService } from '../../services/toast.service';
 
     <!-- Chat Panel -->
     @if (ai.isOpen()) {
-      <section class="botpanel" role="dialog" aria-modal="true" aria-label="PulseQ assistant">
+      <button class="bot-backdrop" type="button" aria-label="Close PulseQ assistant" (click)="ai.close()"></button>
+      <section class="botpanel" role="dialog" aria-modal="true" aria-label="PulseQ assistant" tabindex="-1">
+        <div class="bot-sheet-handle" aria-hidden="true" (touchstart)="onHeadTouchStart($event)" (touchend)="onHeadTouchEnd($event)"></div>
         <div class="chat" style="flex:1;min-height:0;border-radius:0;box-shadow:none">
           <div class="chat-head" (touchstart)="onHeadTouchStart($event)" (touchend)="onHeadTouchEnd($event)">
             <span style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none">
@@ -194,6 +196,45 @@ export class PulseAiComponent implements OnDestroy {
 
   userInput = '';
   private headTouchStartY = 0;
+  private lastScrollY = 0;
+  private fabObserver?: MutationObserver;
+  private handleWindowScroll = () => {
+    const scrollY = window.scrollY || 0;
+    document.body.classList.toggle('pulse-scrolling-down', scrollY > this.lastScrollY && scrollY > 120);
+    this.lastScrollY = scrollY;
+    this.scheduleFabOverlapCheck();
+  };
+  private scheduleFabOverlapCheck = (): void => {
+    if (typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => this.updateFabOverlap());
+    }
+  };
+
+  private updateFabOverlap(): void {
+    if (window.innerWidth > 1023) {
+      document.body.classList.remove('pulse-fab-overlap');
+      return;
+    }
+    const fab = document.querySelector<HTMLElement>('.botfab');
+    if (!fab) {
+      document.body.classList.remove('pulse-fab-overlap');
+      return;
+    }
+    const rect = fab.getBoundingClientRect();
+    const points = [
+      [rect.left + rect.width / 2, rect.top + rect.height / 2],
+      [rect.left + 8, rect.top + 8],
+      [rect.right - 8, rect.bottom - 8]
+    ];
+    const contentSelectors = 'button, a, input, select, textarea, [contenteditable="true"], p, h1, h2, h3, h4, label, li, span, b, strong';
+    const overlapsContent = points.some(([x, y]) =>
+      document.elementsFromPoint(x, y).some(element => {
+        if (element === fab || element.closest('app-pulse-ai, .public-mobile-nav, .clinic-mobile-nav')) return false;
+        return !!element.closest(contentSelectors);
+      })
+    );
+    document.body.classList.toggle('pulse-fab-overlap', overlapsContent);
+  }
 
   onHeadTouchStart(e: TouchEvent): void {
     this.headTouchStartY = e.touches[0]?.clientY || 0;
@@ -217,10 +258,25 @@ export class PulseAiComponent implements OnDestroy {
     if (typeof document !== 'undefined') {
       document.addEventListener('focusin', this.handleFocusIn);
       document.addEventListener('focusout', this.handleFocusOut);
+      this.lastScrollY = window.scrollY || 0;
+      window.addEventListener('scroll', this.handleWindowScroll, { passive: true });
+      window.addEventListener('resize', this.scheduleFabOverlapCheck, { passive: true });
+      this.fabObserver = new MutationObserver(this.scheduleFabOverlapCheck);
+      const content = document.querySelector('#content');
+      if (content) this.fabObserver.observe(content, { childList: true, subtree: true, attributes: true });
+      setTimeout(() => this.scheduleFabOverlapCheck(), 100);
     }
     effect(() => {
       const open = this.ai.isOpen();
       const len = this.ai.messages().length;
+      if (typeof document !== 'undefined') {
+        document.body.classList.toggle('ai-sheet-open', open);
+      }
+      if (open) {
+        setTimeout(() => {
+          document.querySelector<HTMLElement>('.botpanel .botx')?.focus({ preventScroll: true });
+        }, 0);
+      }
       if (open && len > 0) {
         setTimeout(() => this.scrollLogToBottom(), 30);
       }
@@ -238,7 +294,13 @@ export class PulseAiComponent implements OnDestroy {
     if (typeof document !== 'undefined') {
       document.removeEventListener('focusin', this.handleFocusIn);
       document.removeEventListener('focusout', this.handleFocusOut);
+      window.removeEventListener('scroll', this.handleWindowScroll);
+      window.removeEventListener('resize', this.scheduleFabOverlapCheck);
+      this.fabObserver?.disconnect();
       document.body.classList.remove('input-focused');
+      document.body.classList.remove('pulse-scrolling-down');
+      document.body.classList.remove('pulse-fab-overlap');
+      document.body.classList.remove('ai-sheet-open');
     }
   }
 

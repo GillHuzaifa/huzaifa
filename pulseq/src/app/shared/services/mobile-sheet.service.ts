@@ -33,13 +33,61 @@ export class MobileSheetService {
       }
     });
 
+    document.addEventListener('keydown', (event) => {
+      if (this.stack.length === 0) return;
+      const top = this.stack[this.stack.length - 1];
+      const dialog = top.id === 'ai'
+        ? document.querySelector<HTMLElement>('.botpanel[role="dialog"]')
+        : top.id === 'booking'
+          ? document.querySelector<HTMLElement>('.modal [role="dialog"]')
+          : document.querySelector<HTMLElement>('.more-sheet-backdrop[role="dialog"]');
+      if (!dialog) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        if (window.history.state?.pulseqSheet === top.id) {
+          window.history.back();
+        } else {
+          this.stack.pop();
+          if (this.stack.length === 0) this.unlockScroll();
+          this.restoreFocus(top);
+          top.onClose();
+        }
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )).filter(element => element.getClientRects().length > 0);
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+
     const vv = window.visualViewport;
     if (vv) {
       const updateViewport = () => {
         const kb = Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)));
+        const landscape = window.innerWidth > window.innerHeight;
+        const sheetRatio = landscape ? 0.92 : 0.8;
+        const bookingRatio = landscape ? 0.92 : 0.88;
         const root = document.documentElement;
         root.style.setProperty('--vv-kb', `${kb}px`);
         root.style.setProperty('--vv-height', `${Math.round(vv.height)}px`);
+        root.style.setProperty('--vv-sheet-height', `${Math.round(vv.height * sheetRatio)}px`);
+        root.style.setProperty('--vv-booking-height', `${Math.round(vv.height * bookingRatio)}px`);
         if (kb > 90) {
           root.classList.add('kb-open');
         } else {
@@ -81,6 +129,14 @@ export class MobileSheetService {
     }
 
     this.stack.push({ id, onClose, previousFocus });
+    const dialogSelector = id === 'ai'
+      ? '.botpanel[role="dialog"]'
+      : id === 'booking'
+        ? '.modal [role="dialog"]'
+        : '.more-sheet-backdrop[role="dialog"]';
+    setTimeout(() => {
+      document.querySelector<HTMLElement>(dialogSelector)?.focus({ preventScroll: true });
+    }, 0);
   }
 
   close(id: string): void {
