@@ -13,7 +13,7 @@ import { SeoService } from '../../shared/services/seo.service';
         <div style="display:flex;flex-wrap:wrap;gap:24px 56px;align-items:flex-end;justify-content:space-between;margin-bottom:44px">
           <div style="display:flex;flex-direction:column;gap:18px;max-width:640px">
             <span class="eyebrow">For hospitals and clinics <span class="ur" lang="ur">· کلینک کے لیے</span></span>
-            <h2 style="font-size:clamp(29px,4.3vw,55px);color:var(--mint)">Fill the empty hours.</h2>
+            <h2 style="font-size:clamp(29px,4.3vw,55px);color:#fff">Fill the empty hours.</h2>
             <p class="muted" style="font-size:19px">List your hospital or clinic on PulseQ. Patients book your free slots, and your whole day sits on one dashboard.</p>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
