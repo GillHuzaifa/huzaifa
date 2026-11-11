@@ -3177,6 +3177,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   }
 
   .botpanel {
+    z-index: 1063 !important;
     height: min(80dvh, 640px, var(--vv-sheet-height, 80dvh)) !important;
     max-height: min(80dvh, 640px, var(--vv-sheet-height, 80dvh)) !important;
     bottom: var(--vv-kb, 0px) !important;
