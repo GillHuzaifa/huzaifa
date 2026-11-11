@@ -166,6 +166,47 @@ import { SPEC } from '../../data/specialties.data';
     :host { display: block; }
     .pg-hosps { display: block !important; }
     .dlist { display: flex; flex-direction: column; gap: 10px; }
+    .drow {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr) minmax(0, 1.2fr) auto;
+      gap: 10px 22px;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: inset 0 0 0 1.5px #D6E6FB;
+    }
+    .drow:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .drow .dc-ava { width: 52px; height: 52px; font-size: 17px; }
+    .dr-id { display: flex; align-items: center; gap: 14px; min-width: 0; color: var(--fg); text-decoration: none; }
+    .dr-id > .min0 { flex: 1; }
+    .dr-n { display: block; font-size: 18px; line-height: 1.2; }
+    .dr-s { display: block; margin-top: 2px; color: var(--muted); font-size: 14px; line-height: 1.35; }
+    .dr-r { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+    .rt { display: inline-flex; align-items: center; gap: 6px; color: var(--fg); font-size: 14px; text-decoration: none; }
+    .rt:hover { color: #1558B8; }
+    .dr-sl { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dr-sl .slot { min-height: 38px; padding: 0 12px; font-size: 14px; }
+    .dr-act { display: flex; align-items: center; gap: 10px; }
+    .dr-act .dc-fee { white-space: nowrap; }
+    .dr-act .btn { min-height: 44px; padding: 0 24px; }
+    @media (max-width: 860px) {
+      .drow {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: "id id" "rating action" "slots slots";
+        padding: 14px;
+      }
+      .dr-id { grid-area: id; }
+      .dr-r { grid-area: rating; flex-direction: row; align-items: center; flex-wrap: wrap; }
+      .dr-act { grid-area: action; }
+      .dr-sl { grid-area: slots; }
+    }
+    @media (max-width: 420px) {
+      .drow { gap: 12px; }
+      .dr-act { gap: 8px; }
+      .dr-act .btn { padding-inline: 16px; }
+      .dr-sl .slot { min-height: 36px; padding-inline: 10px; }
+    }
   `]
 })
 export class HospitalDetailComponent implements OnInit {

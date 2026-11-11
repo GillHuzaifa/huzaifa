@@ -488,6 +488,33 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     .procedure-filters { display: grid; gap: 14px; margin: 20px 0; }
     .procedure-filters > .inp { width: min(100%, 620px); }
     .procedure-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 14px; }
+    .proclist { display: grid; gap: 10px; }
+    .prow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 6px 16px;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: 18px;
+      background: #fff;
+      box-shadow: inset 0 0 0 1.5px #D6E6FB;
+      color: var(--fg);
+      text-decoration: none;
+    }
+    .prow:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .prow:focus-visible { outline: 3px solid #2381FF; outline-offset: 2px; }
+    .pr-t { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .pr-t small {
+      display: -webkit-box;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+    }
+    .pr-p { color: #1558B8; font-size: 14px; font-weight: 700; white-space: nowrap; }
+    .prow > svg { color: #2381FF; }
     .procedure-card { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
     .procedure-card:hover { box-shadow: inset 0 0 0 2px #2381FF; }
     .procedure-card h3 { font-size: 22px; }
@@ -511,6 +538,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
     .surgery-entry small { margin-top: 3px; color: #526477; font-size: 13px; }
     .surgery-entry-primary small { color: rgba(255,255,255,.88); }
     .surgery-entry-go { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #1558B8; background: #EAF3FF; }
+    @media (max-width: 760px) {
+      .prow { grid-template-columns: minmax(0, 1fr) auto; gap: 6px 12px; }
+      .pr-p { white-space: normal; }
+      .prow > svg { grid-column: 2; grid-row: 1 / 3; }
+    }
     @media (prefers-reduced-motion: reduce) { .surgery-entry { transition: none; } }
   `]
 })
