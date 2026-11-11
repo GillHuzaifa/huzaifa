@@ -541,23 +541,6 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
           </aside>
         </div>
 
-        @if (medService.orders().length > 0) {
-          <div id="ordWrap" style="margin-top:44px">
-            <h3 style="font-size:28px;margin-bottom:14px">Your medicine orders</h3>
-            <div class="mine" id="ordList">
-              @for (o of medService.orders(); track o.code) {
-                <div class="bk">
-                  <span class="muted xs">{{ o.shop }}</span>
-                  <code>{{ o.code }}</code>
-                  <p class="sm">{{ o.items }}</p>
-                  <p class="sm muted">Waiting for the pharmacy to contact you on {{ o.phone }}</p>
-                  <button class="btn btn-line" (click)="medService.cancelOrder(o.code)" style="margin-top:8px">Cancel order</button>
-                </div>
-              }
-            </div>
-          </div>
-        }
-
         <div class="partner">
           <div>
             <h3 style="font-size:26px">Run a pharmacy?</h3>

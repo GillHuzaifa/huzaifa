@@ -4,10 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
-import { BookingsService } from '../../shared/services/bookings.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { PulseAiService } from '../../shared/services/pulse-ai.service';
-import { ToastService } from '../../shared/services/toast.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { DoctorCardComponent } from '../../shared/components/doctor-card/doctor-card.component';
 import { ClinicDashboardComponent } from '../../shared/components/clinic-dashboard/clinic-dashboard.component';
@@ -243,23 +241,6 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
       </div>
     </section>
 
-    <!-- My Bookings List (if any) -->
-    <section *ngIf="myBookings().length > 0" class="sec home" id="my-bookings">
-      <div class="wrap">
-        <div class="sec-head" style="margin-bottom:20px">
-          <h2 style="font-size:clamp(26px,3.0vw,30px)">Your appointments</h2>
-        </div>
-        <div class="mine">
-          <div *ngFor="let b of myBookings()" class="bk">
-            <code>{{ b.code }}</code>
-            <b>{{ b.doctor }}</b>
-            <span class="muted sm">{{ b.hospital }} · {{ b.when }}</span>
-            <button class="btn btn-line sm" style="align-self:flex-start;min-height:36px;margin-top:8px" (click)="cancelMyBooking(b.code)">Cancel booking</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- PULSE AI SECTION -->
     <section class="sec dk home" id="ai">
       <div class="wrap dk-two">
@@ -475,10 +456,8 @@ export class HomeComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
-  bookingsService = inject(BookingsService);
   modalService = inject(ModalService);
   pulseAi = inject(PulseAiService);
-  toast = inject(ToastService);
   seo = inject(SeoService);
   private mobileSheet = inject(MobileSheetService);
 
@@ -518,9 +497,6 @@ export class HomeComponent implements OnInit {
     { n: 24, l: 'Surgical procedures', c: 't1', p: '' }
   ];
   siteNews = SITE.news;
-
-  // My Bookings
-  myBookings = this.bookingsService.bookings;
 
   // Home About Data from PulseQ (14).html
   aboutData = ABOUT;
@@ -901,10 +877,6 @@ export class HomeComponent implements OnInit {
     return this.filteredDoctors().slice(0, this.docLimit);
   }
 
-  cancelMyBooking(code: string) {
-    this.bookingsService.cancelBooking(code);
-    this.toast.show('Booking cancelled.');
-  }
 
   // Hospitals section
   filteredHospitals(): Hospital[] {
