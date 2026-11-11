@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { SurgeryService } from '../../shared/services/surgery.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { SeoService } from '../../shared/services/seo.service';
@@ -9,9 +10,78 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
 @Component({
   selector: 'app-surgery',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
-    @if (viewMode === 'surgery') {
+    @if (viewMode === 'procedures') {
+      <section class="sec pg-scat">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/surgery">Back to surgery</a>
+          <div class="sec-head">
+            <div><span class="eyebrow">PulseQ procedure catalog</span><h2>Find a procedure</h2></div>
+            <p class="muted" style="max-width:380px">Browse estimated costs, hospital stays and recovery times. A hospital confirms the final quote after consultation.</p>
+          </div>
+          <div class="procedure-filters">
+            <label class="sr" for="procedureSearch">Search procedures</label>
+            <input id="procedureSearch" class="inp" type="search" [(ngModel)]="procedureQuery" placeholder="Procedure, e.g. knee, cataract or hernia" autocomplete="off">
+            <div class="chips" role="group" aria-label="Procedure category">
+              <button class="chip" [class.on]="procedureCategory === 'all'" [attr.aria-pressed]="procedureCategory === 'all'" type="button" (click)="procedureCategory = 'all'">All areas</button>
+              @for (cat of surgeryService.categories(); track cat.k) {
+                <button class="chip" [class.on]="procedureCategory === cat.k" [attr.aria-pressed]="procedureCategory === cat.k" type="button" (click)="procedureCategory = cat.k">{{ cat.t }}</button>
+              }
+            </div>
+          </div>
+          <div class="procedure-grid" aria-live="polite">
+            @for (pr of filteredProcedures(); track pr.id) {
+              <a class="procedure-card" [routerLink]="['/surgery/procedures', pr.id]">
+                <span class="eyebrow">{{ procedureCategoryName(pr.c) }}</span>
+                <h3>{{ pr.n }}</h3>
+                <p class="muted">{{ pr.d }}</p>
+                <div class="procedure-stats">
+                  <span><small>Estimated price</small><b>{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</b></span>
+                  <span><small>Typical stay</small><b>{{ pr.stay }}</b></span>
+                  <span><small>Recovery</small><b>{{ pr.rec }}</b></span>
+                </div>
+                <span class="procedure-more">View details <span aria-hidden="true">→</span></span>
+              </a>
+            }
+            @if (filteredProcedures().length === 0) {
+              <div class="empty" style="grid-column:1/-1"><h3>No procedures match</h3><p class="muted">Try another search or choose a different surgery area.</p></div>
+            }
+          </div>
+          <p class="muted xs catalog-disclaimer">Prices, stays and recovery times are sample estimates for this demo, not a medical quote or advice.</p>
+        </div>
+      </section>
+    } @else if (viewMode === 'procedure-detail') {
+      <section class="sec pg-scat">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/surgery/procedures">Back to procedure catalog</a>
+          @if (getRouteProcedure(); as pr) {
+            <article class="procedure-detail">
+              <span class="eyebrow">{{ procedureCategoryName(pr.c) }}</span>
+              <h2>{{ pr.n }}</h2>
+              <p class="muted" style="font-size:18px">{{ pr.d }}</p>
+              <div class="procedure-stats">
+                <span><small>Estimated cost</small><b>{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</b></span>
+                <span><small>Typical hospital stay</small><b>{{ pr.stay }}</b></span>
+                <span><small>Typical recovery</small><b>{{ pr.rec }}</b></span>
+              </div>
+              <div class="procedure-detail-note">
+                <h3>What happens next?</h3>
+                <p class="muted">Meet a surgeon first. The hospital will assess your situation and provide a written quote listing exactly what is included before you decide.</p>
+                <ul class="sinc">@for (inc of surgeryService.inclusions; track inc) { <li>{{ inc }}</li> }</ul>
+              </div>
+              <div class="procedure-detail-actions">
+                <button class="btn btn-ink" type="button" (click)="browseSurgeonsForProc(pr.id)">Find surgeons for this procedure</button>
+                <a class="btn btn-line" routerLink="/surgery">Open surgery planner</a>
+              </div>
+              <p class="muted xs catalog-disclaimer">Sample estimates only. Your surgeon provides a written quote after a consultation. This page is not medical advice.</p>
+            </article>
+          } @else {
+            <div class="empty"><h2>Procedure not found</h2><p class="muted">Choose a procedure from the catalog.</p></div>
+          }
+        </div>
+      </section>
+    } @else if (viewMode === 'surgery') {
       <section class="sec pg-surgery" id="page-surgery">
         <div class="wrap">
           <div class="mhero">
@@ -19,10 +89,19 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
               <span class="eyebrow">PulseQ surgery</span>
               <h2 style="font-size:clamp(27px,4.3vw,55px)">Surgery, planned properly.</h2>
               <p class="muted" style="font-size:18px;max-width:540px">See a price range first, compare hospitals, meet your surgeon in a consultation, then decide. Nothing is booked until you have a written quote.</p>
-              <div style="display:flex;flex-wrap:wrap;gap:12px">
-                <button class="btn btn-ink" type="button" (click)="viewMode = 'surgeons'">Browse all surgeons</button>
-                <button class="btn btn-line" type="button" (click)="scrollToJourney()">See how it works</button>
+              <div class="surgery-entry-row">
+                <a class="surgery-entry surgery-entry-primary" routerLink="/surgery/procedures">
+                  <span class="surgery-entry-icon" aria-hidden="true">+</span>
+                  <span><b>Procedure catalog</b><small>{{ surgeryService.procedures().length }} procedures · price, stay and recovery</small></span>
+                  <span class="surgery-entry-go" aria-hidden="true">→</span>
+                </a>
+                <a class="surgery-entry" routerLink="/surgery/surgeons">
+                  <span class="surgery-entry-icon" aria-hidden="true">+</span>
+                  <span><b>Our surgeons</b><small>Experience, hospitals and consultation fees</small></span>
+                  <span class="surgery-entry-go" aria-hidden="true">→</span>
+                </a>
               </div>
+              <button class="btn btn-line" type="button" (click)="scrollToJourney()">See how it works</button>
             </div>
             <div class="rxcard">
               <span class="pillart" aria-hidden="true"><i></i><i class="r"></i><i></i></span>
@@ -290,7 +369,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           </div>
 
           <div style="margin-top:28px">
-            <button class="btn btn-line" type="button" (click)="viewMode = 'surgery'">← Back to surgery planner</button>
+            <a class="btn btn-line" routerLink="/surgery">← Back to surgery planner</a>
           </div>
         </div>
       </section>
@@ -386,14 +465,46 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
   styles: [`
     :host { display: block; }
     .pg-surgery, .pg-surgeons { display: block !important; }
+    .catalog-page { max-width: 1080px; }
+    .procedure-filters { display: grid; gap: 14px; margin: 20px 0; }
+    .procedure-filters > .inp { width: min(100%, 620px); }
+    .procedure-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 310px), 1fr)); gap: 14px; }
+    .procedure-card { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
+    .procedure-card:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .procedure-card h3 { font-size: 22px; }
+    .procedure-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-top: 12px; }
+    .procedure-stats span { display: flex; flex-direction: column; gap: 4px; }
+    .procedure-stats small { color: var(--muted); }
+    .procedure-stats b { font-size: 14px; }
+    .procedure-more { display: flex; justify-content: space-between; margin-top: auto; padding-top: 8px; color: #1558B8; font-weight: 800; }
+    .procedure-detail { padding: clamp(20px, 4vw, 36px); border-radius: 24px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
+    .procedure-detail h2 { margin: 10px 0; font-size: clamp(28px, 4vw, 44px); }
+    .procedure-detail-note { margin-top: 24px; padding: 20px; border-radius: 18px; background: #F5F9FF; }
+    .procedure-detail-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .catalog-disclaimer { margin-top: 18px; max-width: 700px; }
+    .surgery-entry-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; max-width: 640px; }
+    .surgery-entry { display: flex; align-items: center; gap: 14px; min-height: 78px; padding: 14px 16px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #DCE8F8, 0 1px 2px rgba(16,42,67,.04); color: #102A43; text-decoration: none; transition: transform .18s, box-shadow .18s; }
+    .surgery-entry:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #2381FF, 0 14px 30px -16px rgba(35,129,255,.6); }
+    .surgery-entry-primary { color: #fff; background: linear-gradient(135deg,#2381FF,#1558B8); }
+    .surgery-entry-icon { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 14px; color: #1558B8; background: #EAF3FF; font-weight: 800; font-size: 22px; }
+    .surgery-entry-primary .surgery-entry-icon, .surgery-entry-primary .surgery-entry-go { color: #fff; background: rgba(255,255,255,.18); }
+    .surgery-entry b, .surgery-entry small { display: block; }
+    .surgery-entry small { margin-top: 3px; color: #526477; font-size: 13px; }
+    .surgery-entry-primary small { color: rgba(255,255,255,.88); }
+    .surgery-entry-go { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #1558B8; background: #EAF3FF; }
+    @media (prefers-reduced-motion: reduce) { .surgery-entry { transition: none; } }
   `]
 })
 export class SurgeryComponent implements OnInit {
   surgeryService = inject(SurgeryService);
   hospitalsService = inject(HospitalsService);
   seo = inject(SeoService);
+  router = inject(Router);
 
-  viewMode: 'surgery' | 'surgeons' = 'surgery';
+  viewMode: 'surgery' | 'surgeons' | 'procedures' | 'procedure-detail' = 'surgery';
+  procedureQuery = '';
+  procedureCategory = 'all';
+  routeProcedureId: number | null = null;
 
   selectedCat = 'general';
   selectedProcId = 8;
@@ -437,8 +548,39 @@ export class SurgeryComponent implements OnInit {
   dayOffsets: { offset: number; label: string }[] = [];
 
   ngOnInit(): void {
-    this.seo.setPage('Surgery & Procedures');
+    const [path, query = ''] = this.router.url.split('?');
+    if (path === '/surgery/procedures') {
+      this.viewMode = 'procedures';
+      this.seo.setPage('Procedure Catalog');
+    } else if (path.startsWith('/surgery/procedures/')) {
+      this.viewMode = 'procedure-detail';
+      this.routeProcedureId = Number(path.split('/').pop());
+      this.seo.setPage('Procedure Details');
+    } else if (path === '/surgery/surgeons') {
+      this.viewMode = 'surgeons';
+      const params = new URLSearchParams(query);
+      this.fProc = Number(params.get('procedure')) || null;
+      this.seo.setPage('Surgeons');
+    } else {
+      this.seo.setPage('Surgery & Procedures');
+    }
     this.buildDays();
+  }
+
+  filteredProcedures(): Procedure[] {
+    const q = this.procedureQuery.trim().toLowerCase();
+    return this.surgeryService.procedures().filter(pr =>
+      (this.procedureCategory === 'all' || pr.c === this.procedureCategory) &&
+      (!q || `${pr.n} ${pr.d} ${this.procedureCategoryName(pr.c)}`.toLowerCase().includes(q))
+    );
+  }
+
+  getRouteProcedure(): Procedure | undefined {
+    return this.routeProcedureId ? this.surgeryService.getProcedureById(this.routeProcedureId) : undefined;
+  }
+
+  procedureCategoryName(key: string): string {
+    return this.surgeryService.categories().find(category => category.k === key)?.t || 'Procedure';
   }
 
   buildDays(): void {
@@ -523,8 +665,7 @@ export class SurgeryComponent implements OnInit {
   }
 
   browseSurgeonsForProc(procId: number): void {
-    this.fProc = procId;
-    this.viewMode = 'surgeons';
+    this.router.navigate(['/surgery/surgeons'], { queryParams: { procedure: procId } });
   }
 
   scrollToJourney(): void {

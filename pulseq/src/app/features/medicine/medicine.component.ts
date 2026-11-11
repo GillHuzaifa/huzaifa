@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { MedicineService } from '../../shared/services/medicine.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { SeoService } from '../../shared/services/seo.service';
@@ -9,8 +10,131 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
 @Component({
   selector: 'app-medicine',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   template: `
+    @if (viewMode === 'catalog') {
+      <section class="sec pg-medicine">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/medicine">Back to medicine</a>
+          <div class="catalog-heading">
+            <span class="eyebrow">PulseQ medicine catalog</span>
+            <h2>Find a medicine</h2>
+            <p class="muted">{{ medService.medicines().length }} medicines · Search by name, generic or what it treats.</p>
+            <label class="sr" for="catalogMedicineSearch">Search medicines</label>
+            <input id="catalogMedicineSearch" class="inp" type="search" [(ngModel)]="catalogQuery" placeholder="Medicine, brand or generic name" autocomplete="off">
+            <a class="btn btn-ink" routerLink="/medicine/pharmacies">Partner pharmacies</a>
+          </div>
+          <div class="catalog-list" aria-live="polite">
+            @for (m of filteredCatalogMeds(); track m.id) {
+              <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
+                <span class="catalog-row-main">
+                  <b>{{ m.n }} @if (m.rx === 1) { <span class="tag rx">Rx</span> }</b>
+                  <small>{{ m.g }} · {{ m.f }} · {{ m.u }}</small>
+                </span>
+                <span class="catalog-arrow" aria-hidden="true">›</span>
+              </a>
+            }
+            @if (filteredCatalogMeds().length === 0) {
+              <div class="empty">
+                <h3 style="font-size:24px">No medicines match</h3>
+                <p class="muted">Try another medicine name or generic.</p>
+              </div>
+            }
+          </div>
+          <p class="muted xs catalog-disclaimer">Sample catalogue for this demo. This information is general and is not medical advice. Follow your doctor’s prescription and the medicine label.</p>
+        </div>
+      </section>
+    } @else if (viewMode === 'medicine-detail') {
+      <section class="sec pg-medicine">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/medicine/catalog">Back to medicine catalog</a>
+          @if (getCatalogMedicine(); as m) {
+            <article class="catalog-detail">
+              <span class="eyebrow">PulseQ medicine catalog</span>
+              <h2>{{ m.n }} @if (m.rx === 1) { <span class="tag rx">Prescription required</span> }</h2>
+              <p class="muted">{{ m.g }} · {{ m.f }}</p>
+              <p>{{ m.u }}</p>
+              <div class="catalog-detail-grid">
+                <div><h3>Good to know</h3><p class="muted">{{ m.w }}</p></div>
+                <div><h3>Possible side effects</h3><ul>@for (item of m.s; track item) { <li>{{ item }}</li> }</ul></div>
+                <div><h3>Precautions</h3><ul>@for (item of m.p; track item) { <li>{{ item }}</li> }</ul></div>
+              </div>
+              @if (m.rx === 1) {
+                <p class="catalog-caution">This medicine requires a prescription. Do not use it without advice from a qualified healthcare professional.</p>
+              }
+              <div class="catalog-actions">
+                <button class="btn btn-ink" type="button" (click)="addCatalogMedicine(m)">Add to your pack</button>
+                <a class="btn btn-line" routerLink="/medicine/pharmacies">Browse partner pharmacies</a>
+                <a class="btn btn-line" routerLink="/medicine">Go to ordering</a>
+              </div>
+            </article>
+          } @else {
+            <div class="empty"><h2>Medicine not found</h2><p class="muted">Choose a medicine from the catalog.</p></div>
+          }
+        </div>
+      </section>
+    } @else if (viewMode === 'pharmacies') {
+      <section class="sec pg-medicine">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/medicine">Back to medicine</a>
+          <div class="catalog-heading">
+            <span class="eyebrow">PulseQ pharmacies</span>
+            <h2>Partner pharmacies near you.</h2>
+            <p class="muted">Search by pharmacy, area or city. Open a pharmacy to browse its sample stock and prices.</p>
+            <label class="sr" for="pharmacySearch">Search pharmacies</label>
+            <input id="pharmacySearch" class="inp" type="search" [(ngModel)]="pharmacyQuery" placeholder="Pharmacy, area or city" autocomplete="off">
+            <a class="btn btn-ink" routerLink="/medicine/catalog">Medicine catalog</a>
+          </div>
+          <div class="pharmacy-grid">
+            @for (shop of filteredPharmacies(); track shop.id) {
+              <article class="pharmacy-card">
+                <h3>{{ shop.n }}</h3>
+                <p class="muted">{{ shop.a }} · {{ shop.c }}</p>
+                <div class="tags"><span class="tag">{{ shop.h }}</span><span class="tag">Delivery Rs {{ shop.fee }}</span></div>
+                <p class="muted sm">Sample stock and prices for this demo.</p>
+                <a class="btn btn-ink full" [routerLink]="['/medicine/pharmacies', shop.id]">Open pharmacy</a>
+              </article>
+            }
+            @if (filteredPharmacies().length === 0) {
+              <div class="empty" style="grid-column:1/-1"><h3>No pharmacies match</h3><p class="muted">Try another name, area or city.</p></div>
+            }
+          </div>
+        </div>
+      </section>
+    } @else if (viewMode === 'pharmacy-detail') {
+      <section class="sec pg-medicine">
+        <div class="wrap catalog-page">
+          <a class="pgback" routerLink="/medicine/pharmacies">All partner pharmacies</a>
+          @if (getPharmacyDetail(); as shop) {
+            <div class="catalog-heading">
+              <span class="eyebrow">PulseQ pharmacy</span>
+              <h2>{{ shop.n }}</h2>
+              <p class="muted">{{ shop.a }}, {{ shop.c }} · {{ shop.h }} · Delivery Rs {{ shop.fee }}</p>
+              <label class="sr" for="pharmacyStockSearch">Search this pharmacy’s medicines</label>
+              <input id="pharmacyStockSearch" class="inp" type="search" [(ngModel)]="catalogQuery" placeholder="Medicine, brand or generic name" autocomplete="off">
+            </div>
+            <div class="catalog-list">
+              @for (m of pharmacyStock(shop); track m.id) {
+                <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
+                  <span class="catalog-row-main">
+                    <b>{{ m.n }} @if (m.rx === 1) { <span class="tag rx">Rx</span> }</b>
+                    <small>{{ m.g }} · {{ m.f }}</small>
+                  </span>
+                  <span class="catalog-price">Rs {{ medService.priceAt(m, shop) }}</span>
+                  <span class="catalog-arrow" aria-hidden="true">›</span>
+                </a>
+              }
+              @if (pharmacyStock(shop).length === 0) {
+                <div class="empty"><h3>No stock matches</h3><p class="muted">Try another medicine name.</p></div>
+              }
+            </div>
+            <p class="muted xs catalog-disclaimer">Stock and prices are sample data for this demo. Confirm availability and price with the pharmacy before ordering.</p>
+          } @else {
+            <div class="empty"><h2>Pharmacy not found</h2><p class="muted">Choose a partner pharmacy from the directory.</p></div>
+          }
+        </div>
+      </section>
+    } @else {
     <section class="sec pg-medicine" id="page-medicine">
       <div class="wrap">
         <div class="mhero">
@@ -23,6 +147,18 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
                 <label for="mq">Already know the name?</label>
                 <input id="mq" type="search" enterkeyhint="search" placeholder="Search a medicine or what it treats" autocomplete="off" [(ngModel)]="searchQuery" (input)="onSearchInput()">
               </div>
+            </div>
+            <div class="catalog-entry-row">
+              <a class="catalog-entry catalog-entry-primary" routerLink="/medicine/catalog">
+                <span class="catalog-entry-icon" aria-hidden="true">Rx</span>
+                <span><b>Medicine catalog</b><small>{{ medService.medicines().length }} medicines · search by name or generic</small></span>
+                <span class="catalog-entry-go" aria-hidden="true">→</span>
+              </a>
+              <a class="catalog-entry" routerLink="/medicine/pharmacies">
+                <span class="catalog-entry-icon" aria-hidden="true">+</span>
+                <span><b>Partner pharmacies</b><small>Stock and prices by pharmacy</small></span>
+                <span class="catalog-entry-go" aria-hidden="true">→</span>
+              </a>
             </div>
           </div>
           <div class="rxcard">
@@ -368,16 +504,57 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
         </div>
       </div>
     }
+    }
   `,
   styles: [`
     :host { display: block; }
     .pg-medicine { display: block !important; }
+    .catalog-page { max-width: 1040px; }
+    .catalog-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 8px 0 24px; }
+    .catalog-heading h2, .catalog-detail h2 { font-size: clamp(28px, 4vw, 44px); }
+    .catalog-heading .inp { width: min(100%, 560px); }
+    .catalog-list { display: grid; gap: 10px; }
+    .catalog-row { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
+    .catalog-row:hover { box-shadow: inset 0 0 0 2px #2381FF; }
+    .catalog-row-main { flex: 1; min-width: 0; }
+    .catalog-row-main b, .catalog-row-main small { display: block; }
+    .catalog-row-main small { color: var(--muted); margin-top: 4px; }
+    .catalog-arrow, .catalog-price { flex: none; color: #1558B8; font-weight: 800; }
+    .catalog-detail { padding: clamp(20px, 4vw, 36px); border-radius: 24px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
+    .catalog-detail h2 { margin: 10px 0 6px; }
+    .catalog-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 16px; margin-top: 24px; }
+    .catalog-detail-grid > div { padding: 18px; border-radius: 16px; background: #F5F9FF; }
+    .catalog-detail-grid h3 { margin-bottom: 8px; }
+    .catalog-detail-grid ul { padding-left: 20px; }
+    .catalog-caution { margin-top: 18px; padding: 12px 14px; border-radius: 12px; background: #FFF7E5; color: #78350F; }
+    .catalog-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .catalog-disclaimer { margin-top: 18px; max-width: 700px; }
+    .pharmacy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+    .pharmacy-card { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
+    .pharmacy-card .btn { margin-top: auto; }
+    .catalog-entry-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; max-width: 640px; }
+    .catalog-entry { display: flex; align-items: center; gap: 14px; min-height: 78px; padding: 14px 16px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #DCE8F8, 0 1px 2px rgba(16,42,67,.04); color: #102A43; text-decoration: none; transition: transform .18s, box-shadow .18s; }
+    .catalog-entry:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #2381FF, 0 14px 30px -16px rgba(35,129,255,.6); }
+    .catalog-entry-primary { color: #fff; background: linear-gradient(135deg,#2381FF,#1558B8); }
+    .catalog-entry-icon { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 14px; color: #1558B8; background: #EAF3FF; font-weight: 800; }
+    .catalog-entry-primary .catalog-entry-icon, .catalog-entry-primary .catalog-entry-go { color: #fff; background: rgba(255,255,255,.18); }
+    .catalog-entry b, .catalog-entry small { display: block; }
+    .catalog-entry small { margin-top: 3px; color: #526477; font-size: 13px; }
+    .catalog-entry-primary small { color: rgba(255,255,255,.88); }
+    .catalog-entry-go { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #1558B8; background: #EAF3FF; }
+    @media (prefers-reduced-motion: reduce) { .catalog-entry { transition: none; } }
   `]
 })
 export class MedicineComponent implements OnInit {
   medService = inject(MedicineService);
   toast = inject(ToastService);
   seo = inject(SeoService);
+  router = inject(Router);
+
+  viewMode: 'main' | 'catalog' | 'medicine-detail' | 'pharmacies' | 'pharmacy-detail' = 'main';
+  catalogQuery = '';
+  pharmacyQuery = '';
+  routeId: number | null = null;
 
   areaNames = Object.keys(this.medService.areas);
   areaInput = '';
@@ -414,7 +591,55 @@ export class MedicineComponent implements OnInit {
   ptMessage = '';
 
   ngOnInit(): void {
-    this.seo.setPage('Order Medicine Online');
+    const url = this.router.url.split('?')[0];
+    if (url === '/medicine/catalog') {
+      this.viewMode = 'catalog';
+      this.seo.setPage('Medicine Catalog');
+    } else if (url.startsWith('/medicine/catalog/')) {
+      this.viewMode = 'medicine-detail';
+      this.routeId = Number(url.split('/').pop());
+      this.seo.setPage('Medicine Details');
+    } else if (url === '/medicine/pharmacies') {
+      this.viewMode = 'pharmacies';
+      this.seo.setPage('Partner Pharmacies');
+    } else if (url.startsWith('/medicine/pharmacies/')) {
+      this.viewMode = 'pharmacy-detail';
+      this.routeId = Number(url.split('/').pop());
+      this.seo.setPage('Pharmacy Details');
+    } else {
+      this.seo.setPage('Order Medicine Online');
+    }
+  }
+
+  filteredCatalogMeds(): Medicine[] {
+    const q = this.catalogQuery.trim().toLowerCase();
+    return this.medService.medicines().filter(m => !q || `${m.n} ${m.g} ${m.f} ${m.u}`.toLowerCase().includes(q));
+  }
+
+  getCatalogMedicine(): Medicine | undefined {
+    return this.routeId ? this.medService.getMedicineById(this.routeId) : undefined;
+  }
+
+  getPharmacyDetail(): Pharmacy | undefined {
+    return this.routeId ? this.medService.getPharmacyById(this.routeId) : undefined;
+  }
+
+  filteredPharmacies(): Pharmacy[] {
+    const q = this.pharmacyQuery.trim().toLowerCase();
+    return this.medService.pharmacies().filter(shop => !q || `${shop.n} ${shop.a} ${shop.c}`.toLowerCase().includes(q));
+  }
+
+  pharmacyStock(shop: Pharmacy): Medicine[] {
+    const q = this.catalogQuery.trim().toLowerCase();
+    return this.medService.medicines().filter(m =>
+      this.medService.isStockedAt(m, shop) &&
+      (!q || `${m.n} ${m.g} ${m.f} ${m.u}`.toLowerCase().includes(q))
+    );
+  }
+
+  addCatalogMedicine(medicine: Medicine): void {
+    this.medService.addToCart(medicine.id);
+    this.toast.show(`${medicine.n} added to your pack`);
   }
 
   onSearchInput(): void {

@@ -37,9 +37,44 @@ export const routes: Routes = [
     title: 'Surgery & Procedures — PulseQ Pakistan'
   },
   {
+    path: 'surgery/procedures',
+    loadComponent: () => import('./features/surgery/surgery.component').then(m => m.SurgeryComponent),
+    title: 'Procedure Catalog — PulseQ Pakistan'
+  },
+  {
+    path: 'surgery/procedures/:id',
+    loadComponent: () => import('./features/surgery/surgery.component').then(m => m.SurgeryComponent),
+    title: 'Procedure Details — PulseQ Pakistan'
+  },
+  {
+    path: 'surgery/surgeons',
+    loadComponent: () => import('./features/surgery/surgery.component').then(m => m.SurgeryComponent),
+    title: 'Surgeons — PulseQ Pakistan'
+  },
+  {
     path: 'medicine',
     loadComponent: () => import('./features/medicine/medicine.component').then(m => m.MedicineComponent),
     title: 'Order Medicine — PulseQ Pakistan'
+  },
+  {
+    path: 'medicine/catalog',
+    loadComponent: () => import('./features/medicine/medicine.component').then(m => m.MedicineComponent),
+    title: 'Medicine Catalog — PulseQ Pakistan'
+  },
+  {
+    path: 'medicine/catalog/:id',
+    loadComponent: () => import('./features/medicine/medicine.component').then(m => m.MedicineComponent),
+    title: 'Medicine Details — PulseQ Pakistan'
+  },
+  {
+    path: 'medicine/pharmacies',
+    loadComponent: () => import('./features/medicine/medicine.component').then(m => m.MedicineComponent),
+    title: 'Partner Pharmacies — PulseQ Pakistan'
+  },
+  {
+    path: 'medicine/pharmacies/:id',
+    loadComponent: () => import('./features/medicine/medicine.component').then(m => m.MedicineComponent),
+    title: 'Pharmacy Details — PulseQ Pakistan'
   },
   {
     path: 'clinics',
