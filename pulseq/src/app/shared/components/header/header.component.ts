@@ -107,7 +107,6 @@ const SAY: Record<string, string> = {
           <div class="hero-l">
             <span class="eyebrow">Online appointments · Doctors · Hospitals</span>
             <h1>Your health, <span class="mk">one tap away.</span></h1>
-            <p class="ur ur-hero" lang="ur" dir="rtl" (click)="openAiUrdu()" style="cursor:pointer" title="اردو میں چیٹ کریں">آپ کی صحت، بس ایک ٹیپ کی دوری پر۔</p>
             <div class="hero-ecg-wrap">
               <svg class="ecg-live" width="230" height="44" viewBox="0 0 230 44" aria-hidden="true" style="margin-top:-6px;max-width:100%;overflow:visible">
                 <path class="ecg-tr" d="M2 24h40l10-16 14 30 12-14h36l10-16 14 30 12-14h66" fill="none" stroke="#DBEAFE" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
