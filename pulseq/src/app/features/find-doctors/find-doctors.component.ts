@@ -190,8 +190,12 @@ import { Doctor, Place, Slot } from '../../shared/models';
               Filters
             </button>
             <div class="cnt" aria-live="polite">
-              <b>{{ filteredDoctors().length }}</b>
-              {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
+              @if (filteredDoctors().length > visibleLimit) {
+                Showing <b>{{ visibleLimit }}</b> of <b>{{ filteredDoctors().length }}</b> doctors
+              } @else {
+                <b>{{ filteredDoctors().length }}</b>
+                {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
+              }
               @if (filterDescription()) {
                 <span class="muted">· {{ filterDescription() }}</span>
               }
@@ -336,7 +340,7 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
   router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   @ViewChild('loadMoreTrigger') loadMoreTrigger?: ElementRef<HTMLElement>;
-  visibleLimit = 20;
+  visibleLimit = 10;
   private io?: IntersectionObserver;
 
   ngAfterViewInit(): void {
@@ -357,7 +361,7 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   showMore(): void {
-    this.visibleLimit += 20;
+    this.visibleLimit += 10;
   }
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);

@@ -5,7 +5,7 @@ import { Router, RouterLink } from '@angular/router';
 import { MedicineService } from '../../shared/services/medicine.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { SeoService } from '../../shared/services/seo.service';
-import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
+import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/models';
 
 @Component({
   selector: 'app-medicine',
@@ -250,7 +250,7 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
         <h3 style="font-size:28px;margin:6px 0 14px">What do you need relief from?</h3>
         <div class="needs" id="mNeeds" role="group" aria-label="Choose a need">
           @for (n of medService.needs(); track n.k) {
-            @let on = selectedNeed === n.k;
+            @let on = !searchQuery && selectedNeed === n.k;
             @let cnt = getMedCount(n.k);
             <button class="need {{ n.cls }}" [class.on]="on" [attr.aria-pressed]="on" type="button" (click)="selectNeed(n.k)">
               <span class="pillart" aria-hidden="true"><i></i><i class="r"></i></span>
@@ -264,8 +264,46 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
         <div class="mlayout" style="margin-top:28px">
           <div class="min0" style="flex:1 1 520px">
             <div id="mArea" aria-live="polite">
-              @if (filteredMeds().length > 0) {
-                @for (m of filteredMeds(); track m.id) {
+              @let baseMedsList = baseMeds();
+              @let medicines = filteredMeds();
+              @if (searchQuery.trim()) {
+                <h3 style="font-size:26px;margin-bottom:12px">Results for “{{ searchQuery.trim() }}”</h3>
+              } @else {
+                @if (selectedNeedInfo(); as need) {
+                  <h3 style="font-size:26px;margin-bottom:12px">{{ need.t }}</h3>
+                  <div class="flag">
+                    <p><b>See a doctor if:</b> {{ need.flag }}</p>
+                    <a class="btn btn-ink" [routerLink]="['/find-doctors']" [queryParams]="{ spec: need.spec }">Book a doctor</a>
+                  </div>
+                }
+              }
+
+              @if (baseMedsList.length > 0) {
+                <div class="mfilt">
+                  <div class="chips" role="group" aria-label="Medicine form">
+                    <button class="chip" [class.on]="mainForm === 'all'" [attr.aria-pressed]="mainForm === 'all'" type="button" (click)="mainForm = 'all'">All types</button>
+                    @for (form of mainMedicineForms(); track form) {
+                      <button class="chip" [class.on]="mainForm === form" [attr.aria-pressed]="mainForm === form" type="button" (click)="mainForm = form">{{ form }}</button>
+                    }
+                  </div>
+                  <div class="chips" role="group" aria-label="Prescription">
+                    <button class="chip" [class.on]="mainRx === 'all'" [attr.aria-pressed]="mainRx === 'all'" type="button" (click)="mainRx = 'all'">Any</button>
+                    <button class="chip" [class.on]="mainRx === 'otc'" [attr.aria-pressed]="mainRx === 'otc'" type="button" (click)="mainRx = 'otc'">No prescription</button>
+                    <button class="chip" [class.on]="mainRx === 'rx'" [attr.aria-pressed]="mainRx === 'rx'" type="button" (click)="mainRx = 'rx'">Needs Rx</button>
+                  </div>
+                  <label class="sr" for="mainMedicineSort">Sort medicines</label>
+                  <select id="mainMedicineSort" [(ngModel)]="mainSort" aria-label="Sort medicines">
+                    <option value="az">Name A to Z</option>
+                    <option value="price">Price: low to high</option>
+                  </select>
+                </div>
+                <p class="muted sm" aria-live="polite" style="margin:6px 0 12px">
+                  {{ medicines.length }} {{ medicines.length === 1 ? 'medicine' : 'medicines' }}
+                </p>
+              }
+
+              @if (medicines.length > 0) {
+                @for (m of medicines; track m.id) {
                   @let u = getUnits(m);
                   @let mode = medService.modeOf(m.id);
                   @let isOpen = medService.isInfoOpen(m.id);
@@ -346,11 +384,17 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
                     </div>
                   </article>
                 }
-              } @else {
+              } @else if (baseMedsList.length === 0 && searchQuery.trim()) {
                 <div class="empty">
                   <h3 style="font-size:24px">We don’t list that one yet</h3>
                   <p class="muted">Check the spelling or try searching by generic name.</p>
                   <button class="btn btn-ink" type="button" (click)="searchQuery = ''">Clear search</button>
+                </div>
+              } @else if (baseMedsList.length > 0) {
+                <div class="empty">
+                  <h3 style="font-size:24px">Nothing matches these filters</h3>
+                  <p class="muted">Try another medicine form or prescription filter.</p>
+                  <button class="btn btn-ink" type="button" (click)="resetMainMedicineFilters()">Clear filters</button>
                 </div>
               }
             </div>
@@ -572,6 +616,11 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
     .catalog-entry small { margin-top: 3px; color: #526477; font-size: 13px; }
     .catalog-entry-primary small { color: rgba(255,255,255,.88); }
     .catalog-entry-go { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; color: #1558B8; background: #EAF3FF; }
+    .mfilt { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 4px 0 6px; }
+    .mfilt .chips { gap: 6px; }
+    .mfilt .chip { min-height: 40px; padding: 0 14px; font-size: 14px; }
+    .mfilt select { min-height: 44px; max-width: 100%; border: 1.5px solid var(--line); border-radius: 999px; background: #fff; padding: 0 14px; font: inherit; }
+    @media (max-width: 760px) { .mfilt { align-items: flex-start; flex-direction: column; } }
     @media (prefers-reduced-motion: reduce) { .catalog-entry { transition: none; } }
   `]
 })
@@ -596,6 +645,9 @@ export class MedicineComponent implements OnInit {
   isNear = false;
   selectedNeed = 'pain';
   searchQuery = '';
+  mainForm = 'all';
+  mainRx: 'all' | 'otc' | 'rx' = 'all';
+  mainSort: 'az' | 'price' = 'az';
 
   Math = Math;
 
@@ -700,7 +752,8 @@ export class MedicineComponent implements OnInit {
   }
 
   onSearchInput(): void {
-    // triggers reactive search
+    this.mainForm = 'all';
+    this.mainRx = 'all';
   }
 
   onAreaInput(): void {
@@ -776,14 +829,46 @@ export class MedicineComponent implements OnInit {
   selectNeed(key: string): void {
     this.selectedNeed = key;
     this.searchQuery = '';
+    this.mainForm = 'all';
+    this.mainRx = 'all';
+  }
+
+  selectedNeedInfo(): NeedCategory | undefined {
+    return this.medService.needs().find(need => need.k === this.selectedNeed);
+  }
+
+  baseMeds(): Medicine[] {
+    const q = this.searchQuery.trim().toLowerCase();
+    return q
+      ? this.medService.medicines().filter(m => `${m.n} ${m.g} ${m.u}`.toLowerCase().includes(q))
+      : this.medService.medicines().filter(m => m.c === this.selectedNeed);
+  }
+
+  mainMedicineForms(): string[] {
+    return [...new Set(this.baseMeds().map(m => m.f))].sort((a, b) => a.localeCompare(b));
   }
 
   filteredMeds(): Medicine[] {
-    const q = this.searchQuery.toLowerCase();
-    if (q) {
-      return this.medService.medicines().filter(m => `${m.n} ${m.g} ${m.u}`.toLowerCase().includes(q));
-    }
-    return this.medService.medicines().filter(m => m.c === this.selectedNeed);
+    return this.baseMeds()
+      .filter(m =>
+        (this.mainForm === 'all' || m.f === this.mainForm) &&
+        (this.mainRx === 'all' || (this.mainRx === 'rx' ? m.rx === 1 : m.rx !== 1))
+      )
+      .sort((a, b) => this.mainSort === 'price'
+        ? this.mainMedicinePrice(a) - this.mainMedicinePrice(b)
+        : a.n.localeCompare(b.n));
+  }
+
+  mainMedicinePrice(m: Medicine): number {
+    const shop = this.medService.selectedShop();
+    const price = shop ? this.medService.priceAt(m, shop) : this.medService.baseMedPrice(m);
+    return this.medService.modeOf(m.id) === 's' ? Math.ceil(price / this.medService.packSize(m)) : price;
+  }
+
+  resetMainMedicineFilters(): void {
+    this.mainForm = 'all';
+    this.mainRx = 'all';
+    this.mainSort = 'az';
   }
 
   getUnits(m: Medicine): [string, string] {
