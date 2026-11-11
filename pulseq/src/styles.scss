@@ -2006,6 +2006,11 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
     left: max(14px, env(safe-area-inset-left, 0px));
     right: max(14px, env(safe-area-inset-right, 0px));
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    text-align: center;
+    overflow-wrap: anywhere;
   }
 
   /* Keyboard & visualViewport support for open bottom sheets */
