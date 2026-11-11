@@ -84,63 +84,6 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
       </div>
     </section>
 
-    <!-- SERVICES (from PulseQ 14.html) -->
-    <section class="sec home" id="services">
-      <div class="wrap">
-        <div class="sec-head">
-          <div style="display:flex;flex-direction:column;gap:14px">
-            <span class="eyebrow">What PulseQ does</span>
-            <h2>One place for your whole visit.</h2>
-          </div>
-          <p class="muted" style="max-width:380px">From finding a doctor to collecting your medicine, every step happens here.</p>
-        </div>
-        <div class="svc">
-          <a class="svc-t" routerLink="/find-doctors">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
-            </span>
-            <b>Doctors</b>
-            <small>See live free slots and book in seconds.</small>
-          </a>
-          <a class="svc-t" routerLink="/hospitals">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5h10v16M14 10h6v11M8 9h2M8 13h2M8 17h2"/></svg>
-            </span>
-            <b>Hospitals</b>
-            <small>Browse hospitals and clinics and their doctors.</small>
-          </a>
-          <a class="svc-t" routerLink="/surgery">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg>
-            </span>
-            <b>Surgery</b>
-            <small>Plan a consultation and compare price ranges.</small>
-          </a>
-          <a class="svc-t" routerLink="/medicine">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-35 12 12)"/><path d="M10.5 8.5l3 4"/></svg>
-            </span>
-            <b>Medicine</b>
-            <small>Order from partner pharmacies near you.</small>
-          </a>
-          <a class="svc-t" href="javascript:void(0)" (click)="pulseAi.open()">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-            </span>
-            <b>PulseQ AI</b>
-            <small>Speak or type in Urdu or English.</small>
-          </a>
-          <a class="svc-t" routerLink="/clinics">
-            <span class="svc-i">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
-            </span>
-            <b>For clinics</b>
-            <small>Run your whole day on one dashboard.</small>
-          </a>
-        </div>
-      </div>
-    </section>
-
     <!-- PULSE BODY MAP -->
     <section class="sec bm home" id="bodymap">
       <div class="wrap">
