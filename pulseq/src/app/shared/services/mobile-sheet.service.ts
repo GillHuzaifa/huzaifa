@@ -78,17 +78,24 @@ export class MobileSheetService {
 
     const vv = window.visualViewport;
     if (vv) {
+      let baselineHeight = Math.max(window.innerHeight, vv.height);
+      let landscape = window.innerWidth > window.innerHeight;
       const updateViewport = () => {
         const kb = Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)));
-        const landscape = window.innerWidth > window.innerHeight;
+        const visibleHeight = Math.max(0, Math.round(vv.height + vv.offsetTop));
+        const keyboardOpen = kb > 90 || baselineHeight - visibleHeight > 140;
+        if (!keyboardOpen && visibleHeight > baselineHeight) {
+          baselineHeight = visibleHeight;
+        }
         const sheetRatio = landscape ? 0.92 : 0.72;
         const bookingRatio = landscape ? 0.92 : 0.88;
         const root = document.documentElement;
+        root.classList.toggle('sheet-landscape', landscape);
         root.style.setProperty('--vv-kb', `${kb}px`);
         root.style.setProperty('--vv-height', `${Math.round(vv.height)}px`);
         root.style.setProperty('--vv-sheet-height', `${Math.round(vv.height * sheetRatio)}px`);
         root.style.setProperty('--vv-booking-height', `${Math.round(vv.height * bookingRatio)}px`);
-        if (kb > 90) {
+        if (keyboardOpen) {
           root.classList.add('kb-open');
         } else {
           root.classList.remove('kb-open');
@@ -96,6 +103,14 @@ export class MobileSheetService {
       };
       vv.addEventListener('resize', updateViewport, { passive: true });
       vv.addEventListener('scroll', updateViewport, { passive: true });
+      window.addEventListener('resize', updateViewport, { passive: true });
+      window.addEventListener('orientationchange', () => {
+        window.setTimeout(() => {
+          landscape = window.innerWidth > window.innerHeight;
+          baselineHeight = Math.max(window.innerHeight, vv.height);
+          updateViewport();
+        }, 250);
+      }, { passive: true });
       updateViewport();
     }
 

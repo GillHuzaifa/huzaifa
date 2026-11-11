@@ -3331,3 +3331,15 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     max-height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
   }
 }
+
+@media (max-width: 1023px) {
+  html:not(.sheet-landscape) .botpanel {
+    height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+    max-height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+  }
+
+  html.sheet-landscape .botpanel {
+    height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+    max-height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+  }
+}
