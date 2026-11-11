@@ -631,6 +631,21 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
       font-size: clamp(17px, 3vw, 20px);
       line-height: 1.45;
     }
+    @media (max-width: 640px) {
+      .order-success-modal {
+        align-items: flex-start !important;
+        justify-content: center !important;
+        padding: max(16px, env(safe-area-inset-top, 0px)) 12px 16px !important;
+      }
+      .order-success-panel {
+        width: 100% !important;
+        max-width: 560px !important;
+        max-height: calc(100dvh - max(32px, env(safe-area-inset-top, 0px) + 16px)) !important;
+        margin: 0 !important;
+        padding: 22px 18px !important;
+        border-radius: 28px !important;
+      }
+    }
     .catalog-filters { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 10px; }
     .catalog-letters { display: flex; flex-wrap: wrap; gap: 4px; }
     .catalog-letter { width: 30px; min-height: 30px; padding: 0; border: 1px solid #DCE8F8; border-radius: 8px; background: #fff; color: #1558B8; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
