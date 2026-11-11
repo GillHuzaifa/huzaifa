@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
@@ -285,7 +285,11 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </a>
 
                   <div class="fd-meta">
-                    <a class="rt" [routerLink]="['/doctor', d.id]" [fragment]="'reviews'" (click)="$event.stopPropagation()">
+                    <a
+                      class="rt fd-reviews-link"
+                      [routerLink]="['/doctor', d.id]"
+                      fragment="reviews"
+                      (click)="openReviews($event, d.id)">
                       <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
                       </svg>
@@ -373,6 +377,7 @@ export class FindDoctorsComponent implements OnInit {
   modalService = inject(ModalService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
+  router = inject(Router);
 
   cities = CITIES;
   specMap = SPEC;
@@ -457,6 +462,12 @@ export class FindDoctorsComponent implements OnInit {
 
   getDocRating(id: number) {
     return this.reviewsService.getDocStats(id);
+  }
+
+  openReviews(event: Event, doctorId: number): void {
+    event.preventDefault();
+    event.stopPropagation();
+    void this.router.navigate(['/doctor', doctorId], { fragment: 'reviews' });
   }
 
   ngOnInit(): void {
