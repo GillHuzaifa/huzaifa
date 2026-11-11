@@ -63,6 +63,9 @@ const SAY: Record<string, string> = {
 
         <!-- Right Action Button & Mobile Hamburger -->
         <div class="nav-cta">
+          <button class="ask-pulse-nav" type="button" (click)="pulseAi.open()" aria-label="Ask PulseQ">
+            Ask Pulse
+          </button>
           <a class="btn btn-ink desk-book" routerLink="/find-doctors">Book now</a>
           <button
             class="hamburger-btn"

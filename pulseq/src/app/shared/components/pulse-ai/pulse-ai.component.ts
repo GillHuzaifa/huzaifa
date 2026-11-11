@@ -211,27 +211,31 @@ export class PulseAiComponent implements OnDestroy {
   };
 
   private updateFabOverlap(): void {
+    const fab = document.querySelector<HTMLElement>('.botfab');
     if (window.innerWidth > 1023) {
+      fab?.style.removeProperty('left');
+      fab?.style.removeProperty('right');
       document.body.classList.remove('pulse-fab-overlap');
       return;
     }
-    const fab = document.querySelector<HTMLElement>('.botfab');
     if (!fab) {
       document.body.classList.remove('pulse-fab-overlap');
       return;
     }
+    fab.style.removeProperty('left');
+    fab.style.removeProperty('right');
     const rect = fab.getBoundingClientRect();
-    const points = [
-      [rect.left + rect.width / 2, rect.top + rect.height / 2],
-      [rect.left + 8, rect.top + 8],
-      [rect.right - 8, rect.bottom - 8]
-    ];
-    const contentSelectors = 'button, a, input, select, textarea, [contenteditable="true"], p, h1, h2, h3, h4, label, li, span, b, strong';
-    const overlapsContent = points.some(([x, y]) =>
-      document.elementsFromPoint(x, y).some(element => {
-        if (element === fab || element.closest('app-pulse-ai, .public-mobile-nav, .clinic-mobile-nav')) return false;
-        return !!element.closest(contentSelectors);
-      })
+    const contentSelectors = 'button, a[href], input, select, textarea, [contenteditable="true"]';
+    const targetRects = Array.from(document.querySelectorAll<HTMLElement>(contentSelectors))
+      .filter(element =>
+        !element.closest('app-pulse-ai, .public-mobile-nav, .clinic-mobile-nav') &&
+        element.getClientRects().length > 0
+      )
+      .map(element => element.getBoundingClientRect())
+      .filter(target => target.width > 0 && target.height > 0);
+    const overlapsContent = targetRects.some(target =>
+      rect.left < target.right && rect.right > target.left &&
+      rect.top < target.bottom && rect.bottom > target.top
     );
     document.body.classList.toggle('pulse-fab-overlap', overlapsContent);
   }

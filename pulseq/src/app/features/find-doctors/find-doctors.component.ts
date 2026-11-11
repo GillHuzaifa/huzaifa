@@ -31,7 +31,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
               id="fdQ"
               type="search"
               enterkeyhint="search"
-              placeholder="Doctor, specialty or symptom, e.g. migraine"
+              placeholder="Name or specialty"
               [(ngModel)]="searchQuery"
               (ngModelChange)="resetDoctorPage()"
               name="q"
