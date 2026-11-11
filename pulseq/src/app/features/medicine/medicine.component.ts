@@ -24,6 +24,23 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
             <input id="catalogMedicineSearch" class="inp" type="search" [(ngModel)]="catalogQuery" placeholder="Medicine, brand or generic name" autocomplete="off">
             <a class="btn btn-ink" routerLink="/medicine/pharmacies">Partner pharmacies</a>
           </div>
+          <div class="catalog-filters">
+            <label class="sr" for="catalogMedicineForm">Medicine form</label>
+            <select id="catalogMedicineForm" class="inp" [(ngModel)]="catalogForm">
+              <option value="all">All forms</option>
+              @for (form of medicineForms(); track form) { <option [value]="form">{{ form }}</option> }
+            </select>
+            <label class="sr" for="catalogMedicineCategory">Medicine category</label>
+            <select id="catalogMedicineCategory" class="inp" [(ngModel)]="catalogCategory">
+              <option value="all">All categories</option>
+              @for (category of medicineCategories(); track category.key) { <option [value]="category.key">{{ category.label }}</option> }
+            </select>
+            <div class="chips" role="group" aria-label="Prescription">
+              <button class="chip" [class.on]="catalogRx === 'all'" [attr.aria-pressed]="catalogRx === 'all'" type="button" (click)="catalogRx = 'all'">All</button>
+              <button class="chip" [class.on]="catalogRx === 'rx'" [attr.aria-pressed]="catalogRx === 'rx'" type="button" (click)="catalogRx = 'rx'">Prescription only</button>
+              <button class="chip" [class.on]="catalogRx === 'otc'" [attr.aria-pressed]="catalogRx === 'otc'" type="button" (click)="catalogRx = 'otc'">No prescription</button>
+            </div>
+          </div>
           <div class="catalog-list" aria-live="polite">
             @for (m of filteredCatalogMeds(); track m.id) {
               <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
@@ -84,6 +101,12 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
             <label class="sr" for="pharmacySearch">Search pharmacies</label>
             <input id="pharmacySearch" class="inp" type="search" [(ngModel)]="pharmacyQuery" placeholder="Pharmacy, area or city" autocomplete="off">
             <a class="btn btn-ink" routerLink="/medicine/catalog">Medicine catalog</a>
+          </div>
+          <div class="chips pharmacy-cities" role="group" aria-label="Pharmacy city">
+            <button class="chip" [class.on]="pharmacyCity === 'all'" [attr.aria-pressed]="pharmacyCity === 'all'" type="button" (click)="pharmacyCity = 'all'">All cities</button>
+            @for (city of pharmacyCities(); track city) {
+              <button class="chip" [class.on]="pharmacyCity === city" [attr.aria-pressed]="pharmacyCity === city" type="button" (click)="pharmacyCity = city">{{ city }}</button>
+            }
           </div>
           <div class="pharmacy-grid">
             @for (shop of filteredPharmacies(); track shop.id) {
@@ -150,12 +173,16 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
             </div>
             <div class="catalog-entry-row">
               <a class="catalog-entry catalog-entry-primary" routerLink="/medicine/catalog">
-                <span class="catalog-entry-icon" aria-hidden="true">Rx</span>
+                <span class="catalog-entry-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 20.5a5 5 0 0 1-7-7l9-9a5 5 0 0 1 7 7z"/><path d="m8.5 8.5 7 7"/></svg>
+                </span>
                 <span><b>Medicine catalog</b><small>{{ medService.medicines().length }} medicines · search by name or generic</small></span>
                 <span class="catalog-entry-go" aria-hidden="true">→</span>
               </a>
               <a class="catalog-entry" routerLink="/medicine/pharmacies">
-                <span class="catalog-entry-icon" aria-hidden="true">+</span>
+                <span class="catalog-entry-icon" aria-hidden="true">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m4 9 1.5-5h13L20 9"/><path d="M4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0A2.7 2.7 0 0 0 20 9"/><path d="M5 12v8h14v-8"/><path d="M10 20v-5h4v5"/></svg>
+                </span>
                 <span><b>Partner pharmacies</b><small>Stock and prices by pharmacy</small></span>
                 <span class="catalog-entry-go" aria-hidden="true">→</span>
               </a>
@@ -513,6 +540,9 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
     .catalog-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 8px 0 24px; }
     .catalog-heading h2, .catalog-detail h2 { font-size: clamp(28px, 4vw, 44px); }
     .catalog-heading .inp { width: min(100%, 560px); }
+    .catalog-filters { display: flex; flex-direction: column; gap: 12px; margin: 18px 0 14px; }
+    .catalog-filters > .inp { max-width: 380px; }
+    .pharmacy-cities { margin-bottom: 16px; }
     .catalog-list { display: grid; gap: 10px; }
     .catalog-row { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
     .catalog-row:hover { box-shadow: inset 0 0 0 2px #2381FF; }
@@ -554,6 +584,10 @@ export class MedicineComponent implements OnInit {
   viewMode: 'main' | 'catalog' | 'medicine-detail' | 'pharmacies' | 'pharmacy-detail' = 'main';
   catalogQuery = '';
   pharmacyQuery = '';
+  catalogForm = 'all';
+  catalogCategory = 'all';
+  catalogRx: 'all' | 'rx' | 'otc' = 'all';
+  pharmacyCity = 'all';
   routeId: number | null = null;
 
   areaNames = Object.keys(this.medService.areas);
@@ -613,7 +647,24 @@ export class MedicineComponent implements OnInit {
 
   filteredCatalogMeds(): Medicine[] {
     const q = this.catalogQuery.trim().toLowerCase();
-    return this.medService.medicines().filter(m => !q || `${m.n} ${m.g} ${m.f} ${m.u}`.toLowerCase().includes(q));
+    return this.medService.medicines()
+      .filter(m =>
+        (!q || `${m.n} ${m.g} ${m.f} ${m.u}`.toLowerCase().includes(q)) &&
+        (this.catalogForm === 'all' || m.f === this.catalogForm) &&
+        (this.catalogCategory === 'all' || m.c === this.catalogCategory) &&
+        (this.catalogRx === 'all' || (this.catalogRx === 'rx' ? m.rx === 1 : m.rx !== 1))
+      )
+      .sort((a, b) => a.n.localeCompare(b.n));
+  }
+
+  medicineForms(): string[] {
+    return [...new Set(this.medService.medicines().map(m => m.f))].sort((a, b) => a.localeCompare(b));
+  }
+
+  medicineCategories(): { key: string; label: string }[] {
+    return [...new Set(this.medService.medicines().map(m => m.c))]
+      .map(key => ({ key, label: this.medService.needs().find(need => need.k === key)?.t || key }))
+      .sort((a, b) => a.label.localeCompare(b.label));
   }
 
   getCatalogMedicine(): Medicine | undefined {
@@ -626,7 +677,13 @@ export class MedicineComponent implements OnInit {
 
   filteredPharmacies(): Pharmacy[] {
     const q = this.pharmacyQuery.trim().toLowerCase();
-    return this.medService.pharmacies().filter(shop => !q || `${shop.n} ${shop.a} ${shop.c}`.toLowerCase().includes(q));
+    return this.medService.pharmacies()
+      .filter(shop => (this.pharmacyCity === 'all' || shop.c === this.pharmacyCity) && (!q || `${shop.n} ${shop.a} ${shop.c}`.toLowerCase().includes(q)))
+      .sort((a, b) => a.c.localeCompare(b.c) || a.n.localeCompare(b.n));
+  }
+
+  pharmacyCities(): string[] {
+    return [...new Set(this.medService.pharmacies().map(shop => shop.c))].sort((a, b) => a.localeCompare(b));
   }
 
   pharmacyStock(shop: Pharmacy): Medicine[] {

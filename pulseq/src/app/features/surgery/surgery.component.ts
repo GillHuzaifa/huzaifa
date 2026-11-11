@@ -91,12 +91,16 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
               <p class="muted" style="font-size:18px;max-width:540px">See a price range first, compare hospitals, meet your surgeon in a consultation, then decide. Nothing is booked until you have a written quote.</p>
               <div class="surgery-entry-row">
                 <a class="surgery-entry surgery-entry-primary" routerLink="/surgery/procedures">
-                  <span class="surgery-entry-icon" aria-hidden="true">+</span>
+                  <span class="surgery-entry-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="3"/><path d="M9 4V3h6v1M8 14h2l1.5-3 2 6 1.5-3H16"/></svg>
+                  </span>
                   <span><b>Procedure catalog</b><small>{{ surgeryService.procedures().length }} procedures · price, stay and recovery</small></span>
                   <span class="surgery-entry-go" aria-hidden="true">→</span>
                 </a>
                 <a class="surgery-entry" routerLink="/surgery/surgeons">
-                  <span class="surgery-entry-icon" aria-hidden="true">+</span>
+                  <span class="surgery-entry-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="3.5"/><path d="M3.5 20c.6-3.6 3-5.5 6.5-5.5M17 14v6m-3-3h6"/></svg>
+                  </span>
                   <span><b>Our surgeons</b><small>Experience, hospitals and consultation fees</small></span>
                   <span class="surgery-entry-go" aria-hidden="true">→</span>
                 </a>
@@ -135,16 +139,22 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
             }
           </div>
 
-          <div class="chips" id="sProcs" role="group" aria-label="Choose a procedure" style="margin:16px 0">
-            @for (x of currentProcedures(); track x.id) {
-              <button
-                class="chip"
-                [class.on]="selectedProcId === x.id"
-                [attr.aria-pressed]="selectedProcId === x.id"
-                type="button"
-                (click)="selectProc(x.id)">
-                {{ x.n }}
-              </button>
+          <div class="symbox" style="margin:18px 0 10px">
+            <div class="field wide">
+              <label for="sPq">Find a procedure</label>
+              <input id="sPq" type="search" [(ngModel)]="procedureQuery" placeholder="e.g. knee, cataract, hernia" autocomplete="off">
+            </div>
+          </div>
+          <div class="proclist" id="sProcs" role="list" aria-label="Procedures">
+            @for (pr of filteredPlannerProcedures(); track pr.id) {
+              <a class="prow" [routerLink]="['/surgery/procedures', pr.id]">
+                <span class="pr-t"><b>{{ pr.n }}</b><small>{{ pr.d }}</small></span>
+                <span class="pr-p">{{ surgeryService.formatRange([pr.lo, pr.hi]) }}</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+              </a>
+            }
+            @if (filteredPlannerProcedures().length === 0) {
+              <p class="muted sm" style="padding:14px">No procedure matches. Try another word.</p>
             }
           </div>
 
@@ -180,6 +190,15 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
             <p class="muted sm" id="sHospNote" style="margin-bottom:14px">
               {{ currentHosps().length }} {{ currentHosps().length === 1 ? 'hospital offers ' : 'hospitals offer ' }}{{ pr.n.toLowerCase() }}. Tap Compare on two to see them side by side.
             </p>
+
+            @if (availableSurgeryCities().length > 1) {
+              <div class="chips" id="sCity" role="group" aria-label="Hospital city" style="margin-bottom:12px">
+                <button class="chip" [class.on]="selectedCity === 'all'" [attr.aria-pressed]="selectedCity === 'all'" type="button" (click)="selectedCity = 'all'">All cities</button>
+                @for (city of availableSurgeryCities(); track city) {
+                  <button class="chip" [class.on]="selectedCity === city" [attr.aria-pressed]="selectedCity === city" type="button" (click)="selectedCity = city">{{ city }}</button>
+                }
+              </div>
+            }
 
             <div class="sgrid" id="sHosp">
               @for (h of currentHosps(); track h.id) {
@@ -505,6 +524,7 @@ export class SurgeryComponent implements OnInit {
   procedureQuery = '';
   procedureCategory = 'all';
   routeProcedureId: number | null = null;
+  selectedCity = 'all';
 
   selectedCat = 'general';
   selectedProcId = 8;
@@ -514,6 +534,7 @@ export class SurgeryComponent implements OnInit {
   fQuery = '';
   fSpec = 'all';
   fCity = 'all';
+  fHosp = 'all';
   fProc: number | null = null;
   fSpecs = [
     ['all', 'All'],
@@ -560,6 +581,7 @@ export class SurgeryComponent implements OnInit {
       this.viewMode = 'surgeons';
       const params = new URLSearchParams(query);
       this.fProc = Number(params.get('procedure')) || null;
+      this.fHosp = params.get('hospital') || 'all';
       this.seo.setPage('Surgeons');
     } else {
       this.seo.setPage('Surgery & Procedures');
@@ -603,16 +625,39 @@ export class SurgeryComponent implements OnInit {
     return this.surgeryService.procedures().filter(p => p.c === this.selectedCat);
   }
 
+  filteredPlannerProcedures(): Procedure[] {
+    const q = this.procedureQuery.trim().toLowerCase();
+    return this.surgeryService.procedures().filter(p =>
+      q
+        ? `${p.n} ${p.d} ${this.procedureCategoryName(p.c)}`.toLowerCase().includes(q)
+        : p.c === this.selectedCat
+    );
+  }
+
   currentProc(): Procedure | undefined {
     return this.surgeryService.getProcedureById(this.selectedProcId);
   }
 
   currentHosps(): Hospital[] {
-    return this.surgeryService.hospsFor(this.selectedProcId);
+    return this.allCurrentHosps().filter(h => this.selectedCity === 'all' || h.city === this.selectedCity);
+  }
+
+  private allCurrentHosps(): Hospital[] {
+    const pr = this.currentProc();
+    if (!pr) return [];
+    return this.surgeryService.hospsFor(this.selectedProcId).sort((a, b) =>
+      this.surgeryService.hrange(pr, a.id)[0] - this.surgeryService.hrange(pr, b.id)[0]
+    );
+  }
+
+  availableSurgeryCities(): string[] {
+    return [...new Set(this.allCurrentHosps().map(h => h.city))];
   }
 
   selectCategory(cat: string): void {
     this.selectedCat = cat;
+    this.procedureQuery = '';
+    this.selectedCity = 'all';
     const procs = this.currentProcedures();
     if (procs.length > 0) {
       this.selectedProcId = procs[0].id;
@@ -622,6 +667,8 @@ export class SurgeryComponent implements OnInit {
 
   selectProc(id: number): void {
     this.selectedProcId = id;
+    this.selectedCat = this.currentProc()?.c || this.selectedCat;
+    this.selectedCity = 'all';
     this.comparedHosps = [];
   }
 
@@ -652,7 +699,7 @@ export class SurgeryComponent implements OnInit {
       r: this.surgeryService.formatRange(r),
       s: ss.map(x => x.n).join(', '),
       x: Math.max(...ss.map(x => x.x), 0) + ' years',
-      f: 'from ' + this.surgeryService.formatMoney(Math.min(...ss.map(x => x.fee), 0))
+    f: 'from ' + this.surgeryService.formatMoney(ss.length ? Math.min(...ss.map(x => x.fee)) : 0)
     };
   }
 
@@ -681,6 +728,7 @@ export class SurgeryComponent implements OnInit {
       const h = this.getHospital(s.h);
       if (this.fSpec !== 'all' && s.c !== this.fSpec) return false;
       if (this.fCity !== 'all' && h?.city !== this.fCity) return false;
+      if (this.fHosp !== 'all' && s.h !== this.fHosp) return false;
       if (this.fProc && s.p.indexOf(this.fProc) < 0) return false;
       if (q) {
         const hay = (s.n + ' ' + s.t + ' ' + (h?.name || '') + ' ' + s.p.map(i => this.getProcName(i)).join(' ')).toLowerCase();
@@ -694,6 +742,7 @@ export class SurgeryComponent implements OnInit {
     this.fQuery = '';
     this.fSpec = 'all';
     this.fCity = 'all';
+    this.fHosp = 'all';
     this.fProc = null;
   }
 

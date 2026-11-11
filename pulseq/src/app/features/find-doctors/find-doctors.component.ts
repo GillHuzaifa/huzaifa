@@ -198,10 +198,22 @@ import { Doctor, Place, Slot } from '../../shared/models';
             </div>
             <select [(ngModel)]="sortOption" aria-label="Sort doctors">
               <option value="soon">Earliest available</option>
-              <option value="low">Fee: lowest first</option>
-              <option value="high">Fee: highest first</option>
-              <option value="name">Doctor name</option>
+              <option value="low">Fee: low to high</option>
+              <option value="high">Fee: high to low</option>
+              <option value="score">Patient score</option>
+              <option value="name">Name</option>
             </select>
+          </div>
+
+          <div class="fdactive" aria-label="Active filters">
+            @for (filter of activeFilters(); track filter.key) {
+              <button class="fdx" type="button" (click)="removeFilter(filter.key)">
+                {{ filter.label }} <span aria-hidden="true">×</span>
+              </button>
+            }
+            @if (activeFilters().length > 0) {
+              <button class="fdx clr" type="button" (click)="resetFilters()">Clear all</button>
+            }
           </div>
 
           <div class="fdlist" id="fdList">
@@ -434,6 +446,28 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
     return bits.join(' · ');
   }
 
+  activeFilters(): { key: string; label: string }[] {
+    const active: { key: string; label: string }[] = [];
+    if (this.searchQuery) active.push({ key: 'query', label: `“${this.searchQuery}”` });
+    if (this.selectedSpec !== 'all') active.push({ key: 'spec', label: this.specPlural[this.selectedSpec] || this.specMap[this.selectedSpec] || this.selectedSpec });
+    if (this.selectedCity !== 'all') active.push({ key: 'city', label: this.selectedCity });
+    if (this.selectedMode !== 'all') active.push({ key: 'mode', label: this.selectedMode === 'video' ? 'Video' : 'In clinic' });
+    if (this.onlyToday) active.push({ key: 'today', label: 'Free today' });
+    if (this.maxFee > 0) active.push({ key: 'fee', label: `Up to Rs ${this.maxFee.toLocaleString('en-US')}` });
+    return active;
+  }
+
+  removeFilter(key: string): void {
+    switch (key) {
+      case 'query': this.searchQuery = ''; break;
+      case 'spec': this.selectedSpec = 'all'; break;
+      case 'city': this.selectedCity = 'all'; break;
+      case 'mode': this.selectedMode = 'all'; break;
+      case 'today': this.onlyToday = false; break;
+      case 'fee': this.maxFee = 0; break;
+    }
+  }
+
   getInitials(name: string): string {
     return name.replace('Dr. ', '').split(' ').map(w => w[0]).slice(0, 2).join('');
   }
@@ -463,6 +497,7 @@ export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (this.sortOption === 'low') return a.fee - b.fee;
       if (this.sortOption === 'high') return b.fee - a.fee;
       if (this.sortOption === 'name') return a.name.localeCompare(b.name);
+      if (this.sortOption === 'score') return this.getDocRating(b.id).avg - this.getDocRating(a.id).avg;
       // soon
       const na = this.doctorsService.nextSlots(a, 1)[0];
       const nb = this.doctorsService.nextSlots(b, 1)[0];

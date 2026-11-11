@@ -19,7 +19,7 @@ import { Hospital } from '../../shared/models';
         <div class="pghead">
         <div class="pgh-txt">
           <span class="eyebrow" style="color:#BFD9FF">Hospitals and clinics</span>
-          <h2>Book the hospital, not just the doctor.</h2>
+          <h2>Find a hospital, then pick its doctor.</h2>
           <p>Browse hospitals by city or department, then book a doctor there.</p>
         </div>
 
@@ -104,53 +104,39 @@ import { Hospital } from '../../shared/models';
         </div>
       </div>
 
-      <p class="muted" aria-live="polite" style="margin-top:6px">
-        <b style="color:var(--fg)">{{ filteredHospitals().length }}</b>
-        {{ filteredHospitals().length === 1 ? 'hospital' : 'hospitals' }} shown
+      @let list = visibleHospitals();
+      <p class="muted" id="hpCount" aria-live="polite" style="margin-top:6px">
+        @if (filteredHospitals().length > list.length) {
+          Showing <b style="color:var(--fg)">{{ list.length }}</b> of <b style="color:var(--fg)">{{ filteredHospitals().length }}</b> hospitals
+        } @else {
+          <b style="color:var(--fg)">{{ filteredHospitals().length }}</b>
+          {{ filteredHospitals().length === 1 ? 'hospital' : 'hospitals' }}
+        }
       </p>
 
-      <div class="hpgrid">
-        @let list = filteredHospitals();
+      <div class="hdir" id="hdir">
         @if (list.length > 0) {
-          @for (h of list.slice(0, visibleLimit); track h.id) {
-            @let n = hospitalsService.getDoctorsAtHospital(h.id).length;
-            @let free = hospitalsService.getFreeTodayCount(h.id);
-
-            <article class="hosp hpc" (click)="openHospital(h.id, $event)" style="cursor:pointer">
-              <div class="hosp-top t{{ h.t }}">
-                <span class="big">{{ h.name[0] }}</span>
-                @if (h.badge) {
-                  <span class="tag">{{ h.badge }}</span>
-                }
-              </div>
-              <div class="hosp-body">
-                <h3 style="font-size:22px"><a [routerLink]="['/hospital', h.id]" style="color:inherit;text-decoration:none">{{ h.name }}</a></h3>
-                <p class="muted sm">{{ h.city }}</p>
-                <a class="rt" [routerLink]="['/hospital', h.id]" fragment="hreviews">
-                  <svg class="pulse" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                  </svg>
-                  <b>{{ getHospRating(h.id).avg.toFixed(1) }}</b>
-                  <span>· {{ getHospRating(h.id).n }} reviews</span>
-                </a>
-                <div class="deptpills">
-                  @for (part of h.depts.split(' · '); track part) {
-                    <span>{{ part }}</span>
-                  }
-                </div>
-                <div class="hp-stats">
-                  <span><b>{{ n }}</b> {{ n === 1 ? 'doctor' : 'doctors' }}</span>
-                  <span><b>{{ free }}</b> free today</span>
-                </div>
-                <a class="btn btn-line full" [routerLink]="['/hospital', h.id]">
-                  View doctors and book
-                </a>
-              </div>
-            </article>
+          @for (group of hospitalGroups(list); track group.city) {
+            @if (selectedCity === 'all') {
+              <h3 class="hgroup">{{ group.city }} <span>{{ group.hospitals.length }} {{ group.hospitals.length === 1 ? 'hospital' : 'hospitals' }}</span></h3>
+            }
+            @for (h of group.hospitals; track h.id) {
+              @let n = hospitalsService.getDoctorsAtHospital(h.id).length;
+              @let free = hospitalsService.getFreeTodayCount(h.id);
+              <a class="hrow" [routerLink]="['/hospital', h.id]">
+                <span class="hr-l">{{ h.name[0] }}</span>
+                <span class="min0">
+                  <b class="hr-n">{{ h.name }} @if (h.badge) { <em class="hr-e">{{ h.badge }}</em> }</b>
+                  <span class="hr-s">{{ h.city }} · {{ h.depts.split(' · ').slice(0, 3).join(' · ') }}</span>
+                  <span class="hr-c"><b>{{ n }}</b> {{ n === 1 ? 'doctor' : 'doctors' }} · <b>{{ free }}</b> free today</span>
+                </span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+              </a>
+            }
           }
-          @if (list.length > visibleLimit) {
-            <div #loadMoreHosp style="grid-column:1/-1;padding:12px 0;text-align:center">
-              <button class="btn btn-line" type="button" (click)="showMore()">Load more hospitals ({{ list.length - visibleLimit }} more)</button>
+          @if (filteredHospitals().length > list.length) {
+            <div #loadMoreHosp class="lz-sent">
+              <button class="btn btn-line" type="button" (click)="showMore()">Load more hospitals ({{ filteredHospitals().length - list.length }} more)</button>
             </div>
           }
         } @else {
@@ -260,5 +246,21 @@ export class HospitalsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       return true;
     });
+  }
+
+  visibleHospitals(): Hospital[] {
+    return this.filteredHospitals()
+      .sort((a, b) => a.city.localeCompare(b.city) || a.name.localeCompare(b.name))
+      .slice(0, this.visibleLimit);
+  }
+
+  hospitalGroups(hospitals: Hospital[]): { city: string; hospitals: Hospital[] }[] {
+    const groups = new Map<string, Hospital[]>();
+    hospitals.forEach(hospital => {
+      const group = groups.get(hospital.city) || [];
+      group.push(hospital);
+      groups.set(hospital.city, group);
+    });
+    return [...groups].map(([city, items]) => ({ city, hospitals: items }));
   }
 }

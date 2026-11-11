@@ -4,17 +4,17 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { ReviewsService, ReviewStats, HOSP_ASPECTS } from '../../shared/services/reviews.service';
+import { ModalService } from '../../shared/services/modal.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { SeoService } from '../../shared/services/seo.service';
-import { DoctorCardComponent } from '../../shared/components/doctor-card/doctor-card.component';
 import { PatientReviewsComponent, SubmittedReview } from '../../shared/components/patient-reviews/patient-reviews.component';
-import { Hospital, Doctor } from '../../shared/models';
+import { Hospital, Doctor, Place } from '../../shared/models';
 import { SPEC } from '../../data/specialties.data';
 
 @Component({
   selector: 'app-hospital-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, DoctorCardComponent, PatientReviewsComponent],
+  imports: [CommonModule, RouterLink, PatientReviewsComponent],
   template: `
     <section class="sec pg-hosps" id="page-hosps">
       <div class="wrap" id="hpRoot">
@@ -90,12 +90,48 @@ import { SPEC } from '../../data/specialties.data';
             </div>
           </div>
 
-          <!-- Doctor Grid -->
-          <div class="doc-grid">
+          <!-- Doctor directory -->
+          <div class="dlist">
             @let docs = filteredDoctors();
             @if (docs.length > 0) {
               @for (d of docs; track d.id) {
-                <app-doctor-card [doctor]="d"></app-doctor-card>
+                @let place = placeAtHospital(d);
+                @let slots = doctorsService.nextSlots(place, 2);
+                @let rating = getDocRating(d.id);
+                <article class="drow">
+                  <a class="dr-id" [routerLink]="['/doctor', d.id]">
+                    <span class="dc-ava t{{ d.t }}">
+                      @if (d.photo) { <img [src]="d.photo" [alt]="d.name"> }
+                      @else { {{ getInitials(d.name) }} }
+                    </span>
+                    <span class="min0">
+                      <b class="dr-n">{{ d.name }}</b>
+                      <span class="dr-s">{{ specMap[d.spec] || d.spec }} · {{ hospital.name }}{{ placesCount(d) > 1 ? ' · +' + (placesCount(d) - 1) + ' more place' + (placesCount(d) > 2 ? 's' : '') : '' }}</span>
+                    </span>
+                  </a>
+                  <div class="dr-r">
+                    <a class="rt" [routerLink]="['/doctor', d.id]" fragment="reviews">
+                      <svg class="pulse" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2381FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                      <b>{{ rating.avg.toFixed(1) }}</b><span>· {{ rating.n }} reviews</span>
+                    </a>
+                    <span class="tag">{{ place.mode }}</span>
+                  </div>
+                  <div class="dr-sl">
+                    @if (slots.length > 0) {
+                      @for (slot of slots; track slot.o + slot.t) {
+                        <button class="slot" type="button" (click)="modalService.openBooking(place.id, slot.o, slot.t)">
+                          {{ doctorsService.shortDay(slot.o) }} {{ doctorsService.formatTime(slot.t) }}
+                        </button>
+                      }
+                    } @else {
+                      <span class="muted sm">No free slots this week</span>
+                    }
+                  </div>
+                  <div class="dr-act">
+                    <b class="dc-fee">Rs {{ place.fee.toLocaleString('en-US') }}</b>
+                    <button class="btn btn-ink" type="button" [disabled]="!slots.length" (click)="modalService.openBooking(place.id, slots[0].o, slots[0].t)">Book</button>
+                  </div>
+                </article>
               }
             } @else {
               <div class="empty" style="grid-column:1/-1">
@@ -129,12 +165,14 @@ import { SPEC } from '../../data/specialties.data';
   styles: [`
     :host { display: block; }
     .pg-hosps { display: block !important; }
+    .dlist { display: flex; flex-direction: column; gap: 10px; }
   `]
 })
 export class HospitalDetailComponent implements OnInit {
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
   reviewsService = inject(ReviewsService);
+  modalService = inject(ModalService);
   toastService = inject(ToastService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
@@ -192,6 +230,22 @@ export class HospitalDetailComponent implements OnInit {
 
   filteredDoctors(): Doctor[] {
     return this.doctors().filter(d => this.selectedSpec === 'all' || d.spec === this.selectedSpec);
+  }
+
+  placeAtHospital(doctor: Doctor): Doctor | Place {
+    return this.doctorsService.placesOf(doctor).find(place => place.h === this.hospital?.id) || doctor;
+  }
+
+  placesCount(doctor: Doctor): number {
+    return this.doctorsService.placesOf(doctor).length;
+  }
+
+  getDocRating(id: number) {
+    return this.reviewsService.getDocStats(id);
+  }
+
+  getInitials(name: string): string {
+    return name.replace('Dr. ', '').split(' ').map(part => part[0]).slice(0, 2).join('');
   }
 
   hPh(h: Hospital): string | null {
