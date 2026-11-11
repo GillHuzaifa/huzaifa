@@ -18,35 +18,57 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
           <a class="pgback" routerLink="/medicine">Back to medicine</a>
           <div class="catalog-heading">
             <span class="eyebrow">PulseQ medicine catalog</span>
-            <h2>Find a medicine</h2>
-            <p class="muted">{{ medService.medicines().length }} medicines · Search by name, generic or what it treats.</p>
+            <h2>Search {{ medService.medicines().length }} medicines</h2>
+            <p class="muted">Brands, generics and strengths from partner pharmacies.</p>
+            <a class="btn btn-ink" routerLink="/medicine/pharmacies">Partner pharmacies</a>
             <label class="sr" for="catalogMedicineSearch">Search medicines</label>
             <input id="catalogMedicineSearch" class="inp" type="search" [(ngModel)]="catalogQuery" placeholder="Medicine, brand or generic name" autocomplete="off">
-            <a class="btn btn-ink" routerLink="/medicine/pharmacies">Partner pharmacies</a>
           </div>
           <div class="catalog-filters">
-            <label class="sr" for="catalogMedicineForm">Medicine form</label>
-            <select id="catalogMedicineForm" class="inp" [(ngModel)]="catalogForm">
-              <option value="all">All forms</option>
-              @for (form of medicineForms(); track form) { <option [value]="form">{{ form }}</option> }
-            </select>
-            <label class="sr" for="catalogMedicineCategory">Medicine category</label>
-            <select id="catalogMedicineCategory" class="inp" [(ngModel)]="catalogCategory">
-              <option value="all">All categories</option>
-              @for (category of medicineCategories(); track category.key) { <option [value]="category.key">{{ category.label }}</option> }
-            </select>
-            <div class="chips" role="group" aria-label="Prescription">
+            <div class="catalog-letters" role="group" aria-label="Browse medicines by first letter">
+              <button class="catalog-letter" [class.on]="catalogLetter === '#'" type="button" aria-label="Medicines beginning with a number" [disabled]="medicineCountForLetter('#') === 0" [attr.aria-pressed]="catalogLetter === '#'" (click)="catalogLetter = '#'">#</button>
+              @for (letter of catalogAlphabet; track letter) {
+                <button class="catalog-letter" [class.on]="catalogLetter === letter" type="button" [disabled]="medicineCountForLetter(letter) === 0" [attr.aria-pressed]="catalogLetter === letter" (click)="catalogLetter = letter">{{ letter }}</button>
+              }
+            </div>
+            <div class="catalog-filter-row" role="group" aria-label="Filter by medicine type">
+              <span class="catalog-filter-label">Type</span>
+              <button class="chip" [class.on]="catalogForm === 'all'" type="button" [attr.aria-pressed]="catalogForm === 'all'" (click)="catalogForm = 'all'">All types</button>
+              @for (form of medicineForms(); track form) {
+                <button class="chip" [class.on]="catalogForm === form" type="button" [attr.aria-pressed]="catalogForm === form" (click)="catalogForm = form">{{ form }} ({{ medicineCountForForm(form) }})</button>
+              }
+            </div>
+            <div class="catalog-filter-row" role="group" aria-label="Filter by medicine category">
+              <span class="catalog-filter-label">Category</span>
+              <button class="chip" [class.on]="catalogCategory === 'all'" type="button" [attr.aria-pressed]="catalogCategory === 'all'" (click)="catalogCategory = 'all'">All categories</button>
+              @for (category of medicineCategories(); track category.key) {
+                <button class="chip" [class.on]="catalogCategory === category.key" type="button" [attr.aria-pressed]="catalogCategory === category.key" (click)="catalogCategory = category.key">{{ category.label }} ({{ medicineCountForCategory(category.key) }})</button>
+              }
+            </div>
+            <div class="catalog-filter-row catalog-rx" role="group" aria-label="Prescription">
               <button class="chip" [class.on]="catalogRx === 'all'" [attr.aria-pressed]="catalogRx === 'all'" type="button" (click)="catalogRx = 'all'">All</button>
               <button class="chip" [class.on]="catalogRx === 'rx'" [attr.aria-pressed]="catalogRx === 'rx'" type="button" (click)="catalogRx = 'rx'">Prescription only</button>
               <button class="chip" [class.on]="catalogRx === 'otc'" [attr.aria-pressed]="catalogRx === 'otc'" type="button" (click)="catalogRx = 'otc'">No prescription</button>
             </div>
           </div>
+          <div class="catalog-results-bar">
+            <p aria-live="polite">Showing {{ filteredCatalogMeds().length }} of {{ medService.medicines().length }} medicines</p>
+            <label for="catalogMedicineSort">Sort</label>
+            <select id="catalogMedicineSort" [(ngModel)]="catalogSort" aria-label="Sort medicines">
+              <option value="az">A to Z</option>
+              <option value="za">Z to A</option>
+            </select>
+          </div>
           <div class="catalog-list" aria-live="polite">
             @for (m of filteredCatalogMeds(); track m.id) {
               <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
                 <span class="catalog-row-main">
-                  <b>{{ m.n }} @if (m.rx === 1) { <span class="tag rx">Rx</span> }</b>
-                  <small>{{ m.g }} · {{ m.f }} · {{ m.u }}</small>
+                  <b>{{ m.n }}</b>
+                  <small>{{ m.g }} · {{ m.f }}</small>
+                </span>
+                <span class="catalog-row-badges">
+                  @if (m.rx === 1) { <span class="tag rx">Rx</span> }
+                  <span class="catalog-category-badge">{{ categoryLabel(m.c) }}</span>
                 </span>
                 <span class="catalog-arrow" aria-hidden="true">›</span>
               </a>
@@ -580,19 +602,34 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
   styles: [`
     :host { display: block; }
     .pg-medicine { display: block !important; }
-    .catalog-page { max-width: 1040px; }
-    .catalog-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 8px 0 24px; }
+    .catalog-page { max-width: 1080px; }
+    .catalog-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 8px 0 16px; }
     .catalog-heading h2, .catalog-detail h2 { font-size: clamp(28px, 4vw, 44px); }
     .catalog-heading .inp { width: min(100%, 560px); }
-    .catalog-filters { display: flex; flex-direction: column; gap: 12px; margin: 18px 0 14px; }
-    .catalog-filters > .inp { max-width: 380px; }
+    .catalog-heading > .btn { order: 2; }
+    .catalog-heading > label, .catalog-heading > .inp { order: 3; }
+    .catalog-filters { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 10px; }
+    .catalog-letters { display: flex; flex-wrap: wrap; gap: 4px; }
+    .catalog-letter { width: 30px; min-height: 30px; padding: 0; border: 1px solid #DCE8F8; border-radius: 8px; background: #fff; color: #1558B8; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .catalog-letter:hover:not(:disabled), .catalog-letter.on { border-color: #2381FF; background: #EAF3FF; }
+    .catalog-letter:disabled { color: #B8C2CE; background: #F8FAFC; cursor: not-allowed; }
+    .catalog-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .catalog-filter-label { width: 66px; flex: none; color: var(--muted); font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .catalog-filter-row .chip { min-height: 38px; padding: 0 14px; font-size: 14px; }
+    .catalog-rx { margin-top: 2px; }
+    .catalog-results-bar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin: 8px 0 10px; color: var(--muted); font-size: 13px; }
+    .catalog-results-bar p { flex: 1; margin: 0; color: var(--fg); font-size: 14px; font-weight: 700; }
+    .catalog-results-bar select { min-height: 38px; border: 1px solid #DCE8F8; border-radius: 12px; background: #fff; padding: 0 10px; color: var(--fg); font: inherit; }
     .pharmacy-cities { margin-bottom: 16px; }
     .catalog-list { display: grid; gap: 10px; }
-    .catalog-row { display: flex; align-items: center; gap: 16px; padding: 16px 18px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
+    .catalog-row { display: flex; align-items: center; gap: 14px; min-width: 0; padding: 12px 14px; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; color: var(--fg); text-decoration: none; }
     .catalog-row:hover { box-shadow: inset 0 0 0 2px #2381FF; }
     .catalog-row-main { flex: 1; min-width: 0; }
     .catalog-row-main b, .catalog-row-main small { display: block; }
-    .catalog-row-main small { color: var(--muted); margin-top: 4px; }
+    .catalog-row-main b { font-size: 15px; }
+    .catalog-row-main small { color: var(--muted); margin-top: 3px; font-size: 13px; }
+    .catalog-row-badges { display: flex; flex: none; align-items: center; gap: 6px; }
+    .catalog-category-badge { border-radius: 999px; background: #EFF6FF; color: #1558B8; padding: 5px 10px; font-size: 11px; font-weight: 700; white-space: nowrap; }
     .catalog-arrow, .catalog-price { flex: none; color: #1558B8; font-weight: 800; }
     .catalog-detail { padding: clamp(20px, 4vw, 36px); border-radius: 24px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
     .catalog-detail h2 { margin: 10px 0 6px; }
@@ -621,6 +658,17 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
     .mfilt .chip { min-height: 40px; padding: 0 14px; font-size: 14px; }
     .mfilt select { min-height: 44px; max-width: 100%; border: 1.5px solid var(--line); border-radius: 999px; background: #fff; padding: 0 14px; font: inherit; }
     @media (max-width: 760px) { .mfilt { align-items: flex-start; flex-direction: column; } }
+    @media (max-width: 560px) {
+      .catalog-heading { margin-top: 0; }
+      .catalog-heading h2, .catalog-detail h2 { font-size: 32px; }
+      .catalog-filter-label { width: 100%; }
+      .catalog-letters { gap: 3px; }
+      .catalog-letter { width: 28px; }
+      .catalog-row { align-items: flex-start; gap: 8px; padding: 12px; }
+      .catalog-row-badges { flex-direction: column; align-items: flex-end; }
+      .catalog-category-badge { max-width: 112px; overflow: hidden; text-overflow: ellipsis; }
+      .catalog-arrow { align-self: center; }
+    }
     @media (prefers-reduced-motion: reduce) { .catalog-entry { transition: none; } }
   `]
 })
@@ -636,6 +684,9 @@ export class MedicineComponent implements OnInit {
   catalogForm = 'all';
   catalogCategory = 'all';
   catalogRx: 'all' | 'rx' | 'otc' = 'all';
+  catalogLetter = 'all';
+  catalogSort: 'az' | 'za' = 'az';
+  catalogAlphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   pharmacyCity = 'all';
   routeId: number | null = null;
 
@@ -702,11 +753,29 @@ export class MedicineComponent implements OnInit {
     return this.medService.medicines()
       .filter(m =>
         (!q || `${m.n} ${m.g} ${m.f} ${m.u}`.toLowerCase().includes(q)) &&
+        (this.catalogLetter === 'all' || this.catalogInitial(m.n) === this.catalogLetter) &&
         (this.catalogForm === 'all' || m.f === this.catalogForm) &&
         (this.catalogCategory === 'all' || m.c === this.catalogCategory) &&
         (this.catalogRx === 'all' || (this.catalogRx === 'rx' ? m.rx === 1 : m.rx !== 1))
       )
-      .sort((a, b) => a.n.localeCompare(b.n));
+      .sort((a, b) => this.catalogSort === 'az' ? a.n.localeCompare(b.n) : b.n.localeCompare(a.n));
+  }
+
+  catalogInitial(name: string): string {
+    const initial = name.trim().charAt(0).toUpperCase();
+    return /^[A-Z]$/.test(initial) ? initial : '#';
+  }
+
+  medicineCountForLetter(letter: string): number {
+    return this.medService.medicines().filter(m => this.catalogInitial(m.n) === letter).length;
+  }
+
+  medicineCountForForm(form: string): number {
+    return this.medService.medicines().filter(m => m.f === form).length;
+  }
+
+  medicineCountForCategory(category: string): number {
+    return this.medService.medicines().filter(m => m.c === category).length;
   }
 
   medicineForms(): string[] {
@@ -717,6 +786,10 @@ export class MedicineComponent implements OnInit {
     return [...new Set(this.medService.medicines().map(m => m.c))]
       .map(key => ({ key, label: this.medService.needs().find(need => need.k === key)?.t || key }))
       .sort((a, b) => a.label.localeCompare(b.label));
+  }
+
+  categoryLabel(key: string): string {
+    return this.medService.needs().find(need => need.k === key)?.t || key;
   }
 
   getCatalogMedicine(): Medicine | undefined {
