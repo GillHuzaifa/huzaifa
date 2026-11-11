@@ -62,7 +62,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
           </div>
           <div class="catalog-list" aria-live="polite">
             @for (m of catalogMeds.slice(0, catalogVisibleLimit); track m.id) {
-              <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
+              <a class="catalog-row" routerLink="/medicine" [queryParams]="{ medicine: m.id }">
                 <span class="catalog-row-main">
                   <b>{{ m.n }}</b>
                   <small>{{ m.g }} · {{ m.f }}</small>
@@ -166,7 +166,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
             </div>
             <div class="catalog-list">
               @for (m of pharmacyStock(shop); track m.id) {
-                <a class="catalog-row" [routerLink]="['/medicine/catalog', m.id]">
+                <a class="catalog-row" routerLink="/medicine" [queryParams]="{ medicine: m.id }">
                   <span class="catalog-row-main">
                     <b>{{ m.n }} @if (m.rx === 1) { <span class="tag rx">Rx</span> }</b>
                     <small>{{ m.g }} · {{ m.f }}</small>
@@ -337,7 +337,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                   @let isOpen = medService.isInfoOpen(m.id);
                   @let isWhere = medService.isWhereOpen(m.id);
                   @let inCart = medService.inCartCount(m.id, mode);
-                  <article class="strip">
+                  <article class="strip" [id]="'medicine-' + m.id">
                     <div class="strip-art" aria-hidden="true">
                       <span class="sh sh-{{ medService.shapeMap[m.f] || 'tablet' }}"></span>
                     </div>
@@ -416,7 +416,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 <div class="empty">
                   <h3 style="font-size:24px">We don’t list that one yet</h3>
                   <p class="muted">Check the spelling or try searching by generic name.</p>
-                  <button class="btn btn-ink" type="button" (click)="searchQuery = ''">Clear search</button>
+                  <button class="btn btn-ink" type="button" (click)="clearMedicineSearch()">Clear search</button>
                 </div>
               } @else if (baseMedsList.length > 0) {
                 <div class="empty">
@@ -609,6 +609,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
     :host { display: block; }
     .pg-medicine { display: block !important; }
     .catalog-page { max-width: 1080px; }
+    .strip { scroll-margin-top: 24px; }
     .catalog-heading { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin: 8px 0 16px; }
     .catalog-heading h2, .catalog-detail h2 { font-size: clamp(28px, 4vw, 44px); }
     .catalog-heading .inp { width: min(100%, 560px); }
@@ -702,6 +703,7 @@ export class MedicineComponent implements OnInit {
   selectedArea = '';
   isNear = false;
   selectedNeed = 'pain';
+  selectedMedicineId: number | null = null;
   searchQuery = '';
   mainForm = 'all';
   mainRx: 'all' | 'otc' | 'rx' = 'all';
@@ -735,7 +737,7 @@ export class MedicineComponent implements OnInit {
   ptMessage = '';
 
   ngOnInit(): void {
-    const url = this.router.url.split('?')[0];
+    const [url, query = ''] = this.router.url.split('?');
     if (url === '/medicine/catalog') {
       this.viewMode = 'catalog';
       this.seo.setPage('Medicine Catalog');
@@ -752,6 +754,26 @@ export class MedicineComponent implements OnInit {
       this.seo.setPage('Pharmacy Details');
     } else {
       this.seo.setPage('Order Medicine Online');
+      const selectedMedicineId = Number(new URLSearchParams(query).get('medicine'));
+      const selectedMedicine = Number.isInteger(selectedMedicineId) && selectedMedicineId > 0
+        ? this.medService.getMedicineById(selectedMedicineId)
+        : undefined;
+      if (selectedMedicine) {
+        this.selectedMedicineId = selectedMedicine.id;
+        this.searchQuery = selectedMedicine.n;
+        this.selectedNeed = selectedMedicine.c;
+        if (!this.medService.isInfoOpen(selectedMedicine.id)) {
+          this.medService.toggleInfo(selectedMedicine.id);
+        }
+        if (!this.medService.isWhereOpen(selectedMedicine.id)) {
+          this.medService.toggleWhere(selectedMedicine.id);
+        }
+        if (typeof document !== 'undefined') {
+          setTimeout(() => {
+            document.getElementById(`medicine-${selectedMedicine.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      }
     }
   }
 
@@ -840,8 +862,14 @@ export class MedicineComponent implements OnInit {
   }
 
   onSearchInput(): void {
+    this.selectedMedicineId = null;
     this.mainForm = 'all';
     this.mainRx = 'all';
+  }
+
+  clearMedicineSearch(): void {
+    this.selectedMedicineId = null;
+    this.searchQuery = '';
   }
 
   onAreaInput(): void {
@@ -915,6 +943,7 @@ export class MedicineComponent implements OnInit {
   }
 
   selectNeed(key: string): void {
+    this.selectedMedicineId = null;
     this.selectedNeed = key;
     this.searchQuery = '';
     this.mainForm = 'all';
@@ -927,6 +956,9 @@ export class MedicineComponent implements OnInit {
 
   baseMeds(): Medicine[] {
     const q = this.searchQuery.trim().toLowerCase();
+    if (this.selectedMedicineId !== null) {
+      return this.medService.medicines().filter(m => m.id === this.selectedMedicineId);
+    }
     return q
       ? this.medService.medicines().filter(m => `${m.n} ${m.g} ${m.u}`.toLowerCase().includes(q))
       : this.medService.medicines().filter(m => m.c === this.selectedNeed);
