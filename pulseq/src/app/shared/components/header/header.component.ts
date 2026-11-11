@@ -117,29 +117,29 @@ const SAY: Record<string, string> = {
             </div>
             <p class="hero-desc">Search a doctor, hospital or symptom, or just tell Pulse.</p>
 
-            <div class="search">
+            <form class="search" role="search" (ngSubmit)="goSearch()">
               <div class="tabs" role="group" aria-label="Search type">
-                <button class="tab" [class.on]="activeTab === 'doctors'" (click)="setTab('doctors')">Doctors</button>
-                <button class="tab" [class.on]="activeTab === 'hospitals'" (click)="setTab('hospitals')">Hospitals</button>
-                <button class="tab" [class.on]="activeTab === 'conditions'" (click)="setTab('conditions')">Conditions</button>
+                <button class="tab" type="button" [class.on]="activeTab === 'doctors'" (click)="setTab('doctors')">Doctors</button>
+                <button class="tab" type="button" [class.on]="activeTab === 'hospitals'" (click)="setTab('hospitals')">Hospitals</button>
+                <button class="tab" type="button" [class.on]="activeTab === 'conditions'" (click)="setTab('conditions')">Conditions</button>
               </div>
               <div class="fields">
                 <div class="field wide">
                   <label for="q">{{ tabConfigs[activeTab].label }}</label>
-                  <input id="q" type="search" enterkeyhint="search" [placeholder]="tabConfigs[activeTab].placeholder" [(ngModel)]="searchQuery" (keydown.enter)="goSearch()" autocomplete="off">
+                  <input id="q" name="q" type="search" enterkeyhint="search" [placeholder]="tabConfigs[activeTab].placeholder" [(ngModel)]="searchQuery" autocomplete="off">
                 </div>
                 <div class="field">
                   <label for="city">City</label>
-                  <select id="city" [(ngModel)]="selectedCity">
+                  <select id="city" name="city" [(ngModel)]="selectedCity">
                     <option value="all">All cities</option>
                     <option *ngFor="let c of cities" [value]="c">{{ c }}</option>
                   </select>
                 </div>
-                <button class="btn btn-coral" id="goBtn" (click)="goSearch()">
+                <button class="btn btn-coral" id="goBtn" type="submit">
                   {{ tabConfigs[activeTab].btnText }}
                 </button>
               </div>
-            </div>
+            </form>
 
             <!-- How do you feel today row from PulseQ (14).html -->
             <div class="feel">
@@ -518,7 +518,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     const q = this.searchQuery.trim();
     if (this.activeTab === 'doctors') {
       this.router.navigate(['/find-doctors'], {
-        queryParams: { q: q || null, city: this.selectedCity !== 'all' ? this.selectedCity : null }
+        queryParams: { q: q || null, spec: 'all', city: this.selectedCity !== 'all' ? this.selectedCity : null }
       });
     } else if (this.activeTab === 'hospitals') {
       this.router.navigate(['/hospitals'], {

@@ -519,6 +519,16 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .frow .btn{grid-column:3;grid-row:1/3;align-self:center}
 .frow .slot{border-radius:999px;border-color:#BBD8FF;background:#fff}.frow .slot:hover{background:#1D6FE0;color:#fff;border-color:#1D6FE0}
 .fdactive:empty{display:none}
+.fdactive{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 16px;padding:10px 12px;border:1px solid #E3ECF8;border-radius:16px;background:#F8FBFF}
+.fdactive-label{margin-right:2px;color:#526477;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.fdx{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;padding:5px 8px 5px 12px;border:1px solid #CFE1FA;border-radius:999px;background:#EAF3FF;color:#1558B8;font:inherit;font-size:13px;font-weight:700;line-height:1.25;cursor:pointer;touch-action:manipulation;transition:background .15s,border-color .15s,transform .15s}
+.fdx:hover{border-color:#9FC6FF;background:#DCEBFF}
+.fdx:active{transform:scale(.98);background:#D2E5FF}
+.fdx:focus-visible{outline:3px solid rgba(35,129,255,.35);outline-offset:2px}
+.fdx-x{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;background:#fff;color:#1558B8;font-size:16px;line-height:1}
+.fdx.clr{margin-left:auto;gap:7px;padding-inline:12px;border-color:#D7E2F0;background:#fff;color:#526477}
+.fdx.clr:hover{border-color:#B8CBE3;background:#F1F6FC;color:#1558B8}
+.fdx.clr svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
 .fdlist{display:flex;flex-direction:column;gap:12px}
 .fdcard{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(112px,.7fr) minmax(120px,.75fr) auto;grid-template-areas:"doctor meta slots action";gap:12px 18px;align-items:center;min-width:0;padding:14px 16px;border-radius:22px;background:#fff;box-shadow:inset 0 0 0 1.5px #D6E6FB;transition:box-shadow .18s}
 .fdcard:hover{box-shadow:inset 0 0 0 2px #2381FF}
@@ -3329,6 +3339,51 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   .botpanel {
     height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
     max-height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .fdactive {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .fdactive-label {
+    flex: 0 0 100%;
+  }
+
+  .fdx {
+    min-height: 44px !important;
+    max-width: 100%;
+  }
+
+  .fdx.clr {
+    margin-left: 0;
+  }
+
+  .spectiles {
+    scroll-padding-inline: 16px;
+  }
+
+  .spectiles .stile {
+    max-width: min(220px, calc(100vw - 48px));
+    min-height: 60px;
+    gap: 10px;
+    padding: 8px 14px 8px 8px;
+    border-radius: 20px;
+    scroll-snap-align: start;
+  }
+
+  .spectiles .stile > span {
+    min-width: 0;
+    max-width: 112px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.2;
+  }
+
+  .spectiles .stile small {
+    margin-top: 3px;
   }
 }
 

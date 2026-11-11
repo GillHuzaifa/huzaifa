@@ -212,13 +212,19 @@ import { Doctor, Place, Slot } from '../../shared/models';
           </div>
 
           <div class="fdactive" aria-label="Active filters">
+            @if (activeFilters().length > 0) {
+              <span class="fdactive-label">Active filters</span>
+            }
             @for (filter of activeFilters(); track filter.key) {
-              <button class="fdx" type="button" (click)="removeFilter(filter.key)">
-                {{ filter.label }} <span aria-hidden="true">×</span>
+              <button class="fdx" type="button" (click)="removeFilter(filter.key)" [attr.aria-label]="'Remove ' + filter.label + ' filter'">
+                <span>{{ filter.label }}</span><span class="fdx-x" aria-hidden="true">×</span>
               </button>
             }
             @if (activeFilters().length > 0) {
-              <button class="fdx clr" type="button" (click)="resetFilters()">Clear all</button>
+              <button class="fdx clr" type="button" (click)="resetFilters()">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5h12M8 5V3.5h4V5m2 0-.7 11H6.7L6 5m2.5 3v5m3-5v5"/></svg>
+                <span>Clear all</span>
+              </button>
             }
           </div>
 
@@ -353,9 +359,12 @@ export class FindDoctorsComponent implements OnInit {
   ngOnInit(): void {
     this.seo.setPage('Find Doctors');
     this.route.queryParams.subscribe(params => {
-      if (params['spec']) this.selectedSpec = params['spec'];
-      if (params['city']) this.selectedCity = params['city'];
-      if (params['q']) this.searchQuery = params['q'];
+      this.selectedSpec = params['spec'] && SPEC[params['spec']] ? params['spec'] : 'all';
+      this.selectedCity = this.cities.includes(params['city']) ? params['city'] : 'all';
+      this.searchQuery = typeof params['q'] === 'string' ? params['q'] : '';
+      this.selectedMode = 'all';
+      this.onlyToday = false;
+      this.maxFee = 0;
       this.resetDoctorPage();
     });
   }
