@@ -292,7 +292,14 @@ import { Doctor, Place, Slot } from '../../shared/models';
                       <b>{{ getDocRating(d.id).avg.toFixed(1) }}</b>
                       <span>· {{ getDocRating(d.id).n }} reviews</span>
                     </a>
-                    <span class="tag">{{ P.mode }}</span>
+                    <span class="doctor-mode" [class.video]="P.mode.toLowerCase().includes('video')">
+                      @if (P.mode.toLowerCase().includes('video')) {
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="5" width="10" height="10" rx="2"/><path d="m13 8 4-2v8l-4-2"/></svg>
+                      } @else {
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg>
+                      }
+                      <span>{{ P.mode }}</span>
+                    </span>
                   </div>
 
                   <div class="fd-slots">
@@ -321,6 +328,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </div>
 
                   <div class="fd-actions">
+                    <span class="fee-caption">Consultation fee</span>
                     <b class="dc-fee">Rs {{ P.fee.toLocaleString('en-US') }}</b>
                     <button
                       class="btn btn-ink"

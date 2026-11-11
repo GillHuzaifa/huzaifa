@@ -143,7 +143,17 @@ import { SPEC } from '../../data/specialties.data';
 
                   <div class="row">
                     <span><b>{{ hoursOf(p.times) }}</b></span>
-                    <span>Rs {{ p.fee.toLocaleString('en-US') }} · {{ p.mode }}</span>
+                    <span class="dp-fee-mode">
+                      <b>Rs {{ p.fee.toLocaleString('en-US') }}</b>
+                      <span class="doctor-mode" [class.video]="p.mode.toLowerCase().includes('video')">
+                        @if (p.mode.toLowerCase().includes('video')) {
+                          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="5" width="10" height="10" rx="2"/><path d="m13 8 4-2v8l-4-2"/></svg>
+                        } @else {
+                          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v14M3 10h14"/></svg>
+                        }
+                        <span>{{ p.mode }}</span>
+                      </span>
+                    </span>
                   </div>
 
                   @if (ns.length) {
@@ -201,6 +211,8 @@ import { SPEC } from '../../data/specialties.data';
   styles: [`
     :host { display: block; }
     .pg-doctor { display: block !important; }
+    .dp-fee-mode { display: inline-flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; min-width: 0; text-align: right; }
+    .dp-fee-mode .doctor-mode { max-width: min(100%, 210px); }
     .dp-mobile-sticky-bar { display: none; }
     @media (max-width: 899px) {
       .dp-mobile-sticky-bar {
@@ -297,4 +309,3 @@ export class DoctorProfileComponent implements OnInit {
     this.modalService.openBooking(id, o, t);
   }
 }
-
