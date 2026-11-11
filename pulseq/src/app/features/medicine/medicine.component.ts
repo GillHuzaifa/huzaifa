@@ -21,7 +21,7 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
             <div class="symbox" style="margin:0;max-width:560px">
               <div class="field wide">
                 <label for="mq">Already know the name?</label>
-                <input id="mq" type="text" placeholder="Search a medicine or what it treats" autocomplete="off" [(ngModel)]="searchQuery" (input)="onSearchInput()">
+                <input id="mq" type="search" enterkeyhint="search" placeholder="Search a medicine or what it treats" autocomplete="off" [(ngModel)]="searchQuery" (input)="onSearchInput()">
               </div>
             </div>
           </div>
@@ -258,11 +258,11 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
             </div>
             <div>
               <label class="lbl" for="medName">Your name</label>
-              <input class="inp" id="medName" type="text" autocomplete="name" [(ngModel)]="custName">
+              <input class="inp" id="medName" type="text" autocomplete="name" autocapitalize="words" enterkeyhint="next" [(ngModel)]="custName">
             </div>
             <div>
               <label class="lbl" for="medPhone">Mobile number</label>
-              <input class="inp" id="medPhone" type="tel" inputmode="tel" placeholder="03xx xxxxxxx" autocomplete="tel" [(ngModel)]="custPhone">
+              <input class="inp" id="medPhone" type="tel" inputmode="numeric" placeholder="03xx xxxxxxx" autocomplete="tel" enterkeyhint="next" [(ngModel)]="custPhone">
             </div>
             <div>
               <label class="lbl" for="medAddr">Delivery address and city</label>
@@ -331,7 +331,7 @@ import { Medicine, Pharmacy, MedicineOrder } from '../../shared/models';
           <form id="partnerForm" style="flex:1 1 360px;min-width:0;display:flex;flex-direction:column;gap:10px" novalidate (submit)="submitPartner($event)">
             <div><label class="lbl" for="ptName">Pharmacy name</label><input class="inp" id="ptName" type="text" [(ngModel)]="ptName" name="ptName"></div>
             <div><label class="lbl" for="ptArea">Area and city</label><input class="inp" id="ptArea" type="text" placeholder="e.g. PWD, Islamabad" [(ngModel)]="ptArea" name="ptArea"></div>
-            <div><label class="lbl" for="ptPhone">Contact number</label><input class="inp" id="ptPhone" type="tel" inputmode="tel" [(ngModel)]="ptPhone" name="ptPhone"></div>
+            <div><label class="lbl" for="ptPhone">Contact number</label><input class="inp" id="ptPhone" type="tel" inputmode="numeric" autocomplete="tel" [(ngModel)]="ptPhone" name="ptPhone"></div>
             <p class="err" id="ptMsg" role="status" *ngIf="ptMessage">{{ ptMessage }}</p>
             <button class="btn btn-ink" type="submit">Apply to list your pharmacy</button>
           </form>

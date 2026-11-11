@@ -8,7 +8,7 @@ import { HospitalsService } from '../../shared/services/hospitals.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { Doctor } from '../../shared/models';
-import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
+import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map-3d';
 
 @Component({
   selector: 'app-body-map',
@@ -163,6 +163,7 @@ export class BodyMapComponent implements OnInit, AfterViewInit, OnDestroy {
   specPluralMap = SPEC_PLURAL;
 
   body3D: Body3DController | null = null;
+  private cancelLazy3D: (() => void) | null = null;
 
   ngOnInit(): void {
     this.seo.setPage('Pulse Body Map');
@@ -170,24 +171,19 @@ export class BodyMapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      const tryInit3D = () => {
-        const st = document.getElementById('bmStage');
-        if (st && (window as any).THREE) {
-          this.body3D = init3DBody(
-            st,
-            () => this.selectedKey(),
-            (k) => this.selectArea(k),
-            (k) => this.currentArea()?.label || ''
-          );
-        } else {
-          setTimeout(tryInit3D, 200);
-        }
-      };
-      setTimeout(tryInit3D, 100);
+      const st = document.getElementById('bmStage');
+      this.cancelLazy3D = observeLazy3DBody(
+        st,
+        () => this.selectedKey(),
+        (k) => this.selectArea(k),
+        (k) => this.currentArea()?.label || '',
+        (ctrl) => { this.body3D = ctrl; }
+      );
     }
   }
 
   ngOnDestroy(): void {
+    this.cancelLazy3D?.();
     if (this.body3D) {
       this.body3D.destroy();
       this.body3D = null;

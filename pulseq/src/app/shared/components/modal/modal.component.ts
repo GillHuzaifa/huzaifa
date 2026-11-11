@@ -24,6 +24,7 @@ import { SPEC } from '../../../data/specialties.data';
     @if (modal.isOpen()) {
       <div class="modal" (click)="onBackdrop($event)">
         <div class="panel" role="dialog" aria-modal="true" aria-labelledby="mTitle" tabindex="-1">
+          <div class="sheet-handle" (touchstart)="onHandleTouchStart($event)" (touchend)="onHandleTouchEnd($event)" aria-hidden="true"></div>
           @if (!modal.isDone()) {
             @if (modal.selectedDocOrPlace(); as d) {
               <div style="display:flex;flex-direction:column;gap:18px">
@@ -131,12 +132,12 @@ import { SPEC } from '../../../data/specialties.data';
 
                 <div>
                   <label class="lbl" for="pName">Patient name</label>
-                  <input class="inp" id="pName" type="text" [(ngModel)]="patientName" autocomplete="name">
+                  <input class="inp" id="pName" type="text" [(ngModel)]="patientName" autocomplete="name" autocapitalize="words" enterkeyhint="next">
                 </div>
 
                 <div>
                   <label class="lbl" for="pPhone">Mobile number</label>
-                  <input class="inp" id="pPhone" type="tel" inputmode="tel" placeholder="03xx xxxxxxx" [(ngModel)]="patientPhone" autocomplete="tel">
+                  <input class="inp" id="pPhone" type="tel" inputmode="numeric" placeholder="03xx xxxxxxx" [(ngModel)]="patientPhone" autocomplete="tel" enterkeyhint="done">
                 </div>
 
                 <p class="err" role="alert">{{ modal.errorMessage() }}</p>
@@ -185,6 +186,18 @@ export class ModalComponent {
   docAspects = DOC_ASPECTS;
   patientName = '';
   patientPhone = '';
+  private touchStartY = 0;
+
+  onHandleTouchStart(e: TouchEvent): void {
+    this.touchStartY = e.touches[0]?.clientY || 0;
+  }
+
+  onHandleTouchEnd(e: TouchEvent): void {
+    const endY = e.changedTouches[0]?.clientY || 0;
+    if (endY - this.touchStartY > 55) {
+      this.modal.close();
+    }
+  }
 
   baseDocId(d: Doctor | Place): number {
     return ('base' in d && d.base) ? d.base : Number(d.id);

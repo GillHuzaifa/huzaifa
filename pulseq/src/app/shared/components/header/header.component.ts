@@ -123,7 +123,7 @@ const SAY: Record<string, string> = {
               <div class="fields">
                 <div class="field wide">
                   <label for="q">{{ tabConfigs[activeTab].label }}</label>
-                  <input id="q" type="text" [placeholder]="tabConfigs[activeTab].placeholder" [(ngModel)]="searchQuery" (keydown.enter)="goSearch()" autocomplete="off">
+                  <input id="q" type="search" enterkeyhint="search" [placeholder]="tabConfigs[activeTab].placeholder" [(ngModel)]="searchQuery" (keydown.enter)="goSearch()" autocomplete="off">
                 </div>
                 <div class="field">
                   <label for="city">City</label>

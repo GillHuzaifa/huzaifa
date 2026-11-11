@@ -35,9 +35,9 @@ import { ToastService } from '../../services/toast.service';
 
     <!-- Chat Panel -->
     @if (ai.isOpen()) {
-      <section class="botpanel" role="dialog" aria-label="PulseQ assistant">
+      <section class="botpanel" role="dialog" aria-modal="true" aria-label="PulseQ assistant">
         <div class="chat" style="flex:1;min-height:0;border-radius:0;box-shadow:none">
-          <div class="chat-head">
+          <div class="chat-head" (touchstart)="onHeadTouchStart($event)" (touchend)="onHeadTouchEnd($event)">
             <span style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none">
               <svg width="22" height="22" viewBox="0 0 36 36" aria-hidden="true">
                 <path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -165,6 +165,8 @@ import { ToastService } from '../../services/toast.service';
             }
             <input
               type="text"
+              enterkeyhint="send"
+              [attr.aria-label]="selectedLang === 'ur-PK' ? 'PulseQ سے پوچھیں' : 'Message PulseQ assistant'"
               [attr.dir]="selectedLang === 'ur-PK' ? 'rtl' : 'ltr'"
               [placeholder]="selectedLang === 'ur-PK' ? 'PulseQ سے پوچھیں: کیا تکلیف ہے؟' : 'Tell PulseQ what you need…'"
               [(ngModel)]="userInput"
@@ -191,6 +193,18 @@ export class PulseAiComponent implements OnDestroy {
   @ViewChild('logEl') logEl?: ElementRef<HTMLElement>;
 
   userInput = '';
+  private headTouchStartY = 0;
+
+  onHeadTouchStart(e: TouchEvent): void {
+    this.headTouchStartY = e.touches[0]?.clientY || 0;
+  }
+
+  onHeadTouchEnd(e: TouchEvent): void {
+    const endY = e.changedTouches[0]?.clientY || 0;
+    if (endY - this.headTouchStartY > 55) {
+      this.ai.close();
+    }
+  }
   get selectedLang(): string {
     return this.ai.language();
   }

@@ -225,7 +225,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           <div class="symbox">
             <div class="field wide">
               <label for="fq">Search surgeons</label>
-              <input id="fq" type="text" [(ngModel)]="fQuery" placeholder="Name, hospital or procedure, e.g. knee replacement" autocomplete="off">
+              <input id="fq" type="search" enterkeyhint="search" [(ngModel)]="fQuery" placeholder="Name, hospital or procedure, e.g. knee replacement" autocomplete="off">
             </div>
           </div>
 
@@ -344,11 +344,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
               </div>
               <div>
                 <label class="lbl" for="sName">Patient name</label>
-                <input class="inp" id="sName" type="text" [(ngModel)]="patientName" autocomplete="name">
+                <input class="inp" id="sName" type="text" [(ngModel)]="patientName" autocomplete="name" autocapitalize="words" enterkeyhint="next">
               </div>
               <div>
                 <label class="lbl" for="sPhone">Mobile number</label>
-                <input class="inp" id="sPhone" type="tel" inputmode="tel" placeholder="03xx xxxxxxx" [(ngModel)]="patientPhone" autocomplete="tel">
+                <input class="inp" id="sPhone" type="tel" inputmode="numeric" placeholder="03xx xxxxxxx" [(ngModel)]="patientPhone" autocomplete="tel" enterkeyhint="next">
               </div>
               <div>
                 <label class="lbl" for="sNote">Anything the surgeon should know? (optional)</label>

@@ -197,7 +197,7 @@ details p{padding:0 24px 22px;color:var(--muted);max-width:760px}
 /* modal + toast */
 [hidden], .modal[hidden]{display:none!important}
 .modal{position:fixed;inset:0;z-index:1100;background:rgba(7,24,42,.62);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.panel{background:var(--surface);color:var(--fg);border-radius:32px;width:100%;max-width:560px;max-height:100%;overflow-y:auto;padding:26px;display:flex;flex-direction:column;gap:18px}
+.panel{background:var(--surface);color:var(--fg);border-radius:32px;width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow-y:auto;padding:26px;display:flex;flex-direction:column;gap:18px}
 .panel-head{display:flex;align-items:flex-start;gap:14px}
 .panel .x{margin-left:auto}
 .lbl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:block}
@@ -1842,4 +1842,234 @@ body:has(.kym:not([hidden]), .modal:not([hidden]), .more-sheet-backdrop) {
 }
 .panel, .kyp, .botpanel, .botpanel .log {
   overscroll-behavior: contain;
+}
+
+/* ==========================================================================
+   All-Mobile Polish: Touch, Safe Areas, Landscape, 280px, Keyboard, Contrast
+   ========================================================================== */
+html {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+body {
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+button, a, .chip, .tab, .slot, .pub-mob-tab, .clinic-mob-tab, .feel-t, .need, .st, summary, label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:active, .need:active, .pub-mob-tab:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+/* Urdu RTL readability */
+.ur, [lang="ur"] {
+  font-family: 'Noto Nastaliq Urdu', 'Jameel Noori Nastaliq', 'Nafees Web Naskh', serif;
+  line-height: 1.9 !important;
+  padding-inline: 4px;
+}
+
+/* Prevent long doctor/hospital names from widening layout & support 2-line wrap */
+.dcard h3, .frow h3, .hosp h3, .dc-pl b, .bm-doc .who b, .drow b {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Small text contrast on white (#1558B8 instead of #2381FF for WCAG AA small text) */
+.dcard .dlink:hover, .linkbtn {
+  color: #1558B8;
+}
+
+/* Horizontal carousels: snap, contain overscroll, hide scrollbar */
+.spectiles, .hm-story {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.spectiles::-webkit-scrollbar, .hm-story::-webkit-scrollbar {
+  display: none;
+}
+
+/* Swipe drag handle on mobile bottom sheets */
+.sheet-handle {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .sheet-handle {
+    display: block;
+    width: 42px;
+    height: 5px;
+    border-radius: 999px;
+    background: #CBD5E1;
+    margin: 0 auto 12px;
+    flex: none;
+    touch-action: pan-y;
+  }
+
+  /* Respect safe-area-insets on header, sheets, fab, toast */
+  header.wrap {
+    padding-top: max(6px, env(safe-area-inset-top, 0px));
+  }
+  .apptbar {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
+  }
+  .toast {
+    bottom: calc(74px + env(safe-area-inset-bottom, 0px)) !important;
+    left: max(14px, env(safe-area-inset-left, 0px));
+    right: max(14px, env(safe-area-inset-right, 0px));
+  }
+
+  /* Keyboard & visualViewport support for open bottom sheets */
+  .panel, .kyp, .more-sheet-panel {
+    max-height: 92vh !important;
+    max-height: min(92dvh, calc(var(--vv-height, 100dvh) - 12px)) !important;
+    padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px) + var(--vv-kb, 0px)) !important;
+  }
+  .botpanel {
+    height: 100vh !important;
+    height: min(100dvh, var(--vv-height, 100dvh)) !important;
+    max-height: min(100dvh, var(--vv-height, 100dvh)) !important;
+    padding-top: max(14px, env(safe-area-inset-top, 0px)) !important;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Enforce >= 44x44px mobile touch targets across controls */
+  button:not(.bm-dot):not(.hdot), .btn, .chip, .slot, .search .tabs .tab, .fdside .chip,
+  .bm-chips .chip, .dtop .sm-btn, .dlist .row .st, .dsec .row .st, .drow .sm-btn,
+  .rv-s, .linkbtn, .kyp-x, .icon-btn, .ct-tab, .botx, .pub-mob-tab, .clinic-mob-tab {
+    min-height: 44px !important;
+  }
+  .rv-s, .kyp-x, .icon-btn, .botx {
+    min-width: 44px !important;
+  }
+
+  /* Allow fluid button growth under 130%-150% large system font */
+  .btn, .chip, .slot, .stile, .feel-t, .need {
+    height: auto !important;
+    white-space: normal;
+  }
+  .hosp-top:not(.hdet) {
+    height: auto !important;
+    min-height: 130px !important;
+  }
+}
+
+/* Fold cover screen (280px) & compact phones (< 360px) */
+@media (max-width: 359px) {
+  .logo-mark {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .logo span {
+    font-size: 21px !important;
+  }
+  .hero h1 {
+    font-size: 25px !important;
+  }
+  .ur-hero {
+    font-size: 18px !important;
+  }
+  .search .tabs .tab {
+    font-size: 11.5px !important;
+    padding: 0 4px !important;
+    white-space: nowrap !important;
+  }
+  .feel-g {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .pb-ring {
+    --z: 56px !important;
+  }
+  .apptbar-in {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    font-size: 12.5px !important;
+  }
+  .panel, .kyp {
+    padding-inline: 14px !important;
+  }
+}
+
+/* Phone LANDSCAPE (< 430px height): hide tab bar labels, sheets max 92dvh, search above fold */
+@media (max-height: 430px) and (max-width: 1023px) {
+  .public-mobile-nav, .clinic-mobile-nav {
+    height: calc(46px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+  .pub-mob-tab span, .clinic-mob-tab span, .mob-tab-lbl {
+    display: none !important;
+  }
+  .panel, .kyp, .more-sheet-panel {
+    max-height: 92vh !important;
+    max-height: 92dvh !important;
+    padding-top: 12px !important;
+  }
+  header.wrap {
+    padding-top: 4px !important;
+  }
+  .nav {
+    padding-block: 6px !important;
+    min-height: 48px !important;
+  }
+  .hero {
+    padding-block: 8px 16px !important;
+    gap: 16px !important;
+  }
+  .hero-l {
+    gap: 6px !important;
+  }
+  .hero-l .eyebrow {
+    font-size: 10.5px !important;
+  }
+  .hero h1 {
+    font-size: 23px !important;
+    margin: 0 !important;
+  }
+  .ur-hero {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+    margin: 0 !important;
+  }
+  .hero-ecg-wrap, .hero-desc {
+    display: none !important;
+  }
+  .search {
+    padding: 8px 10px !important;
+  }
+  .search .tabs {
+    padding-bottom: 6px !important;
+  }
+  .search .fields {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+  }
+  .search .field {
+    flex: 1 1 auto !important;
+    width: auto !important;
+  }
+  .search .field.wide {
+    flex: 2 1 auto !important;
+  }
+  .search #goBtn {
+    width: auto !important;
+    flex: 0 0 auto !important;
+    padding-inline: 18px !important;
+    margin-top: 0 !important;
+  }
+  .botfab {
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px)) !important;
+  }
 }

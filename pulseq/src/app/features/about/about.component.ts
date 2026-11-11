@@ -64,7 +64,7 @@ import { SeoService } from '../../shared/services/seo.service';
               <article class="ab-dir">
                 <div class="ab-photo">
                   @if (m.photo) {
-                    <img [src]="m.photo" [alt]="m.name">
+                    <img [src]="m.photo" [alt]="m.name" loading="lazy" width="240" height="240">
                   } @else {
                     <span>{{ m.ini }}</span>
                   }
@@ -94,7 +94,7 @@ import { SeoService } from '../../shared/services/seo.service';
                     <div class="crew-m">
                       <span class="crew-av">
                         @if (m.photo) {
-                          <img [src]="m.photo" [alt]="m.name">
+                          <img [src]="m.photo" [alt]="m.name" loading="lazy" width="48" height="48">
                         } @else {
                           {{ m.ini }}
                         }

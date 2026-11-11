@@ -51,7 +51,7 @@
 
   <!-- Mobile "More" Bottom Sheet (< 900px) -->
   <div *ngIf="showMoreSheet" class="more-sheet-backdrop" (click)="closeMoreSheet()" role="dialog" aria-modal="true" aria-label="More navigation options">
-    <div class="more-sheet-panel" (click)="$event.stopPropagation()">
+    <div class="more-sheet-panel" (click)="$event.stopPropagation()" (touchstart)="onMoreTouchStart($event)" (touchend)="onMoreTouchEnd($event)">
       <div class="more-sheet-handle"></div>
       <div class="more-sheet-top">
         <b>More services</b>

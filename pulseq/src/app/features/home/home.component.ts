@@ -17,7 +17,8 @@ import { SITE } from '../../data/site.data';
 import { BM_AREAS, BM_CHILD } from '../../data/body-map.data';
 import { ABOUT } from '../../data/about.data';
 import { Doctor, Hospital, Slot } from '../../shared/models';
-import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
+import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map-3d';
+import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
 
 @Component({
   selector: 'app-home',
@@ -355,7 +356,7 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
               <a class="hm-p" routerLink="/about">
                 <span class="hm-av">
                   @if (m.photo) {
-                    <img [src]="m.photo" [alt]="m.name">
+                    <img [src]="m.photo" [alt]="m.name" loading="lazy" width="44" height="44">
                   } @else {
                     <span>{{ m.short }}</span>
                   }
@@ -439,10 +440,11 @@ import { init3DBody, Body3DController } from '../../shared/utils/body-map-3d';
 
     <!-- KY MODAL (from PulseQ 14.html) -->
     <div class="kym" [hidden]="!kyModalOpen" (click)="closeKyOnBackdrop($event)">
-      <div class="kyp" role="dialog" aria-modal="true" tabindex="-1">
+      <div class="kyp" role="dialog" aria-modal="true" aria-labelledby="kyTitle" tabindex="-1">
+        <div class="sheet-handle" (touchstart)="onKyTouchStart($event)" (touchend)="onKyTouchEnd($event)" aria-hidden="true"></div>
         <div class="kyp-top">
           <div>
-            <h3>{{ kyCurData.t }}</h3>
+            <h3 id="kyTitle">{{ kyCurData.t }}</h3>
             <p class="muted sm" style="margin-top:4px">{{ kyCurData.s }}</p>
           </div>
           <button class="kyp-x" type="button" (click)="closeKy()" aria-label="Close">×</button>
@@ -478,6 +480,7 @@ export class HomeComponent implements OnInit {
   pulseAi = inject(PulseAiService);
   toast = inject(ToastService);
   seo = inject(SeoService);
+  private mobileSheet = inject(MobileSheetService);
 
   specMap = SPEC;
   cities = CITIES;
@@ -603,14 +606,27 @@ export class HomeComponent implements OnInit {
     return this.KY_CONFIG[this.kyCur];
   }
 
+  private kyTouchStartY = 0;
+
+  onKyTouchStart(e: TouchEvent) {
+    this.kyTouchStartY = e.touches[0]?.clientY || 0;
+  }
+
+  onKyTouchEnd(e: TouchEvent) {
+    const endY = e.changedTouches[0]?.clientY || 0;
+    if (endY - this.kyTouchStartY > 55) this.closeKy();
+  }
+
   openKy(type: 'heart' | 'breast') {
     this.kyCur = type;
     this.kyChecked = {};
     this.kyModalOpen = true;
+    this.mobileSheet.open('ky', () => { this.kyModalOpen = false; });
   }
 
   closeKy() {
     this.kyModalOpen = false;
+    this.mobileSheet.close('ky');
   }
 
   closeKyOnBackdrop(e: MouseEvent) {
@@ -781,28 +797,24 @@ export class HomeComponent implements OnInit {
   }
 
   body3D: Body3DController | null = null;
+  private cancelLazy3D: (() => void) | null = null;
   specPluralMap = SPEC_PLURAL;
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      const tryInit3D = () => {
-        const st = document.getElementById('bmStage');
-        if (st && (window as any).THREE) {
-          this.body3D = init3DBody(
-            st,
-            () => this.selectedBmArea,
-            (k) => this.selectBmArea(k),
-            (k) => this.currentBmAreaObj()?.label || ''
-          );
-        } else {
-          setTimeout(tryInit3D, 200);
-        }
-      };
-      setTimeout(tryInit3D, 100);
+      const st = document.getElementById('bmStage');
+      this.cancelLazy3D = observeLazy3DBody(
+        st,
+        () => this.selectedBmArea,
+        (k) => this.selectBmArea(k),
+        (k) => this.currentBmAreaObj()?.label || '',
+        (ctrl) => { this.body3D = ctrl; }
+      );
     }
   }
 
   ngOnDestroy() {
+    this.cancelLazy3D?.();
     if (this.body3D) {
       this.body3D.destroy();
       this.body3D = null;

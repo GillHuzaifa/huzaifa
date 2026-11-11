@@ -3,6 +3,80 @@ export interface Body3DController {
   destroy: () => void;
 }
 
+const THREE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+let threeLoadPromise: Promise<boolean> | null = null;
+
+export function shouldUse3DBody(): boolean {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
+  const nav = navigator as any;
+  if (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) return false;
+  if (nav.connection?.saveData) return false;
+  if (window.matchMedia?.('(prefers-reduced-data: reduce)')?.matches) return false;
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches) return false;
+  return true;
+}
+
+export function loadThreeScript(): Promise<boolean> {
+  if (typeof window === 'undefined') return Promise.resolve(false);
+  if ((window as any).THREE) return Promise.resolve(true);
+  if (threeLoadPromise) return threeLoadPromise;
+
+  threeLoadPromise = new Promise((resolve) => {
+    const existing = document.querySelector<HTMLScriptElement>('script[data-pulseq-three]');
+    if (existing) {
+      existing.addEventListener('load', () => resolve(!!(window as any).THREE), { once: true });
+      existing.addEventListener('error', () => resolve(false), { once: true });
+      return;
+    }
+    const sc = document.createElement('script');
+    sc.src = THREE_CDN;
+    sc.async = true;
+    sc.setAttribute('data-pulseq-three', '1');
+    sc.onload = () => resolve(!!(window as any).THREE);
+    sc.onerror = () => resolve(false);
+    document.head.appendChild(sc);
+  });
+  return threeLoadPromise;
+}
+
+export function observeLazy3DBody(
+  st: HTMLElement | null,
+  getSelectedKey: () => string,
+  onSelectKey: (k: string) => void,
+  getAreaLabel: (k: string) => string,
+  onReady: (ctrl: Body3DController) => void
+): () => void {
+  if (!st || !shouldUse3DBody()) {
+    return () => {};
+  }
+  let cancelled = false;
+  const startInit = () => {
+    if (cancelled) return;
+    loadThreeScript().then((ok) => {
+      if (!ok || cancelled || !document.contains(st)) return;
+      const ctrl = init3DBody(st, getSelectedKey, onSelectKey, getAreaLabel);
+      if (ctrl) onReady(ctrl);
+    });
+  };
+
+  if (typeof IntersectionObserver !== 'undefined') {
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some(e => e.isIntersecting)) {
+        io.disconnect();
+        startInit();
+      }
+    }, { rootMargin: '180px' });
+    io.observe(st);
+    return () => {
+      cancelled = true;
+      io.disconnect();
+    };
+  }
+
+  startInit();
+  return () => { cancelled = true; };
+}
+
 export function init3DBody(
   st: HTMLElement,
   getSelectedKey: () => string,

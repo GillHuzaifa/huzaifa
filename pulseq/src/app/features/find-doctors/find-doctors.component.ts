@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
@@ -30,6 +31,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
               class="inp"
               id="fdQ"
               type="search"
+              enterkeyhint="search"
               placeholder="Doctor, specialty or symptom, e.g. migraine"
               [(ngModel)]="searchQuery"
               name="q"
@@ -187,7 +189,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
               (click)="sidebarOpen = !sidebarOpen">
               Filters
             </button>
-            <div class="cnt">
+            <div class="cnt" aria-live="polite">
               <b>{{ filteredDoctors().length }}</b>
               {{ filteredDoctors().length === 1 ? 'doctor' : 'doctors' }}
               @if (filterDescription()) {
@@ -205,7 +207,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
           <div class="fdlist" id="fdList">
             @let docs = filteredDoctors();
             @if (docs.length > 0) {
-              @for (d of docs; track d.id) {
+              @for (d of docs.slice(0, visibleLimit); track d.id) {
                 @let P = doctorsService.selectedPlace(d);
                 @let h = hospitalsService.getHospitalById(P.h);
                 @let ns = doctorsService.nextSlots(P, 4);
@@ -295,6 +297,11 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   </button>
                 </article>
               }
+              @if (docs.length > visibleLimit) {
+                <div #loadMoreTrigger style="padding:12px 0;text-align:center">
+                  <button class="btn btn-line" type="button" (click)="showMore()">Load more doctors ({{ docs.length - visibleLimit }} more)</button>
+                </div>
+              }
             } @else {
               <div class="empty">
                 <h3 style="font-size:26px">No doctors match yet</h3>
@@ -313,8 +320,33 @@ import { Doctor, Place, Slot } from '../../shared/models';
     .pg-find { display: block !important; }
   `]
 })
-export class FindDoctorsComponent implements OnInit {
+export class FindDoctorsComponent implements OnInit, AfterViewInit, OnDestroy {
   router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  @ViewChild('loadMoreTrigger') loadMoreTrigger?: ElementRef<HTMLElement>;
+  visibleLimit = 20;
+  private io?: IntersectionObserver;
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId) && typeof IntersectionObserver !== 'undefined') {
+      this.io = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) {
+          this.showMore();
+        }
+      }, { rootMargin: '200px' });
+      if (this.loadMoreTrigger?.nativeElement) {
+        this.io.observe(this.loadMoreTrigger.nativeElement);
+      }
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.io?.disconnect();
+  }
+
+  showMore(): void {
+    this.visibleLimit += 20;
+  }
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);

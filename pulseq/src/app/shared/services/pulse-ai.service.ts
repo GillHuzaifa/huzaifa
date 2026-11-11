@@ -3,6 +3,7 @@ import { Doctor, Slot } from '../models';
 import { DoctorsService } from './doctors.service';
 import { SPEC } from '../../data/specialties.data';
 import { HOSP } from '../../data/hospitals.data';
+import { MobileSheetService } from './mobile-sheet.service';
 
 export interface ChatMessage {
   role: 'bot' | 'me';
@@ -36,6 +37,7 @@ const PART_HOURS: Record<string, [number, number]> = {
 })
 export class PulseAiService {
   private doctorsService = inject(DoctorsService);
+  private mobileSheet = inject(MobileSheetService);
 
   isOpen = signal<boolean>(false);
   language = signal<string>('en-PK');
@@ -68,6 +70,7 @@ export class PulseAiService {
 
   open(): void {
     this.isOpen.set(true);
+    this.mobileSheet.open('ai', () => this.isOpen.set(false));
   }
 
   setLanguage(lang: string): void {
@@ -76,10 +79,15 @@ export class PulseAiService {
 
   close(): void {
     this.isOpen.set(false);
+    this.mobileSheet.close('ai');
   }
 
   toggle(): void {
-    this.isOpen.update(v => !v);
+    if (this.isOpen()) {
+      this.close();
+    } else {
+      this.open();
+    }
   }
 
   private hasWord(text: string, list: string[]): boolean {

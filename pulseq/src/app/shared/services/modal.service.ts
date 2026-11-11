@@ -4,6 +4,7 @@ import { DoctorsService } from './doctors.service';
 import { BookingsService } from './bookings.service';
 import { ToastService } from './toast.service';
 import { HospitalsService } from './hospitals.service';
+import { MobileSheetService } from './mobile-sheet.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class ModalService {
   private bookingsService = inject(BookingsService);
   private hospitalsService = inject(HospitalsService);
   private toastService = inject(ToastService);
+  private mobileSheet = inject(MobileSheetService);
 
   isOpen = signal<boolean>(false);
   isDone = signal<boolean>(false);
@@ -50,6 +52,7 @@ export class ModalService {
     this.errorMessage.set('');
     this.isDone.set(false);
     this.isOpen.set(true);
+    this.mobileSheet.open('booking', () => this.closeFromHistory());
   }
 
   selectDay(offset: number): void {
@@ -120,6 +123,13 @@ export class ModalService {
   }
 
   close(): void {
+    this.isOpen.set(false);
+    this.isDone.set(false);
+    this.selectedDocOrPlace.set(null);
+    this.mobileSheet.close('booking');
+  }
+
+  private closeFromHistory(): void {
     this.isOpen.set(false);
     this.isDone.set(false);
     this.selectedDocOrPlace.set(null);

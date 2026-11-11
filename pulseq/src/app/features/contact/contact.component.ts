@@ -171,8 +171,8 @@ interface CollabOption {
                   <div class="ct-fs">
                     <h4 class="ct-fsh">Who should we call?</h4>
                     <div class="ct-row">
-                      <div><label class="lbl" for="cfPerson">Contact person</label><input class="inp" id="cfPerson" type="text" [(ngModel)]="cfPerson" name="cfPerson" autocomplete="name"></div>
-                      <div><label class="lbl" for="cfPhone">Phone number</label><input class="inp" id="cfPhone" type="tel" [(ngModel)]="cfPhone" name="cfPhone" placeholder="03XX-XXXXXXX" autocomplete="tel"></div>
+                      <div><label class="lbl" for="cfPerson">Contact person</label><input class="inp" id="cfPerson" type="text" [(ngModel)]="cfPerson" name="cfPerson" autocomplete="name" autocapitalize="words"></div>
+                      <div><label class="lbl" for="cfPhone">Phone number</label><input class="inp" id="cfPhone" type="tel" inputmode="numeric" [(ngModel)]="cfPhone" name="cfPhone" placeholder="03XX-XXXXXXX" autocomplete="tel" enterkeyhint="next"></div>
                     </div>
                     <div><label class="lbl" for="cfNote">Anything else? <span class="ct-opt">(optional)</span></label><textarea class="inp" id="cfNote" rows="3" [(ngModel)]="cfNote" name="cfNote" placeholder="Timings, languages, services, questions"></textarea></div>
                   </div>
@@ -221,11 +221,11 @@ interface CollabOption {
               @if (!cbDone) {
                 <form id="collabForm" (submit)="submitCollab($event)" novalidate>
                   <div class="ct-row">
-                    <div><label class="lbl" for="cbOrg">Organisation</label><input class="inp" id="cbOrg" type="text" [(ngModel)]="cbOrg" name="cbOrg" autocomplete="organization"></div>
-                    <div><label class="lbl" for="cbPerson">Your name</label><input class="inp" id="cbPerson" type="text" [(ngModel)]="cbPerson" name="cbPerson" autocomplete="name"></div>
+                    <div><label class="lbl" for="cbOrg">Organisation</label><input class="inp" id="cbOrg" type="text" [(ngModel)]="cbOrg" name="cbOrg" autocomplete="organization" autocapitalize="words"></div>
+                    <div><label class="lbl" for="cbPerson">Your name</label><input class="inp" id="cbPerson" type="text" [(ngModel)]="cbPerson" name="cbPerson" autocomplete="name" autocapitalize="words"></div>
                   </div>
                   <div class="ct-row">
-                    <div><label class="lbl" for="cbPhone">Phone number</label><input class="inp" id="cbPhone" type="tel" [(ngModel)]="cbPhone" name="cbPhone" placeholder="03XX-XXXXXXX" autocomplete="tel"></div>
+                    <div><label class="lbl" for="cbPhone">Phone number</label><input class="inp" id="cbPhone" type="tel" inputmode="numeric" [(ngModel)]="cbPhone" name="cbPhone" placeholder="03XX-XXXXXXX" autocomplete="tel"></div>
                     <div><label class="lbl" for="cbEmail">Email <span class="ct-opt">(optional)</span></label><input class="inp" id="cbEmail" type="email" [(ngModel)]="cbEmail" name="cbEmail" autocomplete="email"></div>
                   </div>
                   <div><label class="lbl" for="cbNote">Tell us your idea</label><textarea class="inp" id="cbNote" rows="4" [(ngModel)]="cbNote" name="cbNote" placeholder="What would you like us to do together?"></textarea></div>

@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HospitalsService } from '../../shared/services/hospitals.service';
@@ -28,6 +29,7 @@ import { Hospital } from '../../shared/models';
             class="inp"
             id="hpQ"
             type="search"
+            enterkeyhint="search"
             placeholder="Hospital, city or department"
             [(ngModel)]="searchQuery"
             name="q"
@@ -110,7 +112,7 @@ import { Hospital } from '../../shared/models';
       <div class="hpgrid">
         @let list = filteredHospitals();
         @if (list.length > 0) {
-          @for (h of list; track h.id) {
+          @for (h of list.slice(0, visibleLimit); track h.id) {
             @let n = hospitalsService.getDoctorsAtHospital(h.id).length;
             @let free = hospitalsService.getFreeTodayCount(h.id);
 
@@ -146,6 +148,11 @@ import { Hospital } from '../../shared/models';
               </div>
             </article>
           }
+          @if (list.length > visibleLimit) {
+            <div #loadMoreHosp style="grid-column:1/-1;padding:12px 0;text-align:center">
+              <button class="btn btn-line" type="button" (click)="showMore()">Load more hospitals ({{ list.length - visibleLimit }} more)</button>
+            </div>
+          }
         } @else {
           <div class="empty" style="grid-column:1/-1">
             <h3 style="font-size:26px">No hospitals match</h3>
@@ -162,8 +169,29 @@ import { Hospital } from '../../shared/models';
     .pg-hosps { display: block !important; }
   `]
 })
-export class HospitalsComponent implements OnInit {
+export class HospitalsComponent implements OnInit, AfterViewInit, OnDestroy {
   router = inject(Router);
+  private platformId = inject(PLATFORM_ID);
+  @ViewChild('loadMoreHosp') loadMoreHosp?: ElementRef<HTMLElement>;
+  visibleLimit = 20;
+  private io?: IntersectionObserver;
+
+  ngAfterViewInit(): void {
+    if (isPlatformBrowser(this.platformId) && typeof IntersectionObserver !== 'undefined') {
+      this.io = new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) this.showMore();
+      }, { rootMargin: '200px' });
+      if (this.loadMoreHosp?.nativeElement) this.io.observe(this.loadMoreHosp.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.io?.disconnect();
+  }
+
+  showMore(): void {
+    this.visibleLimit += 20;
+  }
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
   reviewsService = inject(ReviewsService);

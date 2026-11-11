@@ -7,6 +7,7 @@ import { FooterComponent } from './shared/components/footer/footer.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { ModalComponent } from './shared/components/modal/modal.component';
 import { PulseAiComponent } from './shared/components/pulse-ai/pulse-ai.component';
+import { MobileSheetService } from './shared/services/mobile-sheet.service';
 
 @Component({
   selector: 'app-root',
@@ -27,15 +28,35 @@ import { PulseAiComponent } from './shared/components/pulse-ai/pulse-ai.componen
 })
 export class AppComponent {
   private router = inject(Router);
+  private mobileSheet = inject(MobileSheetService);
   currentView = signal<string>('home');
   showMoreSheet = false;
+  private touchStartY = 0;
 
   toggleMoreSheet(): void {
-    this.showMoreSheet = !this.showMoreSheet;
+    if (this.showMoreSheet) {
+      this.closeMoreSheet();
+    } else {
+      this.showMoreSheet = true;
+      this.mobileSheet.open('more', () => { this.showMoreSheet = false; });
+    }
   }
 
   closeMoreSheet(): void {
+    if (!this.showMoreSheet) return;
     this.showMoreSheet = false;
+    this.mobileSheet.close('more');
+  }
+
+  onMoreTouchStart(e: TouchEvent): void {
+    this.touchStartY = e.touches[0]?.clientY || 0;
+  }
+
+  onMoreTouchEnd(e: TouchEvent): void {
+    const endY = e.changedTouches[0]?.clientY || 0;
+    if (endY - this.touchStartY > 55) {
+      this.closeMoreSheet();
+    }
   }
 
   isMoreActive(): boolean {
