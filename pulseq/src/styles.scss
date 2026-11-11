@@ -506,6 +506,18 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 .fdbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:16px}
 .fdbar .cnt{font-size:18px;flex:1 1 200px}
 .fdbar select{min-height:44px;border-radius:999px;border:1.5px solid var(--line);background:#fff;padding:0 14px;font:inherit;font-weight:500}
+.fd-sort{position:relative;z-index:5;min-width:192px}
+.fd-sort-trigger{display:flex;width:100%;min-height:44px;align-items:center;justify-content:space-between;gap:14px;padding:0 14px;border:1.5px solid #CFE1FA;border-radius:14px;background:#fff;color:#1558B8;font:inherit;font-size:14px;font-weight:700;text-align:left;cursor:pointer;touch-action:manipulation;transition:border-color .15s,background .15s,box-shadow .15s}
+.fd-sort-trigger:hover,.fd-sort-trigger[aria-expanded="true"]{border-color:#2381FF;background:#F7FAFF;box-shadow:0 4px 14px rgba(35,129,255,.1)}
+.fd-sort-trigger:focus-visible,.fd-sort-option:focus-visible{outline:3px solid rgba(35,129,255,.35);outline-offset:2px}
+.fd-sort-trigger svg{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:transform .15s}
+.fd-sort-trigger[aria-expanded="true"] svg{transform:rotate(180deg)}
+.fd-sort-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:50;width:max(100%,220px);max-width:calc(100vw - 32px);padding:6px;border:1px solid #DCE8F8;border-radius:16px;background:#fff;box-shadow:0 16px 38px rgba(16,42,67,.18),0 2px 8px rgba(16,42,67,.06);animation:fd-sort-in .14s ease-out}
+.fd-sort-option{display:flex;width:100%;min-height:42px;align-items:center;justify-content:space-between;gap:10px;padding:8px 11px;border:0;border-radius:10px;background:transparent;color:#334B63;font:inherit;font-size:14px;text-align:left;cursor:pointer;touch-action:manipulation}
+.fd-sort-option:hover,.fd-sort-option:focus-visible{background:#F2F7FF;color:#1558B8}
+.fd-sort-option.selected{background:#EAF3FF;color:#1558B8;font-weight:700}
+.fd-sort-option svg{width:17px;height:17px;flex:none;fill:none;stroke:#2381FF;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes fd-sort-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 .fdtoggle{display:none}
 .frow{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) auto;gap:14px 24px;align-items:center;background:linear-gradient(90deg,#EAF3FF 0,#fff 34%);border-radius:28px;padding:18px 22px;box-shadow:0 0 0 1.5px #D6E6FB;margin-bottom:14px;transition:box-shadow .18s,transform .18s}
 .frow:hover{box-shadow:0 0 0 2px #1D6FE0,0 24px 36px -28px rgba(29,111,224,.7);transform:translateY(-2px)}
@@ -579,6 +591,7 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
  .fd-slots{width:100%}
 }
 @media (prefers-reduced-motion:reduce){.stile,.frow{transition:none}}
+@media (prefers-reduced-motion:reduce){.fd-sort-menu{animation:none}.fd-sort-trigger svg{transition:none}}
 
 /* ===== About page (footer only) ===== */
 .pg-about{display:block;min-height:70vh;padding-top:32px}
@@ -1215,6 +1228,9 @@ button, .btn, .chip, .hdot, .icon-btn, .tab, .ct-tab, .slot, a.apptbtn, .more, .
   .fdbar select {
     width: 100% !important;
     min-height: 46px !important;
+  }
+  .fd-sort {
+    width: 100%;
   }
 
   /* Medicine layout & Sticky cart */
@@ -3321,9 +3337,19 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     overflow-wrap: anywhere;
   }
 
-  .fdbar > label {
+  .fdbar > label,
+  .fdbar > .fd-sort-label {
     min-width: 0 !important;
     white-space: nowrap;
+  }
+
+  .fdbar > .fd-sort-label {
+    align-self: end;
+  }
+
+  .fd-sort {
+    width: 100%;
+    min-width: 0;
   }
 
   .fdbar select {

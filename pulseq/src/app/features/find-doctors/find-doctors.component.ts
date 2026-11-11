@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
@@ -201,14 +201,41 @@ import { Doctor, Place, Slot } from '../../shared/models';
                 <span class="muted">· {{ filterDescription() }}</span>
               }
             </div>
-            <label class="muted sm" for="fdSort">Sort by</label>
-            <select id="fdSort" [(ngModel)]="sortOption" (ngModelChange)="resetDoctorPage()" aria-label="Sort doctors">
-              <option value="soon">Earliest available</option>
-              <option value="low">Fee: low to high</option>
-              <option value="high">Fee: high to low</option>
-              <option value="score">Patient score</option>
-              <option value="name">Name</option>
-            </select>
+            <span class="muted sm fd-sort-label" id="fdSortLabel">Sort by</span>
+            <div class="fd-sort">
+              <button
+                #sortTrigger
+                class="fd-sort-trigger"
+                type="button"
+                aria-haspopup="listbox"
+                aria-labelledby="fdSortLabel fdSortValue"
+                [attr.aria-expanded]="sortMenuOpen"
+                aria-controls="fdSortOptions"
+                (click)="toggleSortMenu()"
+                (keydown)="onSortTriggerKeydown($event)">
+                <span id="fdSortValue">{{ sortOptionLabel() }}</span>
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5"/></svg>
+              </button>
+              @if (sortMenuOpen) {
+                <div class="fd-sort-menu" id="fdSortOptions" role="listbox" aria-labelledby="fdSortLabel">
+                  @for (option of sortOptions; track option.value) {
+                    <button
+                      class="fd-sort-option"
+                      type="button"
+                      role="option"
+                      [attr.aria-selected]="sortOption === option.value"
+                      [class.selected]="sortOption === option.value"
+                      (click)="selectSort(option.value)"
+                      (keydown)="onSortOptionKeydown($event, option.value)">
+                      <span>{{ option.label }}</span>
+                      @if (sortOption === option.value) {
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8"/></svg>
+                      }
+                    </button>
+                  }
+                </div>
+              }
+            </div>
           </div>
 
           <div class="fdactive" aria-label="Active filters">
@@ -329,6 +356,7 @@ import { Doctor, Place, Slot } from '../../shared/models';
   `]
 })
 export class FindDoctorsComponent implements OnInit {
+  private host: ElementRef<HTMLElement> = inject(ElementRef);
   expandedSlots = new Set<number>();
   doctorVisibleLimit = 10;
   doctorsService = inject(DoctorsService);
@@ -350,7 +378,74 @@ export class FindDoctorsComponent implements OnInit {
   onlyToday = false;
   maxFee = 0;
   sortOption = 'soon';
+  sortMenuOpen = false;
+  sortOptions = [
+    { value: 'soon', label: 'Earliest available' },
+    { value: 'low', label: 'Fee: low to high' },
+    { value: 'high', label: 'Fee: high to low' },
+    { value: 'score', label: 'Patient score' },
+    { value: 'name', label: 'Name' }
+  ];
   sidebarOpen = false;
+
+  sortOptionLabel(): string {
+    return this.sortOptions.find(option => option.value === this.sortOption)?.label ?? 'Earliest available';
+  }
+
+  toggleSortMenu(): void {
+    this.sortMenuOpen = !this.sortMenuOpen;
+    if (this.sortMenuOpen) {
+      setTimeout(() => this.host.nativeElement.querySelector<HTMLButtonElement>('.fd-sort-option[aria-selected="true"]')?.focus());
+    }
+  }
+
+  selectSort(value: string): void {
+    this.sortOption = value;
+    this.sortMenuOpen = false;
+    this.resetDoctorPage();
+    setTimeout(() => this.host.nativeElement.querySelector<HTMLButtonElement>('.fd-sort-trigger')?.focus());
+  }
+
+  onSortTriggerKeydown(event: KeyboardEvent): void {
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (!this.sortMenuOpen) {
+        this.sortMenuOpen = true;
+      }
+      setTimeout(() => this.host.nativeElement.querySelector<HTMLButtonElement>('.fd-sort-option[aria-selected="true"]')?.focus());
+    }
+  }
+
+  onSortOptionKeydown(event: KeyboardEvent, value: string): void {
+    const options = Array.from(this.host.nativeElement.querySelectorAll<HTMLButtonElement>('.fd-sort-option'));
+    const index = options.findIndex(option => option.getAttribute('aria-selected') === 'true');
+    let targetIndex = index;
+    if (event.key === 'ArrowDown') targetIndex = (index + 1) % options.length;
+    else if (event.key === 'ArrowUp') targetIndex = (index - 1 + options.length) % options.length;
+    else if (event.key === 'Home') targetIndex = 0;
+    else if (event.key === 'End') targetIndex = options.length - 1;
+    else if (event.key === 'Escape') {
+      event.preventDefault();
+      this.sortMenuOpen = false;
+      setTimeout(() => this.host.nativeElement.querySelector<HTMLButtonElement>('.fd-sort-trigger')?.focus());
+      return;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    options[targetIndex]?.focus();
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      const option = this.sortOptions[targetIndex];
+      if (option) this.sortOption = option.value;
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  closeSortMenuOnOutsideClick(event: MouseEvent): void {
+    if (this.sortMenuOpen && event.target instanceof Node && !this.host.nativeElement.contains(event.target)) {
+      this.sortMenuOpen = false;
+    }
+  }
 
   getDocRating(id: number) {
     return this.reviewsService.getDocStats(id);
