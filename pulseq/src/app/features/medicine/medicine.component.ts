@@ -565,17 +565,17 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
 
     <!-- Order Success Modal (omodal) -->
     @if (orderSuccessOpen) {
-      <div class="modal" id="omodal" (click)="onBackdrop($event)">
-        <div class="panel" role="dialog" aria-modal="true" aria-labelledby="oTitle" tabindex="-1" id="opanel">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span style="width:48px;height:48px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex:none">
+      <div class="modal order-success-modal" id="omodal" (click)="onBackdrop($event)">
+        <div class="panel order-success-panel" role="dialog" aria-modal="true" aria-labelledby="oTitle" tabindex="-1" id="opanel">
+          <div class="order-success-heading">
+            <span class="order-success-icon">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#102A43" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M5 12.5l4.5 4.5L19 7.5"></path>
               </svg>
             </span>
-            <h3 id="oTitle" style="font-size:28px">Order placed</h3>
+            <h3 id="oTitle">Order placed</h3>
           </div>
-          <p id="oMsg" style="font-size:18px"><b>{{ lastOrderShop }}</b> will contact you on <b>{{ custPhone }}</b> to confirm your order and arrange delivery.</p>
+          <p class="order-success-message" id="oMsg"><b>{{ lastOrderShop }}</b> will contact you on <b>{{ custPhone }}</b> to confirm your order and arrange delivery.</p>
           <div class="bk">
             <span class="muted xs">Order code</span>
             <code id="oCode">{{ lastOrderCode }}</code>
@@ -598,6 +598,39 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
     .catalog-heading .inp { width: min(100%, 560px); }
     .catalog-heading > .btn { order: 2; }
     .catalog-heading > label, .catalog-heading > .inp { order: 3; }
+    .order-success-modal {
+      align-items: flex-start;
+      padding-top: max(24px, env(safe-area-inset-top, 0px));
+      padding-bottom: max(24px, env(safe-area-inset-bottom, 0px));
+    }
+    .order-success-panel {
+      max-height: calc(100dvh - max(48px, env(safe-area-inset-top, 0px) + env(safe-area-inset-bottom, 0px)));
+      overflow-y: auto;
+      gap: 14px;
+    }
+    .order-success-heading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .order-success-heading h3 {
+      font-size: clamp(26px, 5vw, 32px);
+      line-height: 1.05;
+    }
+    .order-success-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--mint);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: none;
+    }
+    .order-success-message {
+      font-size: clamp(17px, 3vw, 20px);
+      line-height: 1.45;
+    }
     .catalog-filters { display: flex; flex-direction: column; gap: 10px; margin: 8px 0 10px; }
     .catalog-letters { display: flex; flex-wrap: wrap; gap: 4px; }
     .catalog-letter { width: 30px; min-height: 30px; padding: 0; border: 1px solid #DCE8F8; border-radius: 8px; background: #fff; color: #1558B8; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
