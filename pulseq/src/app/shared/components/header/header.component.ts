@@ -37,7 +37,7 @@ const SAY: Record<string, string> = {
     </button>
 
     <!-- Header Container per PulseQ (14).html -->
-    <header class="wrap">
+    <header class="wrap" [class.home-header]="isHome()">
       <div class="nav">
         <!-- Brand Logo on Top Left -->
         <a class="logo" routerLink="/" (click)="closeMobileMenu()" aria-label="PulseQ home">
