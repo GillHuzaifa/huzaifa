@@ -7,6 +7,7 @@ import { HospitalsService } from '../../shared/services/hospitals.service';
 import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { DoctorCardComponent } from '../../shared/components/doctor-card/doctor-card.component';
+import { ClinicDashboardComponent } from '../../shared/components/clinic-dashboard/clinic-dashboard.component';
 import { SPEC, SPEC_PLURAL, CITIES } from '../../data/specialties.data';
 import { SHOPS } from '../../data/pharmacies.data';
 import { SITE } from '../../data/site.data';
@@ -25,6 +26,7 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
     FormsModule,
     RouterLink,
     DoctorCardComponent,
+    ClinicDashboardComponent,
   ],
   template: `
     <!-- PARTNERS STRIP WITH MARQUEE -->
@@ -195,6 +197,24 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
           <div class="step"><span class="n">2</span><h3 style="font-size:26px">Pick a time that’s free</h3><p class="muted">Every slot you see is live. Confirm and the doctor’s diary closes it instantly.</p></div>
           <div class="step"><span class="n">3</span><h3 style="font-size:26px">Show your code, walk in</h3><p class="muted">Your booking code arrives right away. Show it at the desk and skip the queue.</p></div>
         </div>
+      </div>
+    </section>
+
+    <!-- CLINIC DASHBOARD PREVIEW -->
+    <section class="sec dk home" id="clinics">
+      <div class="wrap">
+        <div style="display:flex;flex-wrap:wrap;gap:24px 56px;align-items:flex-end;justify-content:space-between;margin-bottom:44px">
+          <div style="display:flex;flex-direction:column;gap:18px;max-width:640px">
+            <span class="eyebrow">For hospitals and clinics <span class="ur" lang="ur">· کلینک کے لیے</span></span>
+            <h2 style="font-size:clamp(29px,4.3vw,55px);color:#fff">Fill the empty hours.</h2>
+            <p class="muted" style="font-size:19px">List your hospital or clinic on PulseQ. Patients book your free slots, and your whole day sits on one dashboard.</p>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+            <a class="btn btn-mint" routerLink="/contact">List your clinic</a>
+            <a routerLink="/clinics" style="color:#fff;font-weight:700;text-decoration:none;padding:12px 8px">Open dashboard</a>
+          </div>
+        </div>
+        <app-clinic-dashboard></app-clinic-dashboard>
       </div>
     </section>
 
