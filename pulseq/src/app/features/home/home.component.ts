@@ -263,7 +263,11 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
         <div style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:16px;align-self:flex-start">
           <span class="eyebrow">Questions</span>
           <h2 style="font-size:clamp(26px,3.8vw,43px)">The fine print, in big print.</h2>
-          <p class="muted">Still stuck? <a routerLink="/contact" style="color:var(--link);font-weight:700">Contact our team</a> and a real person will reply.</p>
+          <div class="faq-contact-card">
+            <strong>Still stuck?</strong>
+            <p>A real person will reply.</p>
+            <a class="faq-contact-link" routerLink="/contact">Contact our team <span aria-hidden="true">&rarr;</span></a>
+          </div>
         </div>
         <div style="flex:2 1 500px;display:flex;flex-direction:column;gap:12px;min-width:0">
           <details><summary>Do I pay online?</summary><p>You choose. Pay online when you book, or pay at the clinic when you arrive, depending on what the doctor offers.</p></details>
