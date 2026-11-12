@@ -49,7 +49,7 @@ const SAY: Record<string, string> = {
         <nav class="nav-links" aria-label="Main">
           <div class="nav-menu">
             <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors'" (click)="toggleNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
-              Find doctors <span aria-hidden="true">⌃</span>
+              Find doctors <span aria-hidden="true">{{ openNavMenu === 'doctors' ? '⌃' : '⌄' }}</span>
             </button>
             <div class="nav-dropdown doctors-dropdown" *ngIf="openNavMenu === 'doctors'">
               <p class="nav-dropdown-label">By specialty</p>
@@ -65,7 +65,7 @@ const SAY: Record<string, string> = {
           </div>
           <div class="nav-menu">
             <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals'" (click)="toggleNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
-              Hospitals <span aria-hidden="true">⌄</span>
+              Hospitals <span aria-hidden="true">{{ openNavMenu === 'hospitals' ? '⌃' : '⌄' }}</span>
             </button>
             <div class="nav-dropdown hospitals-dropdown" *ngIf="openNavMenu === 'hospitals'">
               <p class="nav-dropdown-label">Browse</p>

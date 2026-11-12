@@ -1080,6 +1080,8 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-dropdown a:hover{background:#EAF3FF!important;color:#1D6FE0!important;text-decoration:none!important}
 .nav-dropdown .dd-sep{height:1px;background:#E2E8F0;margin:5px 0}
 .nav-dropdown .dd-all{color:#1D6FE0!important;font-weight:700!important}
+.nav-menu .nav-dropdown{top:48px;width:474px;min-width:0;padding:24px 30px;display:block;flex-direction:initial;gap:initial}
+.nav-menu .hospitals-dropdown{width:420px}
 
 /* ===== Contact page v2 ===== */
 .ct-hero-top{display:flex;flex-wrap:wrap;gap:28px 40px;align-items:center;justify-content:space-between;width:100%}
