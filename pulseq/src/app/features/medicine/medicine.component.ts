@@ -26,9 +26,9 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
           </div>
           <div class="catalog-filters">
             <div class="catalog-letters" role="group" aria-label="Browse medicines by first letter">
-              <button class="catalog-letter" [class.on]="catalogLetter === '#'" type="button" aria-label="Medicines beginning with a number" [disabled]="medicineCountForLetter('#') === 0" [attr.aria-pressed]="catalogLetter === '#'" (click)="catalogLetter = '#'; resetCatalogPage()">#</button>
+              <button class="catalog-letter" [class.on]="catalogLetter === '#'" type="button" aria-label="Medicines beginning with a number" [disabled]="medicineCountForLetter('#') === 0" [attr.aria-pressed]="catalogLetter === '#'" (click)="toggleCatalogLetter('#')">#</button>
               @for (letter of catalogAlphabet; track letter) {
-                <button class="catalog-letter" [class.on]="catalogLetter === letter" type="button" [disabled]="medicineCountForLetter(letter) === 0" [attr.aria-pressed]="catalogLetter === letter" (click)="catalogLetter = letter; resetCatalogPage()">{{ letter }}</button>
+                <button class="catalog-letter" [class.on]="catalogLetter === letter" type="button" [disabled]="medicineCountForLetter(letter) === 0" [attr.aria-pressed]="catalogLetter === letter" (click)="toggleCatalogLetter(letter)">{{ letter }}</button>
               }
             </div>
             <div class="catalog-filter-row" role="group" aria-label="Filter by medicine type">
@@ -836,6 +836,11 @@ export class MedicineComponent implements OnInit {
 
   resetCatalogPage(): void {
     this.catalogVisibleLimit = 20;
+  }
+
+  toggleCatalogLetter(letter: string): void {
+    this.catalogLetter = this.catalogLetter === letter ? 'all' : letter;
+    this.resetCatalogPage();
   }
 
   loadMoreCatalog(): void {
