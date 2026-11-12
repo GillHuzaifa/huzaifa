@@ -18,6 +18,7 @@ interface LifeStage {
 }
 
 const STAGES: LifeStage[] = [
+  { id: 'all', n: 'All ages', a: 'Whole-body care', k: 'All' },
   { id: 'baby', n: 'Infants', a: '0–2 yrs', k: '0–2' },
   {
     n: 'Children', a: '3–12 yrs', k: '3–12',
@@ -174,7 +175,7 @@ const RISK_FACTORS: [string, string, string][] = [
         </div>
 
         @let stage = stages[selectedStage()];
-        @if (selectedStage() === 0) {
+        @if (selectedStage() === 1) {
           <div class="tp">
             <div class="tp-top">
               <div><p class="hand">tiny pulse</p><h2>Little hearts, big checks.</h2><p class="intro">Vaccines, milestones and warning signs for your baby’s first two years.</p></div>
@@ -216,7 +217,7 @@ const RISK_FACTORS: [string, string, string][] = [
               </div>
             </div>
           </div>
-        } @else {
+        } @else if (selectedStage() !== 0) {
           <div class="lm-body">
             <aside class="lm-lead">
               <span class="big">{{ stage.k }}</span><h2>{{ stage.n }}</h2><p>{{ stage.d }}</p><p class="hand">tests, risks, vaccines</p>
@@ -242,6 +243,7 @@ const RISK_FACTORS: [string, string, string][] = [
           </div>
         }
 
+        @if (selectedStage() === 0) {
         <section class="lm-sec">
           <span class="eyebrow">Cancer awareness</span><h2>Cancer: causes, risks and early signs.</h2>
           <p class="section-copy">Many cancers are linked to tobacco, infections, diet and inactivity, and most are far easier to treat when found early. Choose Women or Men above to filter.</p>
@@ -326,6 +328,7 @@ const RISK_FACTORS: [string, string, string][] = [
             </details>
           </div>
         </section>
+        }
         <p class="disclaimer">Lifemap gives general guidance based on common screening and vaccination advice. It is not a diagnosis. Your doctor may change the timing for your health, family history or local schedule. In an emergency call 1122 or 115.</p>
       </div>
     </section>
@@ -395,7 +398,7 @@ export class LifeMapComponent implements OnInit {
   riskFactors = RISK_FACTORS;
   sexOptions: { value: SexFilter; label: string }[] = [{ value: 'all', label: 'Everyone' }, { value: 'f', label: 'Women' }, { value: 'm', label: 'Men' }];
 
-  selectedStage = signal(3);
+  selectedStage = signal(0);
   sexFilter = signal<SexFilter>('all');
   selectedMindTopic = signal(0);
   selectedCancer = signal('breast');
@@ -430,7 +433,7 @@ export class LifeMapComponent implements OnInit {
   }
 
   sexGuidance(): { w: string[]; m: string[] } | undefined {
-    return this.sexGuides[this.selectedStage()];
+    return this.sexGuides[this.selectedStage() - 1];
   }
 
   visibleSexGuidance(guidance: { w: string[]; m: string[] }): { key: 'w' | 'm'; items: string[] }[] {
