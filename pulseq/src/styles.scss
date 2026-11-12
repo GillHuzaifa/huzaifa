@@ -3670,8 +3670,14 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 
 @media (max-width: 1023px) {
   .botpanel .sugs {
-    flex: 0 0 auto !important;
-    min-height: 44px !important;
+    display: flex !important;
+    flex: 0 0 56px !important;
+    align-items: center !important;
+    min-height: 56px !important;
+    height: 56px !important;
+    position: relative !important;
+    z-index: 3 !important;
+    background: #fff !important;
   }
 
   html:not(.sheet-landscape) .botpanel {
