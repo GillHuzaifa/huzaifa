@@ -48,7 +48,7 @@ const SAY: Record<string, string> = {
         <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
           <div class="nav-menu" (mouseenter)="hoverNavMenu('doctors')" (mouseleave)="closeNavMenu()">
-            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors'" (click)="toggleNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
+            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors' || isDoctorsPage()" (click)="toggleNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
               Find Doctors <span aria-hidden="true">⌄</span>
             </button>
             <div class="nav-dropdown doctors-dropdown" *ngIf="openNavMenu === 'doctors'">
@@ -64,7 +64,7 @@ const SAY: Record<string, string> = {
             </div>
           </div>
           <div class="nav-menu" (mouseenter)="hoverNavMenu('hospitals')" (mouseleave)="closeNavMenu()">
-            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals'" (click)="toggleNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
+            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals' || isHospitalsPage()" (click)="toggleNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
               Hospitals <span aria-hidden="true">⌄</span>
             </button>
             <div class="nav-dropdown hospitals-dropdown" *ngIf="openNavMenu === 'hospitals'">
@@ -464,6 +464,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   closeNavMenu(): void {
     this.openNavMenu = null;
+  }
+
+  isDoctorsPage(): boolean {
+    return this.router.url.startsWith('/find-doctors');
+  }
+
+  isHospitalsPage(): boolean {
+    return this.router.url.startsWith('/hospitals');
   }
 
   toggleDocDrop(e?: Event): void {
