@@ -26,9 +26,9 @@ import { SPEC } from '../../../data/specialties.data';
 
       <div class="clinic-mobile-dashboard" aria-label="Mobile clinic dashboard preview">
         <div class="clinic-mobile-topbar">
-          <button type="button" aria-label="Open dashboard menu">☰</button>
+          <button type="button" aria-label="Open dashboard menu" (click)="selectTab(state.tab)">☰</button>
           <span class="clinic-mobile-notch" aria-hidden="true"></span>
-          <button type="button" aria-label="Search dashboard">⌕</button>
+          <button type="button" aria-label="Search dashboard" (click)="focusDashboardSearch()">⌕</button>
         </div>
         <div class="clinic-mobile-welcome">
           <div>
@@ -465,6 +465,15 @@ export class ClinicDashboardComponent {
     this.setTab(tab);
     if (typeof window !== 'undefined' && window.innerWidth <= 760) {
       document.getElementById('clinic-full-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  focusDashboardSearch(): void {
+    this.selectTab(this.state.tab);
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        document.querySelector<HTMLInputElement>('#clinic-full-demo .dtop input')?.focus();
+      }, 350);
     }
   }
 
