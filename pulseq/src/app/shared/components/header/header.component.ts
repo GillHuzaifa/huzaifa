@@ -47,8 +47,38 @@ const SAY: Record<string, string> = {
 
         <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
-          <a routerLink="/find-doctors" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Find doctors</a>
-          <a routerLink="/hospitals" routerLinkActive="active">Hospitals</a>
+          <div class="nav-menu">
+            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors'" (click)="toggleNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
+              Find doctors <span aria-hidden="true">⌃</span>
+            </button>
+            <div class="nav-dropdown doctors-dropdown" *ngIf="openNavMenu === 'doctors'">
+              <p class="nav-dropdown-label">By specialty</p>
+              <div class="nav-dropdown-grid">
+                <a routerLink="/find-doctors" [queryParams]="{spec: 'all'}" (click)="closeNavMenu()">All doctors</a>
+                <a *ngFor="let item of specialties" routerLink="/find-doctors" [queryParams]="{spec: item[0]}" (click)="closeNavMenu()">{{ item[1] }}</a>
+              </div>
+              <p class="nav-dropdown-label">By city</p>
+              <div class="nav-dropdown-grid">
+                <a *ngFor="let city of cities" routerLink="/find-doctors" [queryParams]="{city: city}" (click)="closeNavMenu()">{{ city }}</a>
+              </div>
+            </div>
+          </div>
+          <div class="nav-menu">
+            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals'" (click)="toggleNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
+              Hospitals <span aria-hidden="true">⌄</span>
+            </button>
+            <div class="nav-dropdown hospitals-dropdown" *ngIf="openNavMenu === 'hospitals'">
+              <p class="nav-dropdown-label">Browse</p>
+              <div class="nav-dropdown-grid nav-dropdown-single">
+                <a routerLink="/hospitals" (click)="closeNavMenu()">All hospitals</a>
+                <a routerLink="/hospitals" [queryParams]="{emergency: 'true'}" (click)="closeNavMenu()">24/7 Emergency</a>
+              </div>
+              <p class="nav-dropdown-label">By city</p>
+              <div class="nav-dropdown-grid">
+                <a *ngFor="let city of cities" routerLink="/hospitals" [queryParams]="{city: city}" (click)="closeNavMenu()">{{ city }}</a>
+              </div>
+            </div>
+          </div>
           <a routerLink="/surgery" routerLinkActive="active">Surgery</a>
           <a routerLink="/medicine" routerLinkActive="active">Medicine</a>
           <a routerLink="/clinics" routerLinkActive="active">For clinics</a>
@@ -382,6 +412,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isHome = signal<boolean>(true);
   showDocDrop = false;
   showHospDrop = false;
+  openNavMenu: 'doctors' | 'hospitals' | null = null;
 
   mobileMenuOpen = false;
   mobileDocOpen = false;
@@ -395,6 +426,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.mobileMenuOpen = false;
     this.mobileDocOpen = false;
     this.mobileHospOpen = false;
+  }
+
+  specialties = Object.entries(SPEC);
+
+  toggleNavMenu(menu: 'doctors' | 'hospitals'): void {
+    this.openNavMenu = this.openNavMenu === menu ? null : menu;
+  }
+
+  closeNavMenu(): void {
+    this.openNavMenu = null;
   }
 
   toggleDocDrop(e?: Event): void {

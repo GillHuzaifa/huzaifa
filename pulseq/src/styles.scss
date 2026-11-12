@@ -1045,6 +1045,19 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-links a,.nav-link-with-arrow{color:var(--muted)!important;text-decoration:none;font-weight:500;font-size:15px;padding:8px 4px;min-height:40px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;transition:opacity .15s ease,color .15s ease,text-decoration .15s ease}
 .nav-links a:hover,.nav-link-with-arrow:hover{color:var(--fg)!important;text-decoration:underline!important;text-underline-offset:6px;text-decoration-thickness:2px}
 .nav-links a.active,.nav-link-with-arrow.active{color:var(--fg)!important;font-weight:700;text-decoration:underline!important;text-underline-offset:6px;text-decoration-thickness:2px}
+.nav-menu{position:relative;display:inline-flex}
+.nav-menu-trigger{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 4px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:15px;font-weight:500;white-space:nowrap;cursor:pointer}
+.nav-menu-trigger:hover,.nav-menu-trigger.active{color:var(--fg)}
+.nav-menu-trigger.active{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.nav-menu-trigger span{font-size:14px;line-height:1}
+.nav-dropdown{position:absolute;z-index:20;top:48px;left:50%;width:474px;padding:24px 30px;border:1px solid #D6E6FB;border-radius:22px;background:#fff;box-shadow:0 20px 44px -20px rgba(12,45,94,.3);transform:translateX(-50%);animation:fadeIn .14s ease-out}
+.hospitals-dropdown{width:420px}
+.nav-dropdown-label{margin:0 0 12px;color:#526477;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.nav-dropdown-label:not(:first-child){margin-top:24px}
+.nav-dropdown-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:34px;row-gap:4px}
+.nav-dropdown-single{grid-template-columns:1fr}
+.nav-dropdown a{display:block!important;min-height:40px;padding:7px 0!important;color:#163451!important;font-size:16px!important;font-weight:700!important;text-decoration:none!important}
+.nav-dropdown a:hover{color:#2381FF!important;transform:none!important}
 
 .nav-cta{display:flex;align-items:center;justify-content:flex-end;flex:0 0 auto}
 .nav-cta .btn-ink{background:var(--btn-bg)!important;color:#fff!important;font-weight:700;padding:0 22px;min-height:44px;box-shadow:none!important;transition:all .15s ease}
