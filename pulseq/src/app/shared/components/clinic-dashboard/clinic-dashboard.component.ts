@@ -26,10 +26,25 @@ import { SPEC } from '../../../data/specialties.data';
 
       <div class="clinic-mobile-dashboard" aria-label="Mobile clinic dashboard preview">
         <div class="clinic-mobile-topbar">
-          <button type="button" aria-label="Open dashboard menu" (click)="selectTab(state.tab)">☰</button>
+          <button type="button" aria-label="Open dashboard menu" [attr.aria-expanded]="mobileNavOpen" (click)="toggleMobileNav()">☰</button>
           <span class="clinic-mobile-notch" aria-hidden="true"></span>
-          <button type="button" aria-label="Search dashboard" (click)="focusDashboardSearch()">⌕</button>
+          <button type="button" aria-label="Search dashboard" [attr.aria-expanded]="mobileSearchOpen" (click)="toggleMobileSearch()">⌕</button>
         </div>
+        @if (mobileSearchOpen) {
+          <div class="clinic-mobile-search">
+            <input type="search" placeholder="Search patient, doctor or time" [(ngModel)]="state.q" aria-label="Search patient, doctor or time">
+          </div>
+        }
+        @if (mobileNavOpen) {
+          <nav class="clinic-mobile-drawer" aria-label="Dashboard sections">
+            @for (r of railItems; track r[0]) {
+              <button type="button" [class.active]="state.tab === r[0]" (click)="selectTab(r[0])">
+                <span [innerHTML]="r[2]"></span>
+                {{ r[1] }}
+              </button>
+            }
+          </nav>
+        }
         <div class="clinic-mobile-welcome">
           <div>
             <span class="clinic-mobile-date">MONDAY, 12 AUGUST</span>
@@ -418,6 +433,8 @@ export class ClinicDashboardComponent {
 
   state = { ...INITIAL_CLINIC_STATE };
   railItems = CLINIC_RAIL;
+  mobileNavOpen = false;
+  mobileSearchOpen = false;
   nowMinutes = 17 * 60 + 40; // 17:40
   currentTime = '17:40';
 
@@ -461,20 +478,29 @@ export class ClinicDashboardComponent {
     this.state.err = '';
   }
 
+  toggleMobileNav(): void {
+    this.mobileNavOpen = !this.mobileNavOpen;
+    if (this.mobileNavOpen) this.mobileSearchOpen = false;
+  }
+
+  toggleMobileSearch(): void {
+    this.mobileSearchOpen = !this.mobileSearchOpen;
+    if (this.mobileSearchOpen) {
+      this.mobileNavOpen = false;
+      setTimeout(() => document.querySelector<HTMLInputElement>('.clinic-mobile-search input')?.focus(), 0);
+    }
+  }
+
   selectTab(tab: string): void {
     this.setTab(tab);
+    this.mobileNavOpen = false;
     if (typeof window !== 'undefined' && window.innerWidth <= 760) {
       document.getElementById('clinic-full-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
   focusDashboardSearch(): void {
-    this.selectTab(this.state.tab);
-    if (typeof window !== 'undefined') {
-      window.setTimeout(() => {
-        document.querySelector<HTMLInputElement>('#clinic-full-demo .dtop input')?.focus();
-      }, 350);
-    }
+    this.toggleMobileSearch();
   }
 
   openWalkin(): void {
@@ -528,7 +554,7 @@ export class ClinicDashboardComponent {
   }
 
   getUpNextGroup(): any[] {
-    const up = this.clToday().filter(a => this.timeToMins(a.time) >= this.nowMinutes && !this.state.done[a.id]);
+    const up = this.clToday().filter(a => this.timeToMins(a.time) >= this.nowMinutes && !this.state.done[a.id] && this.matchesSearch(a));
     if (!up.length) return [];
     const firstTime = up[0].time;
     return up.filter(a => a.time === firstTime);
@@ -536,12 +562,20 @@ export class ClinicDashboardComponent {
 
   getRestToday(): any[] {
     const upNext = this.getUpNextGroup();
-    const q = this.state.q.toLowerCase();
     return this.clToday().filter(a => {
       if (upNext.some(u => u.id === a.id)) return false;
-      if (!q) return true;
-      return `${a.patient} ${a.phone || ''} ${a.code || ''}`.toLowerCase().includes(q);
+      return this.matchesSearch(a);
     });
+  }
+
+  private matchesSearch(appointment: any): boolean {
+    const q = this.state.q.trim().toLowerCase();
+    if (!q) return true;
+    const doctor = this.dShort(appointment.doc).toLowerCase();
+    const time = this.doctorsService.formatTime(appointment.time).toLowerCase();
+    return `${appointment.patient} ${doctor} ${appointment.time} ${time} ${appointment.phone || ''} ${appointment.code || ''}`
+      .toLowerCase()
+      .includes(q);
   }
 
   clStatus(d: Doctor): { t: string; c: string; w: number } {
@@ -633,10 +667,10 @@ export class ClinicDashboardComponent {
   getScheduleGrouped(): { date: string; appts: any[] }[] {
     const map: Record<string, any[]> = {};
     const todayIso = this.doctorsService.isoOf(0);
-    this.state.appts.forEach(a => {
+    this.state.appts.filter(a => this.matchesSearch(a)).forEach(a => {
       (map[todayIso] = map[todayIso] || []).push(a);
     });
-    this.clOnline().forEach(a => {
+    this.clOnline().filter(a => this.matchesSearch(a)).forEach(a => {
       (map[a.date] = map[a.date] || []).push(a);
     });
     return Object.keys(map).sort().map(d => ({
@@ -646,8 +680,7 @@ export class ClinicDashboardComponent {
   }
 
   getFilteredPatients(): any[] {
-    const q = this.state.q.toLowerCase();
     const all = [...this.clToday(), ...this.clOnline().filter(a => a.date !== this.doctorsService.isoOf(0))];
-    return all.filter(a => !q || `${a.patient} ${a.phone || ''} ${a.code || ''}`.toLowerCase().includes(q));
+    return all.filter(a => this.matchesSearch(a));
   }
 }
