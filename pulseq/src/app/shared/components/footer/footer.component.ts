@@ -9,16 +9,28 @@ import { PulseAiService } from '../../services/pulse-ai.service';
   template: `
     <footer class="dk foot">
       <div class="wrap">
-        <div class="foot-cols">
-          <div style="max-width:320px;flex:1 1 260px">
-            <div style="display:flex;align-items:center;gap:12px">
-              <img class="logo-mark" src="/Pulseq_logo.png" alt="" aria-hidden="true" width="40" height="40">
-              <p style="font-family:var(--disp);font-weight:800;font-size:30px;color:#fff;margin:0">PulseQ</p>
-            </div>
-            <p class="muted" style="margin-top:10px">Book doctors and hospitals online, by search or chat in Urdu and English.</p>
-            <p class="hand" style="font-size:26px;color:#93C5FD;margin-top:8px">made with care in Pakistan</p>
+        <div class="foot-verify">
+          <div class="foot-verify-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 36" fill="none">
+              <path d="M16 2 29 7v9.5c0 8.2-5.3 14.3-13 17.5C8.3 30.8 3 24.7 3 16.5V7L16 2Z" fill="currentColor"/>
+              <path d="m9.5 17.5 4.2 4.2 8.8-9" stroke="#0A3850" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           <div>
+            <strong>PMC Verified Doctors</strong>
+            <span>Every doctor is verified.</span>
+          </div>
+        </div>
+        <div class="foot-cols">
+          <div class="foot-brand">
+            <div class="foot-brand-mark">
+              <img class="logo-mark" src="/Pulseq_logo.png" alt="" aria-hidden="true" width="40" height="40">
+              <p>PulseQ</p>
+            </div>
+            <p class="foot-description">Book doctors and hospitals online, by search or chat in Urdu and English.</p>
+            <p class="hand foot-signoff">made with care in Pakistan</p>
+          </div>
+          <div class="foot-group">
             <p class="eyebrow">Patients</p>
             <a routerLink="/find-doctors">Find a doctor</a>
             <a routerLink="/hospitals">Hospitals</a>
@@ -27,18 +39,18 @@ import { PulseAiService } from '../../services/pulse-ai.service';
             <a routerLink="/surgery">Surgery</a>
             <a routerLink="/medicine">Medicine</a>
           </div>
-          <div>
+          <div class="foot-group">
             <p class="eyebrow">Clinics</p>
             <a routerLink="/contact">List your clinic</a>
             <a routerLink="/clinics">Clinic dashboard</a>
           </div>
-          <div>
+          <div class="foot-group">
             <p class="eyebrow">Company</p>
             <a routerLink="/about">About us</a>
             <a routerLink="/about" fragment="about-team">Our directors</a>
             <a routerLink="/privacy">Privacy policy</a>
           </div>
-          <div>
+          <div class="foot-group">
             <p class="eyebrow">Help</p>
             <a routerLink="/" fragment="faq">Questions</a>
             <a routerLink="/contact">Contact us</a>
