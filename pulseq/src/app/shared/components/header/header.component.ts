@@ -47,9 +47,9 @@ const SAY: Record<string, string> = {
         <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
           <div class="nav-menu" (mouseenter)="hoverNavMenu('doctors')" (mouseleave)="closeNavMenu()">
-            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors' || isDoctorsPage()" (click)="showNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
+            <a class="nav-menu-trigger" routerLink="/find-doctors" [class.active]="isDoctorsPage()" (click)="closeNavMenu()" [attr.aria-expanded]="openNavMenu === 'doctors'">
               Find Doctors <span aria-hidden="true">⌄</span>
-            </button>
+            </a>
             <div class="nav-dropdown doctors-dropdown" *ngIf="openNavMenu === 'doctors'">
               <p class="nav-dropdown-label">By specialty</p>
               <div class="nav-dropdown-grid">
@@ -63,9 +63,9 @@ const SAY: Record<string, string> = {
             </div>
           </div>
           <div class="nav-menu" (mouseenter)="hoverNavMenu('hospitals')" (mouseleave)="closeNavMenu()">
-            <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals' || isHospitalsPage()" (click)="showNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
+            <a class="nav-menu-trigger" routerLink="/hospitals" [class.active]="isHospitalsPage()" (click)="closeNavMenu()" [attr.aria-expanded]="openNavMenu === 'hospitals'">
               Hospitals <span aria-hidden="true">⌄</span>
-            </button>
+            </a>
             <div class="nav-dropdown hospitals-dropdown" *ngIf="openNavMenu === 'hospitals'">
               <p class="nav-dropdown-label">Browse</p>
               <div class="nav-dropdown-grid nav-dropdown-single">
@@ -450,10 +450,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   specialties = Object.entries(SPEC);
-
-  showNavMenu(menu: 'doctors' | 'hospitals'): void {
-    this.openNavMenu = menu;
-  }
 
   hoverNavMenu(menu: 'doctors' | 'hospitals'): void {
     if (typeof window !== 'undefined' && window.innerWidth >= 900) {
