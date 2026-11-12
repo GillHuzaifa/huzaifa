@@ -431,7 +431,6 @@ header.wrap .nav-links a{font-size:15px;color:var(--muted)!important}
   header.wrap .nav-links{gap:4px 38px}
   header.wrap .nav-menu-trigger,
   header.wrap .nav-links > a{font-size:19px!important;min-height:44px}
-  header.wrap .nav-menu-trigger span{font-size:18px}
 }
 header.wrap .nav-links a:hover,header.wrap .nav-links a.active,header.wrap .nav-links a[aria-current="page"]{color:var(--fg)!important;text-decoration:underline!important;text-underline-offset:6px}
 header.wrap .hero-l [data-try]{border-color:#DCE8F8;background:#fff;min-height:38px;font-size:14px}
@@ -1062,7 +1061,17 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-menu-trigger{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:8px 4px;border:0;background:transparent;color:var(--muted);font:inherit;font-size:15px;font-weight:500;white-space:nowrap;cursor:pointer}
 .nav-menu-trigger:hover,.nav-menu-trigger.active{color:var(--fg)}
 .nav-menu-trigger.active{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
-.nav-menu-trigger span{font-size:14px;line-height:1}
+.nav-menu-trigger span{
+  display:inline-block;
+  width:8px;
+  height:8px;
+  border-right:2px solid currentColor;
+  border-bottom:2px solid currentColor;
+  font-size:0;
+  line-height:1;
+  transform:translateY(-2px) rotate(45deg);
+}
+.nav-menu-trigger.active span{transform:translateY(2px) rotate(225deg)}
 .nav-dropdown{position:absolute;z-index:20;top:48px;left:50%;width:474px;padding:24px 30px;border:1px solid #D6E6FB;border-radius:22px;background:#fff;box-shadow:0 20px 44px -20px rgba(12,45,94,.3);transform:translateX(-50%);animation:fadeIn .14s ease-out}
 .hospitals-dropdown{width:420px}
 .nav-dropdown-label{margin:0 0 12px;color:#526477;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
