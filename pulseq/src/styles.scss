@@ -3680,6 +3680,17 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     background: #fff !important;
   }
 
+  .botpanel .sugs .sug {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #1558B8 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
   html:not(.sheet-landscape) .botpanel {
     height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
     max-height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
