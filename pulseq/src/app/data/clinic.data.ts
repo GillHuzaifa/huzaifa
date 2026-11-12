@@ -10,13 +10,13 @@ export const INITIAL_CLINIC_STATE: ClinicState = {
   done: { s1: "16:27", s2: "16:57" },
   blocked: { 104: true },
   appts: [
-    { id: "s1", time: "16:30", doc: 101, patient: "Ayesha Khan", note: "Check-up", src: "seed" },
-    { id: "s2", time: "17:00", doc: 102, patient: "Danish Aslam", note: "Skin follow-up", src: "seed" },
-    { id: "s3", time: "18:00", doc: 101, patient: "Mahnoor Ali", note: "Follow-up", src: "seed" },
-    { id: "s4", time: "18:00", doc: 102, patient: "Talha Munir", note: "New patient", src: "seed" },
-    { id: "s5", time: "19:00", doc: 101, patient: "Nida Rauf", note: "Check-up", src: "seed" },
-    { id: "s6", time: "19:30", doc: 102, patient: "Saad Chaudhry", note: "New patient", src: "seed" },
-    { id: "s7", time: "20:00", doc: 101, patient: "Sana Iqbal", note: "Walk-in", src: "walkin" }
+    { id: "s1", time: "16:30", doc: 101, patient: "Demo patient 01", note: "Check-up", src: "seed" },
+    { id: "s2", time: "17:00", doc: 102, patient: "Demo patient 02", note: "Skin follow-up", src: "seed" },
+    { id: "s3", time: "18:00", doc: 101, patient: "Demo patient 03", note: "Follow-up", src: "seed" },
+    { id: "s4", time: "18:00", doc: 102, patient: "Demo patient 04", note: "New patient", src: "seed" },
+    { id: "s5", time: "19:00", doc: 101, patient: "Demo patient 05", note: "Check-up", src: "seed" },
+    { id: "s6", time: "19:30", doc: 102, patient: "Demo patient 06", note: "New patient", src: "seed" },
+    { id: "s7", time: "20:00", doc: 101, patient: "Demo patient 07", note: "Walk-in", src: "walkin" }
   ]
 };
 

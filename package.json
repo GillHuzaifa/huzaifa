@@ -6,6 +6,7 @@
   "scripts": {
     "postinstall": "npm --prefix pulseq install",
     "build": "npm --prefix pulseq run build",
-    "start": "npm --prefix pulseq run start"
+    "start": "npm --prefix pulseq run start",
+    "security:frontend": "node scripts/check-frontend-safety.mjs"
   }
 }
