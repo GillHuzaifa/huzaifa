@@ -2740,6 +2740,14 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     color: #102A43;
     position: relative;
   }
+  .clinic-preview-heading,
+  .clinic-preview-chips,
+  .clinic-preview-stats,
+  .clinic-preview-next,
+  .clinic-preview-list,
+  .clinic-preview-link {
+    display: none !important;
+  }
 
   .clinic-preview-heading {
     display: flex;
@@ -2775,6 +2783,80 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     font-size: 22px;
     line-height: 1;
   }
+  .clinic-mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #123B68;
+    line-height: 1.05;
+  }
+  .clinic-mobile-brand-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: #1558B8;
+    color: #8CC2FF;
+    font-size: 24px;
+    font-weight: 800;
+  }
+  .clinic-mobile-brand b,
+  .clinic-mobile-brand small {
+    display: block;
+  }
+  .clinic-mobile-brand b { font-size: 14px; }
+  .clinic-mobile-brand small { margin-top: 2px; color: #71839A; font-size: 9px; }
+  .clinic-mobile-tab-page {
+    min-height: 460px;
+    padding: 18px 0 24px;
+  }
+  .clinic-mobile-tab-page h3 {
+    margin: 5px 0 16px;
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .clinic-mobile-tab-page .clinic-mobile-schedule-row {
+    padding-inline: 8px;
+    background: #fff;
+  }
+  .clinic-mobile-tab-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 62px;
+    padding: 10px;
+    margin-top: 8px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 8px 18px -18px #123E68;
+  }
+  .clinic-mobile-tab-row > div { min-width: 0; flex: 1; }
+  .clinic-mobile-tab-row b,
+  .clinic-mobile-tab-row small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clinic-mobile-tab-row small { margin-top: 3px; color: #71839A; font-size: 10px; }
+  .clinic-mobile-tab-row button {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 9px;
+    background: #DCEBFA;
+    color: #123B68;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .clinic-mobile-billing {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 18px;
+    border-radius: 16px;
+    background: #123E68;
+    color: #fff;
+  }
+  .clinic-mobile-billing strong { font-size: 28px; }
+  .clinic-mobile-billing span { color: #C7DDF5; font-size: 11px; }
   .clinic-mobile-search {
     position: relative;
     z-index: 4;

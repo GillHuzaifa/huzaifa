@@ -27,7 +27,10 @@ import { SPEC } from '../../../data/specialties.data';
       <div class="clinic-mobile-dashboard" aria-label="Mobile clinic dashboard preview">
         <div class="clinic-mobile-topbar">
           <button type="button" aria-label="Open dashboard menu" [attr.aria-expanded]="mobileNavOpen" (click)="toggleMobileNav()">☰</button>
-          <span class="clinic-mobile-notch" aria-hidden="true"></span>
+          <span class="clinic-mobile-brand">
+            <span class="clinic-mobile-brand-icon" aria-hidden="true">⌁</span>
+            <span><b>Crescent</b><small>Family Clinic</small></span>
+          </span>
           <button type="button" aria-label="Search dashboard" [attr.aria-expanded]="mobileSearchOpen" (click)="toggleMobileSearch()">⌕</button>
         </div>
         @if (mobileSearchOpen) {
@@ -45,6 +48,7 @@ import { SPEC } from '../../../data/specialties.data';
             }
           </nav>
         }
+        @if (state.tab === 'today') {
         <div class="clinic-mobile-welcome">
           <div>
             <span class="clinic-mobile-date">MONDAY, 12 AUGUST</span>
@@ -88,6 +92,37 @@ import { SPEC } from '../../../data/specialties.data';
             <div class="clinic-mobile-schedule-row"><strong>{{ doctorsService.formatTime(a.time) }}</strong><div><b>{{ a.patient }}</b><small>{{ dShort(a.doc) }}</small></div><span>{{ state.done[a.id] ? 'Here' : 'Expected' }} ›</span></div>
           }
         </section>
+        } @else {
+          <section class="clinic-mobile-tab-page">
+            @if (state.tab === 'schedule') {
+              <span class="clinic-mobile-section-label">SCHEDULE</span>
+              <h3>Full day</h3>
+              @for (a of getScheduleAppointments(); track a.id) {
+                <div class="clinic-mobile-schedule-row"><strong>{{ doctorsService.formatTime(a.time) }}</strong><div><b>{{ a.patient }}</b><small>{{ dShort(a.doc) }}</small></div><span>{{ state.done[a.id] ? 'Here' : 'Expected' }} ›</span></div>
+              }
+            } @else if (state.tab === 'patients') {
+              <span class="clinic-mobile-section-label">PATIENTS</span>
+              <h3>All patients</h3>
+              @for (a of getFilteredPatients(); track a.id) {
+                <div class="clinic-mobile-tab-row"><span class="clinic-mobile-initials">{{ getInitials(a.patient) }}</span><div><b>{{ a.patient }}</b><small>{{ dShort(a.doc) }} · {{ doctorsService.formatTime(a.time) }}</small></div><button type="button" (click)="checkIn(a.id)">{{ state.done[a.id] ? 'Here' : 'Check in' }}</button></div>
+              }
+            } @else if (state.tab === 'doctors') {
+              <span class="clinic-mobile-section-label">DOCTORS</span>
+              <h3>Doctors today</h3>
+              @for (d of cfcDocs(); track d.id) {
+                @let s = clStatus(d);
+                <div class="clinic-mobile-tab-row"><span class="clinic-mobile-doctor-icon">⚕</span><div><b>{{ dShort(d.id) }}</b><small [style.color]="s.c">{{ s.t }}</small></div><button type="button" (click)="toggleBlock(d.id)">{{ state.blocked[d.id] ? 'Unblock' : 'Block' }}</button></div>
+              }
+            } @else {
+              <span class="clinic-mobile-section-label">BILLING</span>
+              <h3>Today's billing</h3>
+              <div class="clinic-mobile-billing"><strong>Rs {{ totalCash().toLocaleString('en-US') }}</strong><span>Collected from {{ countDone() }} checked-in patients</span></div>
+              @for (a of getCheckedInAppointments(); track a.id) {
+                <div class="clinic-mobile-tab-row"><div><b>{{ a.patient }}</b><small>{{ doctorsService.formatTime(a.time) }}</small></div><strong>Paid</strong></div>
+              }
+            }
+          </section>
+        }
         <nav class="clinic-mobile-preview-nav" aria-label="Preview navigation">
           @for (r of railItems; track r[0]) {
             <button type="button" [class.active]="state.tab === r[0]" (click)="selectTab(r[0])">
@@ -494,9 +529,6 @@ export class ClinicDashboardComponent {
   selectTab(tab: string): void {
     this.setTab(tab);
     this.mobileNavOpen = false;
-    if (typeof window !== 'undefined' && window.innerWidth <= 760) {
-      document.getElementById('clinic-full-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
   }
 
   focusDashboardSearch(): void {
@@ -682,5 +714,15 @@ export class ClinicDashboardComponent {
   getFilteredPatients(): any[] {
     const all = [...this.clToday(), ...this.clOnline().filter(a => a.date !== this.doctorsService.isoOf(0))];
     return all.filter(a => this.matchesSearch(a));
+  }
+
+  getScheduleAppointments(): any[] {
+    return [...this.clToday(), ...this.clOnline()]
+      .filter(a => this.matchesSearch(a))
+      .sort((a, b) => this.timeToMins(a.time) - this.timeToMins(b.time));
+  }
+
+  getCheckedInAppointments(): any[] {
+    return this.clToday().filter(a => !!this.state.done[a.id] && this.matchesSearch(a));
   }
 }
