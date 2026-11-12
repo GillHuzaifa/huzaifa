@@ -332,7 +332,7 @@ const RISK_FACTORS: [string, string, string][] = [
   `,
   styles: [`
     :host{display:block;color:#102A43}
-    .life-map{display:block!important;min-height:70vh;padding-top:28px}
+    .life-map{display:block!important;min-height:70vh;padding-top:28px;background:radial-gradient(640px 420px at 95% 0,#DBEAFE,transparent 70%),radial-gradient(560px 420px at 0 38%,rgba(224,231,255,.9),transparent 70%)}
     .life-map h1,.life-map h2,.life-map h3{font-family:var(--disp,'Bricolage Grotesque',sans-serif);font-weight:800;letter-spacing:-.02em;line-height:1.08}
     .lm-hero{position:relative;overflow:hidden;border-radius:40px;padding:clamp(26px,4.6vw,58px) clamp(26px,4.6vw,58px) 92px;background:linear-gradient(135deg,#2381FF 0,#1558B8 62%,#0F3F86);color:#fff;box-shadow:0 30px 60px -36px rgba(12,45,94,.8)}
     .lm-hero:before{content:"";position:absolute;right:-110px;top:-130px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(147,197,253,.5),rgba(147,197,253,0) 68%)}

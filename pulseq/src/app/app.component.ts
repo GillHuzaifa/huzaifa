@@ -65,6 +65,8 @@ export class AppComponent {
         this.currentView.set('surgery');
       } else if (url.startsWith('/medicine')) {
         this.currentView.set('medicine');
+      } else if (url.startsWith('/life-map')) {
+        this.currentView.set('lifemap');
       } else if (url.startsWith('/clinics')) {
         this.currentView.set('clinics');
       } else if (url.startsWith('/about')) {
