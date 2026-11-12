@@ -589,6 +589,13 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
             <code id="oCode">{{ lastOrderCode }}</code>
             <p class="sm" id="oItems">{{ lastOrderItems }}</p>
           </div>
+          @if (lastOrderTotal > 0) {
+            <div class="order-price-summary" aria-live="polite">
+              <span>Estimated medicine total</span>
+              <strong>Rs {{ lastOrderTotal.toLocaleString('en-US') }}</strong>
+            </div>
+            <p class="order-price-note">Estimate based on this pharmacy’s prices; delivery is charged separately.</p>
+          }
           <p class="muted sm">Please keep your phone nearby.<br>Note: orders here are saved in this browser only.</p>
           <button class="btn btn-ink full" id="oClose" type="button" (click)="orderSuccessOpen = false">Done</button>
         </div>
@@ -639,6 +646,19 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
       font-size: clamp(17px, 3vw, 20px);
       line-height: 1.45;
     }
+    .order-price-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #EAF3FF;
+      color: #102A43;
+    }
+    .order-price-summary span { color: #526477; font-size: 14px; font-weight: 700; }
+    .order-price-summary strong { color: #1558B8; font-size: 20px; white-space: nowrap; }
+    .order-price-note { margin: -8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
     @media (max-width: 640px) {
       .order-success-modal {
         align-items: flex-start !important;
@@ -773,6 +793,7 @@ export class MedicineComponent implements OnInit {
   lastOrderCode = '';
   lastOrderShop = '';
   lastOrderItems = '';
+  lastOrderTotal = 0;
 
   // Partner form
   ptName = '';
@@ -1187,7 +1208,16 @@ export class MedicineComponent implements OnInit {
     let code = "MD-";
     for (let i = 0; i < 5; i++) code += ch[Math.floor(Math.random() * ch.length)];
 
-    const parts = entries.map(e => `${e.med.n} (${e.mode === 's' ? 'single' : 'full pack'}) × ${e.qty}`);
+    const pricedEntries = entries.map(e => {
+      const packPrice = this.medService.priceAt(e.med, shop);
+      const unitPrice = e.mode === 's'
+        ? Math.ceil(packPrice / this.medService.packSize(e.med))
+        : packPrice;
+      return { entry: e, total: unitPrice * e.qty };
+    });
+    const parts = pricedEntries.map(({ entry, total }) =>
+      `${entry.med.n} (${entry.mode === 's' ? 'single' : 'full pack'}) × ${entry.qty} — Rs ${total.toLocaleString('en-US')}`);
+    this.lastOrderTotal = pricedEntries.reduce((total, e) => total + e.total, 0);
     if (this.rxFileObj) parts.push(`Prescription: ${this.rxFileObj.name}`);
     if (this.custNote.trim()) parts.push(this.custNote.trim());
     const items = parts.join(', ');
