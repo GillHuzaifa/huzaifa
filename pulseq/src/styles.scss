@@ -1974,60 +1974,6 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 .hpc:focus-visible{outline:3px solid #2381FF;outline-offset:2px}
 .hpc .rt{margin:2px 0 4px}
 .hrv{margin-top:44px}
-/* Know your signs: heart and breast self-checks */
-.ky{padding:26px 0 6px}
-.ky-in{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:14px;align-items:stretch}
-.ky-lead{display:flex;flex-direction:column;justify-content:center;gap:8px;padding-right:10px}
-.ky-lead h2{font-size:clamp(22px,2.4vw,29px)}
-.ky-lead p{color:var(--muted);font-size:14.5px;max-width:42ch}
-.ky-t{all:unset;box-sizing:border-box;cursor:pointer;display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:18px;position:relative;overflow:hidden;transition:transform .18s,box-shadow .18s}
-.ky-t:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(16,42,67,.12)}
-.ky-t:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
-.ky-h{background:#FEECEC;color:#7A1A12}.ky-b{background:#FCE8F3;color:#8A1250}
-.ky-ic{flex:none;width:54px;height:54px;border-radius:16px;background:#fff;display:grid;place-items:center}
-.ky-h .ky-ic{color:#C62E22}.ky-b .ky-ic{color:#C2185B}
-.ky-t b{display:block;font-family:var(--disp);font-size:18px;line-height:1.15}
-.ky-t small{display:block;font-size:13px;opacity:.85;margin-top:3px}
-.ky-go{margin-left:auto;flex:none;font-weight:800;font-size:13px;white-space:nowrap}
-.ky-ecg{stroke-dasharray:60;stroke-dashoffset:60;animation:kyecg 2.6s ease-in-out infinite}
-@keyframes kyecg{0%{stroke-dashoffset:60}55%,100%{stroke-dashoffset:0}}
-.ky-rib{transform-origin:50% 60%;animation:kyrib 3s ease-in-out infinite}
-@keyframes kyrib{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-@media(prefers-reduced-motion:reduce){.ky-ecg,.ky-rib{animation:none;stroke-dashoffset:0}}
-@media(max-width:900px){.ky-in{grid-template-columns:1fr 1fr}.ky-lead{grid-column:1/-1;padding:0}}
-@media(max-width:560px){.ky-in{grid-template-columns:1fr}.ky-t{padding:13px 14px}.ky-ic{width:46px;height:46px}}
-.kym{position:fixed;inset:0;z-index:1100;background:rgba(7,24,42,.62);display:flex;align-items:center;justify-content:center;padding:16px}
-.kym[hidden]{display:none}
-.kyp{background:#fff;color:var(--fg);width:min(560px,100%);max-height:92vh;overflow:auto;border-radius:22px;padding:22px 22px 20px;box-shadow:0 24px 60px rgba(7,24,42,.35);outline:none}
-@media(max-width:1023px){
-  .kym{align-items:flex-end!important;padding:0!important}
-  .kyp{width:100%!important;max-width:100%!important;border-radius:24px 24px 0 0!important;max-height:90dvh!important;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px))!important;animation:slideUp 0.22s ease-out!important}
-  .kyl span{min-height:44px!important;padding:8px 16px!important}
-}
-.kyp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.kyp h3{font-size:24px}
-.kyp-x{all:unset;cursor:pointer;width:38px;height:38px;min-height:38px;border-radius:50%;display:grid;place-items:center;background:var(--surface2);font-size:20px;line-height:1;flex:none}
-.kyp-x:focus-visible{outline:3px solid var(--focus)}
-.kyp h4{font-size:14px;margin:16px 0 8px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-family:var(--body);font-weight:800}
-.kyl{display:flex;flex-wrap:wrap;gap:8px}
-.kyl.kyl-rows{flex-direction:column}
-.kyl.kyl-rows label{width:100%;display:block}
-.kyl.kyl-rows span{width:100%;border-radius:14px;padding:10px 16px;justify-content:flex-start}
-.kyl label{position:relative;cursor:pointer}
-.kyl input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
-.kyl span{display:inline-flex;align-items:center;min-height:40px;padding:6px 14px;border-radius:999px;border:1.5px solid var(--line);font-size:14.5px;font-weight:600;background:#fff;transition:background .15s,border-color .15s}
-.kyl input:checked+span{background:var(--mint-soft);border-color:#2381FF;color:var(--mint-ink)}
-.kyl input:focus-visible+span{outline:3px solid var(--focus);outline-offset:2px}
-.kyr{margin-top:16px;border-radius:16px;padding:14px 16px;font-size:15px}
-.kyr b{display:block;font-family:var(--disp);font-size:19px;margin-bottom:4px}
-.kyr p{margin:4px 0 0}.kyr ol{margin:8px 0 0;padding-left:20px}.kyr li{margin:3px 0}
-.kyr .btn{margin-top:12px}
-.kyr-u{background:#FEE4E2;color:#7A1A12;border:2px solid #D92D20}
-.kyr-a{background:#FEF3C7;color:#78350F}
-.kyr-g{background:#DCFCE7;color:#14532D}
-.kyr-u .btn{background:#B42318;color:#fff;font-size:18px}
-.kyn{margin-top:12px;font-size:12px;font-weight:600;color:var(--fg);line-height:1.4;white-space:nowrap}
-@media(max-width:560px){.kyn{white-space:normal;font-size:12.5px}}
 /* Live heartbeat line in the hero */
 .ecg-ln{stroke-dasharray:100;stroke-dashoffset:100;animation:ecgdraw 3s linear infinite}
 .ecg-dot{offset-rotate:0deg;offset-distance:0%;opacity:0;filter:drop-shadow(0 0 6px rgba(35,129,255,.8));animation:ecgdot 3s linear infinite}
@@ -2037,15 +1983,15 @@ header.wrap .hero-l>svg,header.wrap .confirmed,header.wrap .bubble{display:none!
 header.wrap .hero-l>svg.ecg-live{display:block!important;margin-top:-10px}header.wrap .hero-l>svg.ecg-live path.ecg-tr{stroke:#DBEAFE}
 
 /* Prevent background page scrolling while modals or overlays are open */
-html:has(.kym:not([hidden]), .modal:not([hidden]), .more-sheet-backdrop),
-body:has(.kym:not([hidden]), .modal:not([hidden]), .more-sheet-backdrop) {
+html:has(.modal:not([hidden]), .more-sheet-backdrop),
+body:has(.modal:not([hidden]), .more-sheet-backdrop) {
   overflow: hidden !important;
   overscroll-behavior: none !important;
 }
-.modal, .kym, .more-sheet-backdrop {
+.modal, .more-sheet-backdrop {
   overscroll-behavior: contain;
 }
-.panel, .kyp, .botpanel, .botpanel .log {
+.panel, .botpanel, .botpanel .log {
   overscroll-behavior: contain;
 }
 
@@ -2143,7 +2089,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   }
 
   /* Keyboard & visualViewport support for open bottom sheets */
-  .panel, .kyp, .more-sheet-panel {
+  .panel, .more-sheet-panel {
     max-height: 92vh !important;
     max-height: min(92dvh, calc(var(--vv-height, 100dvh) - 12px)) !important;
     padding-bottom: calc(22px + env(safe-area-inset-bottom, 0px) + var(--vv-kb, 0px)) !important;
@@ -2159,10 +2105,10 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   /* Enforce >= 44x44px mobile touch targets across controls */
   button:not(.bm-dot):not(.hdot), .btn, .chip, .slot, .search .tabs .tab, .fdside .chip,
   .bm-chips .chip, .dtop .sm-btn, .dlist .row .st, .dsec .row .st, .drow .sm-btn,
-  .rv-s, .linkbtn, .kyp-x, .icon-btn, .ct-tab, .botx, .pub-mob-tab, .clinic-mob-tab {
+  .rv-s, .linkbtn, .icon-btn, .ct-tab, .botx, .pub-mob-tab, .clinic-mob-tab {
     min-height: 44px !important;
   }
-  .rv-s, .kyp-x, .icon-btn, .botx {
+  .rv-s, .icon-btn, .botx {
     min-width: 44px !important;
   }
 
@@ -2208,7 +2154,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     gap: 6px !important;
     font-size: 12.5px !important;
   }
-  .panel, .kyp {
+  .panel {
     padding-inline: 14px !important;
   }
 }
@@ -2221,7 +2167,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   .pub-mob-tab span, .clinic-mob-tab span, .mob-tab-lbl {
     display: none !important;
   }
-  .panel, .kyp, .more-sheet-panel {
+  .panel, .more-sheet-panel {
     max-height: 92vh !important;
     max-height: 92dvh !important;
     padding-top: 12px !important;
