@@ -74,7 +74,12 @@ import { SPEC } from '../../../data/specialties.data';
           }
         </section>
         <nav class="clinic-mobile-preview-nav" aria-label="Preview navigation">
-          <span class="active">⌂<small>Today</small></span><span>◷<small>Schedule</small></span><span>♙<small>Patients</small></span><span>⚕<small>Doctors</small></span><span>▣<small>Billing</small></span>
+          @for (r of railItems; track r[0]) {
+            <button type="button" [class.active]="state.tab === r[0]" (click)="selectTab(r[0])">
+              <span [innerHTML]="r[2]"></span>
+              <small>{{ r[1] }}</small>
+            </button>
+          }
         </nav>
       </div>
 
@@ -127,7 +132,7 @@ import { SPEC } from '../../../data/specialties.data';
               @for (r of railItems; track r[0]) {
                 <button
                   [class.on]="state.tab === r[0]"
-                  (click)="setTab(r[0])"
+                  (click)="selectTab(r[0])"
                   [attr.aria-current]="state.tab === r[0] ? 'page' : 'false'">
                   <span style="display:inline-flex;align-items:center;line-height:1" [innerHTML]="r[2]"></span>
                   {{ r[1] }}
@@ -396,7 +401,7 @@ import { SPEC } from '../../../data/specialties.data';
         <button
           class="clinic-mob-tab"
           [class.active]="state.tab === r[0]"
-          (click)="setTab(r[0])"
+          (click)="selectTab(r[0])"
           type="button"
           [attr.aria-current]="state.tab === r[0] ? 'page' : 'false'">
           <span class="mob-tab-icon" [innerHTML]="r[2]"></span>
@@ -454,6 +459,13 @@ export class ClinicDashboardComponent {
     this.state.walk = false;
     this.state.add = false;
     this.state.err = '';
+  }
+
+  selectTab(tab: string): void {
+    this.setTab(tab);
+    if (typeof window !== 'undefined' && window.innerWidth <= 760) {
+      document.getElementById('clinic-full-demo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 
   openWalkin(): void {
