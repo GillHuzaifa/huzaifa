@@ -2,6 +2,8 @@
 
 PulseQ is a high-performance, mobile-first Angular 18+ healthcare booking web application built for Pakistan. It provides real-time doctor appointments across multi-place clinics, hospital directories, surgery procedure cost comparisons, neighborhood medicine deliveries with custom blister-pack ordering, an interactive 2D/3D Body Map, and an AI healthcare triage assistant (Pulse) fluent in English and Urdu.
 
+> **Current delivery status:** This repository is a frontend/demo application. Booking, medicine-order, and surgery data currently use local mock services and browser storage for demonstration only. Do not use it with real patient data. Before production, replace those services with authenticated server APIs and server-authoritative validation, then complete the security checklist below.
+
 ---
 
 ## Architecture & Technology Stack
@@ -70,6 +72,7 @@ Permissions-Policy: camera=(), microphone=(self), geolocation=(self), payment=()
 ### 9. Production Build & Source Map Privacy
 - Angular production mode enables AOT compilation, tree-shaking, and minification.
 - **Source Maps Disabled**: Public source maps (`sourceMap: false`) are disabled in production builds to prevent exposing source comments, architecture, and internals.
+- The production Angular configuration explicitly sets `sourceMap: false`. Verify deployed artifacts contain no `.map` files.
 
 ### 10. Dependency Management & Vulnerability Scanning
 - All dependencies in `package.json` are pinned.
