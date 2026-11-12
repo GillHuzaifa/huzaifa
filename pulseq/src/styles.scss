@@ -2222,6 +2222,9 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 .clinic-preview {
   display: none;
 }
+.clinic-mobile-dashboard {
+  display: none;
+}
 
 #clinic-full-demo {
   scroll-margin-top: 20px;
@@ -2694,6 +2697,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     border-radius: 20px;
     background: #fff;
     color: #102A43;
+    position: relative;
   }
 
   .clinic-preview-heading {
@@ -2702,6 +2706,170 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     justify-content: space-between;
     min-width: 0;
   }
+
+  .clinic-mobile-dashboard {
+    display: block;
+    margin: -16px;
+    padding: 0 16px 76px;
+    background: #EAF3FF;
+    color: #102A43;
+    overflow: hidden;
+  }
+  .clinic-mobile-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 58px;
+    margin: 0 -16px;
+    padding: 0 16px;
+    background: #EAF3FF;
+  }
+  .clinic-mobile-topbar button {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #D6E6FB;
+    border-radius: 12px;
+    background: rgba(255,255,255,.82);
+    color: #123B68;
+    font-size: 22px;
+    line-height: 1;
+  }
+  .clinic-mobile-notch {
+    width: 92px;
+    height: 22px;
+    border-radius: 999px;
+    background: #08111E;
+  }
+  .clinic-mobile-welcome {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 20px 0 16px;
+  }
+  .clinic-mobile-date, .clinic-mobile-section-label {
+    display: block;
+    color: #53759B;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+  }
+  .clinic-mobile-welcome h3 {
+    margin-top: 10px;
+    font-size: 25px;
+    line-height: 1.1;
+  }
+  .clinic-mobile-welcome p {
+    margin-top: 10px;
+    color: #526477;
+    font-size: 13px;
+  }
+  .clinic-mobile-welcome p i {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-right: 5px;
+    border-radius: 50%;
+    background: #2381FF;
+  }
+  .clinic-mobile-welcome > button, .clinic-mobile-patient button {
+    min-height: 42px;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 14px;
+    background: #63A5F8;
+    color: #123B68;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .clinic-mobile-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-bottom: 14px;
+    padding: 14px 8px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.78);
+  }
+  .clinic-mobile-metrics div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    border-right: 1px solid #DCE9F8;
+  }
+  .clinic-mobile-metrics div:last-child { border-right: 0; }
+  .clinic-mobile-metrics strong { font-size: 17px; }
+  .clinic-mobile-metrics span { color: #71839A; font-size: 10px; text-align: center; }
+  .clinic-mobile-upnext {
+    padding: 18px;
+    border-radius: 22px;
+    background: linear-gradient(145deg, #123E68, #0E2B49);
+    color: #fff;
+    box-shadow: 0 16px 28px -20px #123E68;
+  }
+  .clinic-mobile-upnext .clinic-mobile-section-label { color: #73B3FF; }
+  .clinic-mobile-upnext-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 6px 0 16px;
+  }
+  .clinic-mobile-upnext-head strong { font-size: 34px; line-height: 1; }
+  .clinic-mobile-upnext-head span { color: #C7DDF5; font-size: 12px; }
+  .clinic-mobile-patient {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 9px;
+    padding: 10px;
+    border-radius: 15px;
+    background: #1D568D;
+  }
+  .clinic-mobile-initials {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex: none;
+    border-radius: 11px;
+    background: #356FA6;
+    color: #EAF3FF;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .clinic-mobile-patient div { min-width: 0; flex: 1; }
+  .clinic-mobile-patient b, .clinic-mobile-patient small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clinic-mobile-patient b { font-size: 13px; }
+  .clinic-mobile-patient small { margin-top: 3px; color: #C7DDF5; font-size: 10px; }
+  .clinic-mobile-patient button { min-height: 36px; padding-inline: 10px; font-size: 11px; }
+  .clinic-mobile-live, .clinic-mobile-schedule { margin-top: 24px; }
+  .clinic-mobile-section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+  .clinic-mobile-section-head h3 { margin-top: 5px; font-size: 20px; font-weight: 500; }
+  .clinic-mobile-section-head a { color: #2863A1; font-size: 11px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+  .clinic-mobile-doctors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+  .clinic-mobile-doctors article { min-width: 0; padding: 12px; border-radius: 17px; background: #fff; box-shadow: 0 8px 18px -18px #123E68; }
+  .clinic-mobile-doctor-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 10px; background: #EAF3FF; color: #1558B8; }
+  .clinic-mobile-doctors b, .clinic-mobile-doctors small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clinic-mobile-doctors b { margin-top: 8px; font-size: 13px; }
+  .clinic-mobile-doctors small { margin-top: 4px; font-size: 10px; }
+  .clinic-mobile-doctors button { width: 100%; min-height: 32px; margin-top: 10px; border: 0; border-radius: 10px; background: #EDF3F9; color: #38536D; font-size: 10px; font-weight: 700; }
+  .clinic-mobile-schedule { padding: 16px; border-radius: 20px; background: #fff; }
+  .clinic-mobile-schedule-row { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 14px 0; border-top: 1px solid #E8EEF5; }
+  .clinic-mobile-schedule-row:first-of-type { margin-top: 12px; }
+  .clinic-mobile-schedule-row > strong { color: #123E68; font-size: 12px; }
+  .clinic-mobile-schedule-row b, .clinic-mobile-schedule-row small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .clinic-mobile-schedule-row b { font-size: 13px; }
+  .clinic-mobile-schedule-row small { margin-top: 3px; color: #71839A; font-size: 10px; }
+  .clinic-mobile-schedule-row > span { padding: 6px 7px; border-radius: 9px; background: #EDF5FD; color: #2863A1; font-size: 9px; white-space: nowrap; }
+  .clinic-mobile-preview-nav { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; position: absolute; right: 0; bottom: 0; left: 0; padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)); background: rgba(255,255,255,.96); border-top: 1px solid #D6E6FB; }
+  .clinic-mobile-preview-nav span { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #71839A; font-size: 18px; }
+  .clinic-mobile-preview-nav span.active { color: #2381FF; }
+  .clinic-mobile-preview-nav small { font-size: 9px; font-weight: 700; }
+  .clinic-preview-stats, .clinic-preview-next, .clinic-preview-list, .clinic-preview-link { display: none !important; }
 
   .clinic-sample-label {
     display: inline-flex;

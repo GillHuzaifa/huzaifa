@@ -24,6 +24,60 @@ import { SPEC } from '../../../data/specialties.data';
         <span class="clinic-preview-chip">Lahore</span>
       </div>
 
+      <div class="clinic-mobile-dashboard" aria-label="Mobile clinic dashboard preview">
+        <div class="clinic-mobile-topbar">
+          <button type="button" aria-label="Open dashboard menu">☰</button>
+          <span class="clinic-mobile-notch" aria-hidden="true"></span>
+          <button type="button" aria-label="Search dashboard">⌕</button>
+        </div>
+        <div class="clinic-mobile-welcome">
+          <div>
+            <span class="clinic-mobile-date">MONDAY, 12 AUGUST</span>
+            <h3>Good evening</h3>
+            <p><i></i> Lahore clinic</p>
+          </div>
+          <button type="button" (click)="openWalkin()">+ Walk-in</button>
+        </div>
+        <div class="clinic-mobile-metrics">
+          <div><strong>{{ clToday().length }}</strong><span>Appointments</span></div>
+          <div><strong>{{ countDone() }}</strong><span>Checked in</span></div>
+          <div><strong>Rs {{ totalCash().toLocaleString('en-US') }}</strong><span>Collected</span></div>
+        </div>
+        @let mobileUpNext = getUpNextGroup();
+        <section class="clinic-mobile-upnext">
+          <div class="clinic-mobile-section-label">UP NEXT · IN 20 MIN</div>
+          <div class="clinic-mobile-upnext-head">
+            <strong>{{ mobileUpNext.length ? doctorsService.formatTime(mobileUpNext[0].time) : 'No more' }}</strong>
+            <span>{{ mobileUpNext.length }} waiting</span>
+          </div>
+          @for (a of mobileUpNext.slice(0, 2); track a.id) {
+            <div class="clinic-mobile-patient">
+              <span class="clinic-mobile-initials">{{ getInitials(a.patient) }}</span>
+              <div><b>{{ a.patient }}</b><small>{{ dShort(a.doc) }} · {{ a.note }}</small></div>
+              <button type="button" (click)="checkIn(a.id)">Check in</button>
+            </div>
+          }
+        </section>
+        <section class="clinic-mobile-live">
+          <div class="clinic-mobile-section-head"><div><span class="clinic-mobile-section-label">LIVE STATUS</span><h3>Doctors now</h3></div><a href="#clinic-full-demo">View all ›</a></div>
+          <div class="clinic-mobile-doctors">
+            @for (d of cfcDocs().slice(0, 2); track d.id) {
+              @let s = clStatus(d);
+              <article><span class="clinic-mobile-doctor-icon">⚕</span><b>{{ dShort(d.id) }}</b><small [style.color]="s.c">{{ s.t }}</small><button type="button" (click)="toggleBlock(d.id)">{{ state.blocked[d.id] ? 'Unblock today' : 'Block today' }}</button></article>
+            }
+          </div>
+        </section>
+        <section class="clinic-mobile-schedule">
+          <div class="clinic-mobile-section-head"><div><span class="clinic-mobile-section-label">SCHEDULE</span><h3>Rest of today</h3></div><a href="#clinic-full-demo">Full day ›</a></div>
+          @for (a of clToday().slice(0, 4); track a.id) {
+            <div class="clinic-mobile-schedule-row"><strong>{{ doctorsService.formatTime(a.time) }}</strong><div><b>{{ a.patient }}</b><small>{{ dShort(a.doc) }}</small></div><span>{{ state.done[a.id] ? 'Here' : 'Expected' }} ›</span></div>
+          }
+        </section>
+        <nav class="clinic-mobile-preview-nav" aria-label="Preview navigation">
+          <span class="active">⌂<small>Today</small></span><span>◷<small>Schedule</small></span><span>♙<small>Patients</small></span><span>⚕<small>Doctors</small></span><span>▣<small>Billing</small></span>
+        </nav>
+      </div>
+
       <div class="clinic-preview-stats">
         <article><span>Appointments today</span><strong>{{ clToday().length }}</strong></article>
         <article><span>Checked in</span><strong>{{ countDone() }}</strong></article>
