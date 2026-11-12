@@ -47,9 +47,9 @@ const SAY: Record<string, string> = {
 
         <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
-          <div class="nav-menu">
+          <div class="nav-menu" (mouseenter)="hoverNavMenu('doctors')" (mouseleave)="closeNavMenu()">
             <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'doctors'" (click)="toggleNavMenu('doctors')" [attr.aria-expanded]="openNavMenu === 'doctors'">
-              Find doctors <span aria-hidden="true">{{ openNavMenu === 'doctors' ? '⌃' : '⌄' }}</span>
+              Find Doctors <span aria-hidden="true">⌄</span>
             </button>
             <div class="nav-dropdown doctors-dropdown" *ngIf="openNavMenu === 'doctors'">
               <p class="nav-dropdown-label">By specialty</p>
@@ -63,9 +63,9 @@ const SAY: Record<string, string> = {
               </div>
             </div>
           </div>
-          <div class="nav-menu">
+          <div class="nav-menu" (mouseenter)="hoverNavMenu('hospitals')" (mouseleave)="closeNavMenu()">
             <button type="button" class="nav-menu-trigger" [class.active]="openNavMenu === 'hospitals'" (click)="toggleNavMenu('hospitals')" [attr.aria-expanded]="openNavMenu === 'hospitals'">
-              Hospitals <span aria-hidden="true">{{ openNavMenu === 'hospitals' ? '⌃' : '⌄' }}</span>
+              Hospitals <span aria-hidden="true">⌄</span>
             </button>
             <div class="nav-dropdown hospitals-dropdown" *ngIf="openNavMenu === 'hospitals'">
               <p class="nav-dropdown-label">Browse</p>
@@ -454,6 +454,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   toggleNavMenu(menu: 'doctors' | 'hospitals'): void {
     this.openNavMenu = this.openNavMenu === menu ? null : menu;
+  }
+
+  hoverNavMenu(menu: 'doctors' | 'hospitals'): void {
+    if (typeof window !== 'undefined' && window.innerWidth >= 900) {
+      this.openNavMenu = menu;
+    }
   }
 
   closeNavMenu(): void {
