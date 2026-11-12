@@ -669,7 +669,7 @@ body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointe
 
 .ab-cta{margin-top:clamp(43px,6.1vw,79px);border-radius:36px;padding:clamp(26px,3.8vw,43px);background:#EAF3FF;box-shadow:0 0 0 1.5px #D6E6FB;display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between}
 .ab-cta h2{font-size:clamp(26px,3.0vw,33px);max-width:20ch}
-.ab-note{margin-top:28px;font-size:13px;color:var(--muted)}
+.ab-note{width:100%;margin:28px 0 0;text-align:center;font-size:14px;line-height:1.5;font-weight:600;color:#33475B}
 @media (prefers-reduced-motion:reduce){.ab-dir{transition:none}}
 
 /* ===== Privacy policy page ===== */
