@@ -44,6 +44,7 @@ const SAY: Record<string, string> = {
           <img class="logo-mark" src="/Pulseq_logo.png" alt="" aria-hidden="true" width="46" height="46">
           <span>PulseQ</span>
         </a>
+        <a class="mobile-lifemap" routerLink="/life-map" routerLinkActive="active">Lifemap</a>
 
         <!-- Middle Navigation (Desktop >= 900px) - Exact match to PulseQ (14).html -->
         <nav class="nav-links" aria-label="Main">
