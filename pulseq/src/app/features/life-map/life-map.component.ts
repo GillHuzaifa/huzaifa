@@ -335,13 +335,13 @@ const RISK_FACTORS: [string, string, string][] = [
   `,
   styles: [`
     :host{display:block;color:#102A43}
-    .life-map{display:block!important;min-height:70vh;padding-top:28px;background:radial-gradient(640px 420px at 95% 0,#DBEAFE,transparent 70%),radial-gradient(560px 420px at 0 38%,rgba(224,231,255,.9),transparent 70%)}
+    .life-map{display:block!important;min-height:70vh;padding-top:28px;background:#fff}
     .life-map h1,.life-map h2,.life-map h3{font-family:var(--disp,'Bricolage Grotesque',sans-serif);font-weight:800;letter-spacing:-.02em;line-height:1.08}
-    .lm-hero{position:relative;overflow:hidden;border-radius:40px;padding:clamp(26px,4.6vw,58px) clamp(26px,4.6vw,58px) 92px;background:linear-gradient(135deg,#2381FF 0,#1558B8 62%,#0F3F86);color:#fff;box-shadow:0 30px 60px -36px rgba(12,45,94,.8)}
-    .lm-hero:before{content:"";position:absolute;right:-110px;top:-130px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(147,197,253,.5),rgba(147,197,253,0) 68%)}
+    .lm-hero{position:relative;overflow:hidden;border-radius:36px;padding:32px clamp(24px,3.6vw,40px) 36px;background:#2381FF;color:#fff}
+    .lm-hero:before{display:none}
     .eyebrow{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1558B8}
-    .lm-hero .eyebrow{color:#BFDBFE}.lm-hero h1{font-size:clamp(34px,4.6vw,60px);max-width:18ch;margin-top:12px;position:relative}.lm-hero p{max-width:520px;color:#F0F6FF;margin-top:14px;font-size:18px;position:relative}
-    .lm-hero svg{position:absolute;left:0;bottom:16px;width:100%;height:64px;opacity:.55}.lm-hero path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400}
+    .lm-hero .eyebrow{color:#BFDBFE}.lm-hero h1{font-size:clamp(30px,3vw,40px);max-width:18ch;margin-top:12px;position:relative}.lm-hero p{max-width:520px;color:#F0F6FF;margin-top:14px;font-size:17px;position:relative}
+    .lm-hero svg{position:absolute;left:0;bottom:8px;width:100%;height:28px;opacity:.55}.lm-hero path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400}
     @media(prefers-reduced-motion:no-preference){.lm-hero path{animation:lmdraw 6s ease-in-out infinite}}@keyframes lmdraw{0%{stroke-dashoffset:1400}60%,100%{stroke-dashoffset:0}}
     .lm-who{display:inline-flex;gap:4px;padding:5px;margin-top:22px;border-radius:999px;background:#fff;box-shadow:0 0 0 1.5px #E2E8F0,0 18px 36px -24px rgba(16,42,67,.5)}
     .lm-who button,.chip{min-height:44px;padding:0 18px;border:1.5px solid #E2E8F0;border-radius:999px;background:#fff;color:#526477;font:inherit;font-weight:700;font-size:15px;cursor:pointer}
