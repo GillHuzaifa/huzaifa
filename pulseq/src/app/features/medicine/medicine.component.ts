@@ -125,7 +125,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
           <div class="catalog-heading">
             <span class="eyebrow">PulseQ pharmacies</span>
             <h2>Partner pharmacies near you.</h2>
-            <p class="muted">Search by pharmacy, area or city. Open a pharmacy to browse its sample stock and prices.</p>
+            <p class="muted">Search by pharmacy, area or city. Open a pharmacy to browse its stock and prices.</p>
             <label class="sr" for="pharmacySearch">Search pharmacies</label>
             <input id="pharmacySearch" class="inp" type="search" [(ngModel)]="pharmacyQuery" placeholder="Pharmacy, area or city" autocomplete="off">
             <a class="btn btn-ink" routerLink="/medicine/catalog">Medicine catalog</a>
@@ -142,7 +142,6 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 <h3>{{ shop.n }}</h3>
                 <p class="muted">{{ shop.a }} · {{ shop.c }}</p>
                 <div class="tags"><span class="tag">{{ shop.h }}</span><span class="tag">Delivery Rs {{ shop.fee }}</span></div>
-                <p class="muted sm">Sample stock and prices for this demo.</p>
                 <a class="btn btn-ink full" [routerLink]="['/medicine/pharmacies', shop.id]">Open pharmacy</a>
               </article>
             }
@@ -179,7 +178,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 <div class="empty"><h3>No stock matches</h3><p class="muted">Try another medicine name.</p></div>
               }
             </div>
-            <p class="muted xs catalog-disclaimer">Stock and prices are sample data for this demo. Confirm availability and price with the pharmacy before ordering.</p>
+            <p class="muted xs catalog-disclaimer">Confirm current availability and prices with the pharmacy before ordering.</p>
           } @else {
             <div class="empty"><h2>Pharmacy not found</h2><p class="muted">Choose a partner pharmacy from the directory.</p></div>
           }
@@ -258,7 +257,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
             } @else if (matchingPharmacies().length === 0) {
               No partner pharmacy in “{{ selectedArea }}” yet. Try a nearby area, or send us your area on WhatsApp.
             } @else {
-              {{ matchingPharmacies().length }} {{ matchingPharmacies().length === 1 ? 'pharmacy' : 'pharmacies' }} in {{ selectedArea }}{{ isNear ? ' (near you)' : '' }}. Sample shops for this demo.
+              {{ matchingPharmacies().length }} {{ matchingPharmacies().length === 1 ? 'pharmacy' : 'pharmacies' }} in {{ selectedArea }}{{ isNear ? ' (near you)' : '' }}.
             }
           </p>
           <div class="shops" id="pShops">
@@ -395,7 +394,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                       @if (isWhere) {
                         <div class="wh">
                           <h4>Where to buy {{ m.n }}</h4>
-                          <span class="muted xs">Sample stock and prices for this demo, showing the {{ mode === 's' ? 'price of a single tablet/unit' : 'full strip/pack' }}.</span>
+                          <span class="muted xs">Showing the {{ mode === 's' ? 'price of a single tablet/unit' : 'full strip/pack' }}.</span>
                           @for (sh of sortedPharmacies(); track sh.id) {
                             @let ok = medService.isStockedAt(m, sh);
                             @let pr = medService.priceAt(m, sh);
