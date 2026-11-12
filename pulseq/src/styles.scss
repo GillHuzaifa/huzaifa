@@ -3669,6 +3669,11 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 }
 
 @media (max-width: 1023px) {
+  .botpanel .sugs {
+    flex: 0 0 auto !important;
+    min-height: 44px !important;
+  }
+
   html:not(.sheet-landscape) .botpanel {
     height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
     max-height: min(72dvh, 580px, var(--vv-sheet-height, 72dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
