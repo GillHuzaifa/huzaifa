@@ -1070,18 +1070,11 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-cta .btn-ink{background:var(--btn-bg)!important;color:#fff!important;font-weight:700;padding:0 22px;min-height:44px;box-shadow:none!important;transition:all .15s ease}
 .nav-cta .btn-ink:hover{background:var(--btn-hover)!important;color:#fff!important;transform:translateY(-1px)}
 
-.nav-item-dropdown{position:relative;display:inline-flex;align-items:center}
-.nav-item-dropdown .chevron{display:inline-flex;align-items:center;justify-content:center;transition:transform .2s ease;border:0;background:transparent;padding:0 2px;cursor:pointer;color:inherit}
-.nav-item-dropdown:hover .chevron{transform:rotate(180deg)}
-.nav-dropdown{position:absolute;top:calc(100% + 2px);left:50%;transform:translateX(-50%);min-width:225px;background:#ffffff!important;color:#102a43;border-radius:20px;border:1.5px solid #D6E6FB;box-shadow:0 24px 50px -12px rgba(12,45,94,.28);padding:10px;display:none;flex-direction:column;gap:2px;z-index:99999!important;opacity:1!important;animation:fadeIn .16s ease-out}
-.nav-item-dropdown:hover .nav-dropdown,.nav-dropdown.show{display:flex}
-.nav-dropdown .dd-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#627D98;padding:6px 12px 4px}
-.nav-dropdown a{padding:8px 12px!important;color:#102A43!important;font-size:14px!important;font-weight:500!important;border-radius:10px;text-decoration:none!important;display:block!important;min-height:auto!important;line-height:1.4!important;transition:background .12s ease,color .12s ease}
-.nav-dropdown a:hover{background:#EAF3FF!important;color:#1D6FE0!important;text-decoration:none!important}
-.nav-dropdown .dd-sep{height:1px;background:#E2E8F0;margin:5px 0}
-.nav-dropdown .dd-all{color:#1D6FE0!important;font-weight:700!important}
-.nav-menu .nav-dropdown{top:48px;width:474px;min-width:0;padding:24px 30px;display:block;flex-direction:initial;gap:initial}
+.nav-menu .nav-dropdown{top:48px;width:474px;min-width:0;padding:24px 30px;display:block;z-index:99999}
 .nav-menu .hospitals-dropdown{width:420px}
+@media(min-width:900px){
+  .nav-menu:hover .nav-dropdown{display:block}
+}
 
 /* ===== Contact page v2 ===== */
 .ct-hero-top{display:flex;flex-wrap:wrap;gap:28px 40px;align-items:center;justify-content:space-between;width:100%}
