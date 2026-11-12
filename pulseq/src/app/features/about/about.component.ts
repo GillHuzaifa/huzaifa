@@ -121,7 +121,7 @@ import { SeoService } from '../../shared/services/seo.service';
         <div class="ab-cta">
           <h2>Run a clinic, hospital or pharmacy? Partner with us.</h2>
           <div style="display:flex;flex-wrap:wrap;gap:12px">
-            <a class="btn btn-ink" routerLink="/" fragment="clinics">For clinics</a>
+            <a class="btn btn-ink" routerLink="/clinics">For clinics</a>
             <a class="btn btn-line" routerLink="/find-doctors">Find a doctor</a>
           </div>
         </div>
