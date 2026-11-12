@@ -108,8 +108,30 @@ const SAY: Record<string, string> = {
 
       <!-- Mobile Navigation Drawer (< 900px) - Exact Clean Links matching PulseQ (14).html -->
       <nav class="mobile-nav-drawer" *ngIf="mobileMenuOpen" aria-label="Mobile Navigation">
-        <a routerLink="/find-doctors" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Find doctors</a>
-        <a routerLink="/hospitals" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Hospitals</a>
+        <div class="mob-item">
+          <button type="button" class="mob-link mob-link-flat" (click)="toggleMobileDoc()" [attr.aria-expanded]="mobileDocOpen">
+            <span>Find doctors</span><span aria-hidden="true">{{ mobileDocOpen ? '⌃' : '⌄' }}</span>
+          </button>
+          <div class="mob-sub" *ngIf="mobileDocOpen">
+            <span class="mob-sub-title">By specialty</span>
+            <a routerLink="/find-doctors" [queryParams]="{spec: 'all'}" (click)="closeMobileMenu()">All doctors</a>
+            <a *ngFor="let item of specialties" routerLink="/find-doctors" [queryParams]="{spec: item[0]}" (click)="closeMobileMenu()">{{ item[1] }}</a>
+            <span class="mob-sub-title">By city</span>
+            <a *ngFor="let city of cities" routerLink="/find-doctors" [queryParams]="{city: city}" (click)="closeMobileMenu()">{{ city }}</a>
+          </div>
+        </div>
+        <div class="mob-item">
+          <button type="button" class="mob-link mob-link-flat" (click)="toggleMobileHosp()" [attr.aria-expanded]="mobileHospOpen">
+            <span>Hospitals</span><span aria-hidden="true">{{ mobileHospOpen ? '⌃' : '⌄' }}</span>
+          </button>
+          <div class="mob-sub" *ngIf="mobileHospOpen">
+            <span class="mob-sub-title">Browse</span>
+            <a routerLink="/hospitals" (click)="closeMobileMenu()">All hospitals</a>
+            <a routerLink="/hospitals" (click)="closeMobileMenu()">24/7 Emergency</a>
+            <span class="mob-sub-title">By city</span>
+            <a *ngFor="let city of cities" routerLink="/hospitals" [queryParams]="{city: city}" (click)="closeMobileMenu()">{{ city }}</a>
+          </div>
+        </div>
         <a routerLink="/surgery" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Surgery</a>
         <a routerLink="/medicine" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Medicine</a>
         <a routerLink="/clinics" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">For clinics</a>

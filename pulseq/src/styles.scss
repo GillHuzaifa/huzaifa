@@ -979,11 +979,18 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
     min-height:44px;
     display:flex;
     align-items:center;
+    justify-content:space-between;
+    width:100%;
     padding:10px 14px;
+    border:0;
+    background:transparent;
     font-size:16px;
     font-weight:600;
+    font-family:inherit;
     color:#102A43!important;
     text-decoration:none!important;
+    text-align:left;
+    cursor:pointer;
     border-radius:12px;
     transition:background .12s,color .12s;
   }
