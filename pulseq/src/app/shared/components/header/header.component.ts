@@ -156,8 +156,6 @@ const SAY: Record<string, string> = {
                 <circle class="ecg-dot" r="5.500" fill="#2381FF" style="offset-path:path('M2 24h40l10-16 14 30 12-14h36l10-16 14 30 12-14h66')"/>
               </svg>
             </div>
-            <p class="hero-desc">Search a doctor, hospital or symptom, or just tell Pulse.</p>
-
             <form class="search" role="search" (ngSubmit)="goSearch()">
               <div class="tabs" role="group" aria-label="Search type">
                 <button class="tab" type="button" [class.on]="activeTab === 'doctors'" (click)="setTab('doctors')">Doctors</button>
