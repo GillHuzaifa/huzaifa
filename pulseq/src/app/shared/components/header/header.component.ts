@@ -6,7 +6,6 @@ import { filter } from 'rxjs/operators';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
 import { MedicineService } from '../../services/medicine.service';
-import { ModalService } from '../../services/modal.service';
 import { Doctor, MedicineOrder } from '../../models';
 import { SPEC, CITIES } from '../../../data/specialties.data';
 
@@ -254,9 +253,9 @@ const SAY: Record<string, string> = {
                         <p class="muted xs">Consultation</p>
                         <p style="font-weight:700;font-size:20px">Rs {{ d.fee.toLocaleString('en-US') }}</p>
                       </div>
-                      <button class="btn btn-ink" style="flex:1 1 170px" (click)="bookHeroDoctor(d)">
+                      <a class="btn btn-ink" style="flex:1 1 170px" href="https://patient.pulseq.health">
                         Book {{ heroTime ? doctorsService.formatTime(heroTime) : '' }}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -426,7 +425,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   medicineService = inject(MedicineService);
-  modalService = inject(ModalService);
 
   orderNotification: Signal<MedicineOrder | null> = this.medicineService.activeOrder;
   orderSummary = signal<MedicineOrder | null>(null);
@@ -652,10 +650,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.heroIndex = i;
     this.updateHeroSlots();
     this.resumeCarousel();
-  }
-
-  bookHeroDoctor(d: Doctor) {
-    this.modalService.openBooking(d.id, this.heroDayOffset, this.heroTime);
   }
 
   setTab(tab: 'doctors' | 'hospitals' | 'conditions') {
