@@ -131,7 +131,6 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
               }
 
               <div class="bm-foot" style="margin-top:16px">
-                <small>Pulse suggests the kind of doctor. It does not diagnose.</small>
                 <button class="btn btn-line" type="button" (click)="seeAllDoctors(a.k)">
                   See all {{ (specPluralMap[a.k] || 'doctors').toLowerCase() }}
                 </button>

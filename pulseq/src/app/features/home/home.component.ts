@@ -134,7 +134,6 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
               </div>
             </div>
             <div class="bm-foot" style="margin-top:16px">
-              <small>Pulse suggests the kind of doctor. It does not diagnose.</small>
               <a class="btn btn-line" routerLink="/find-doctors" [queryParams]="{ spec: selectedBmArea }">
                 See all {{ (specPluralMap[selectedBmArea] || 'doctors').toLowerCase() }}
               </a>
