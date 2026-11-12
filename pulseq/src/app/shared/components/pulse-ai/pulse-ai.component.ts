@@ -40,11 +40,7 @@ import { ToastService } from '../../services/toast.service';
         <div class="bot-sheet-handle" aria-hidden="true" (touchstart)="onHeadTouchStart($event)" (touchend)="onHeadTouchEnd($event)"></div>
         <div class="chat" style="flex:1;min-height:0;border-radius:0;box-shadow:none">
           <div class="chat-head" (touchstart)="onHeadTouchStart($event)" (touchend)="onHeadTouchEnd($event)">
-            <span style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex:none">
-              <svg width="22" height="22" viewBox="0 0 36 36" aria-hidden="true">
-                <path d="M5 19h7l3-8 5 15 3-7h8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </span>
+            <img class="pulse-ai-logo" src="/Pulseq_logo.png" alt="" aria-hidden="true" width="36" height="36">
             <div class="grow">
               <b>PulseQ</b>
               <p class="xs muted" style="margin:0">Answers, support and booking</p>
