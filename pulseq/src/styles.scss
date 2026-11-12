@@ -4035,9 +4035,10 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 }
 
 /* Final responsive home hero overrides */
-#top header.wrap > .hero.home .hero-title span:nth-child(1){color:#102A43!important}
-#top header.wrap > .hero.home .hero-title span:nth-child(2){color:#1558B8!important}
-#top header.wrap > .hero.home .hero-title span:nth-child(3){color:#2381FF!important}
+#top header.wrap > .hero.home .hero-title span:nth-of-type(1){color:#102A43!important}
+#top header.wrap > .hero.home .hero-title span:nth-of-type(2){color:#1558B8!important}
+#top header.wrap > .hero.home .hero-title span:nth-of-type(3){color:#2381FF!important}
+.mobile-title-break{display:none}
 @media (min-width:900px){
   #top header.wrap > .hero.home .hero-title{
     display:flex!important;
@@ -4063,9 +4064,18 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   #top header.wrap > .hero.home .hero-title{
     display:block!important;
     max-width:100%!important;
-    font-size:clamp(34px,10vw,52px)!important;
+    font-size:clamp(28px,8.5vw,42px)!important;
     line-height:1.04!important;
-    overflow-wrap:anywhere;
+    overflow:visible;
+  }
+  #top header.wrap > .hero.home .hero-title .mobile-title-break{
+    display:block;
+  }
+  #top header.wrap > .hero.home .hero-title span{
+    white-space:nowrap;
+  }
+  #top header.wrap > .hero.home .hero-title span:first-child{
+    display:inline-block;
   }
   #top header.wrap > .hero.home .hero-title span + span{margin-left:.18em}
   #top header.wrap > .hero.home .hero-ecg-wrap{
