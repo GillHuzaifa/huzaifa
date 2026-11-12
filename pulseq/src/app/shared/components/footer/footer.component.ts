@@ -43,6 +43,7 @@ import { RouterLink } from '@angular/router';
             <a routerLink="/" fragment="conditions">Conditions</a>
             <a routerLink="/surgery">Surgery</a>
             <a routerLink="/medicine">Medicine</a>
+            <a routerLink="/life-map">Lifemap</a>
           </div>
           <div class="foot-group">
             <p class="eyebrow">Clinics</p>

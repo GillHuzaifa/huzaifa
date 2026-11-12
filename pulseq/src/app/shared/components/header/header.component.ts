@@ -81,7 +81,7 @@ const SAY: Record<string, string> = {
           </div>
           <a routerLink="/surgery" routerLinkActive="active">Surgery</a>
           <a routerLink="/medicine" routerLinkActive="active">Medicine</a>
-          <a routerLink="/life-map" routerLinkActive="active">Life Map</a>
+          <a routerLink="/life-map" routerLinkActive="active">Lifemap</a>
           <a routerLink="/clinics" routerLinkActive="active">For clinics</a>
         </nav>
 
@@ -135,7 +135,7 @@ const SAY: Record<string, string> = {
         </div>
         <a routerLink="/surgery" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Surgery</a>
         <a routerLink="/medicine" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Medicine</a>
-        <a routerLink="/life-map" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Life Map</a>
+        <a routerLink="/life-map" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Lifemap</a>
         <a routerLink="/clinics" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">For clinics</a>
         <a routerLink="/about" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">About us</a>
         <a routerLink="/contact" routerLinkActive="active" (click)="closeMobileMenu()" class="mob-link-flat">Contact us</a>

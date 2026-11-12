@@ -34,7 +34,7 @@ export const routes: Routes = [
   {
     path: 'life-map',
     loadComponent: () => import('./features/life-map/life-map.component').then(m => m.LifeMapComponent),
-    title: 'Life Map — PulseQ Pakistan'
+    title: 'Lifemap — PulseQ Pakistan'
   },
   {
     path: 'surgery',

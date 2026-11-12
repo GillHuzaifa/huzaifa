@@ -153,7 +153,7 @@ const RISK_FACTORS: [string, string, string][] = [
     <section class="sec life-map">
       <div class="wrap" id="lifeMapRoot" [attr.data-sex]="sexFilter()">
         <div class="lm-hero">
-          <span class="eyebrow">PulseQ Life Map</span>
+          <span class="eyebrow">PulseQ Lifemap</span>
           <h1>Your health, mapped age by age.</h1>
           <p>Pick your stage of life to see which tests you need, what to watch for, and what puts your health at risk.</p>
           <svg viewBox="0 0 800 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34h230l22-26 32 54 28-38 18 10h470"/></svg>
@@ -326,7 +326,7 @@ const RISK_FACTORS: [string, string, string][] = [
             </details>
           </div>
         </section>
-        <p class="disclaimer">Life Map gives general guidance based on common screening and vaccination advice. It is not a diagnosis. Your doctor may change the timing for your health, family history or local schedule. In an emergency call 1122 or 115.</p>
+        <p class="disclaimer">Lifemap gives general guidance based on common screening and vaccination advice. It is not a diagnosis. Your doctor may change the timing for your health, family history or local schedule. In an emergency call 1122 or 115.</p>
       </div>
     </section>
   `,
@@ -408,7 +408,7 @@ export class LifeMapComponent implements OnInit {
   private readonly sexGuides = SEX_STAGE;
 
   ngOnInit(): void {
-    this.seo.updateTitle('Life Map — PulseQ Pakistan');
+    this.seo.updateTitle('Lifemap — PulseQ Pakistan');
     this.seo.updateMeta('Age-by-age health screening, vaccination and wellness guidance from PulseQ.');
   }
 
