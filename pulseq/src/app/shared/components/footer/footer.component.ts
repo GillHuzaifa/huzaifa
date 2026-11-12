@@ -16,8 +16,9 @@ import { RouterLink } from '@angular/router';
             </svg>
           </div>
           <div>
-            <strong>PMC Verified Doctors</strong>
-            <span>Every doctor is verified.</span>
+            <strong>PMDC Verified</strong>
+            <span>Real doctors. Real licenses.</span>
+            <small>PAKISTAN MEDICAL &amp; DENTAL COUNCIL</small>
           </div>
         </div>
         <div class="foot-cols">
@@ -26,8 +27,13 @@ import { RouterLink } from '@angular/router';
               <img class="logo-mark" src="/Pulseq_logo.png" alt="" aria-hidden="true" width="40" height="40">
               <p>PulseQ</p>
             </div>
-            <p class="foot-description">Book doctors and hospitals online, by search or chat in Urdu and English.</p>
+            <p class="foot-description">Book trusted doctors and hospitals online, by search in Urdu and English.</p>
             <p class="hand foot-signoff">made with care in Pakistan</p>
+            <div class="foot-socials" aria-label="Social links">
+              <a href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Facebook">f</a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram">◎</a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+            </div>
           </div>
           <div class="foot-group">
             <p class="eyebrow">Patients</p>
