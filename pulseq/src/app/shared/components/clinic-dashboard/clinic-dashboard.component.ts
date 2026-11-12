@@ -425,15 +425,15 @@ import { SPEC } from '../../../data/specialties.data';
                     @for (d of cfcDocs(); track d.id) {
                       @let n = countDoneForDoctor(d.id);
                       @let c = n * d.fee;
-                      <div class="row">
-                        <span class="p"><b>{{ d.name }}</b></span>
-                        <span class="d" style="width:110px">{{ n }} {{ n === 1 ? 'patient' : 'patients' }}</span>
-                        <b>Rs {{ c.toLocaleString('en-US') }}</b>
+                      <div class="billing-row">
+                        <span class="billing-doctor"><b>{{ d.name }}</b></span>
+                        <span class="billing-patients">{{ n }} {{ n === 1 ? 'patient' : 'patients' }}</span>
+                        <b class="billing-amount">Rs {{ c.toLocaleString('en-US') }}</b>
                       </div>
                     }
-                    <div class="row">
-                      <span class="p"><b>Total</b></span>
-                      <b>Rs {{ totalCash().toLocaleString('en-US') }}</b>
+                    <div class="billing-row billing-total">
+                      <span class="billing-doctor"><b>Total</b></span>
+                      <b class="billing-amount">Rs {{ totalCash().toLocaleString('en-US') }}</b>
                     </div>
                   </div>
                 }

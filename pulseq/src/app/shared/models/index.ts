@@ -137,17 +137,6 @@ export interface Surgeon {
   tint: number;
 }
 
-export interface SurgeryRequest {
-  code: string;
-  doctor: string;
-  hospital: string;
-  proc: string;
-  when: string;
-  name: string;
-  phone: string;
-  stage: number;
-}
-
 export interface BodyMapArea {
   k: string;
   label: string;

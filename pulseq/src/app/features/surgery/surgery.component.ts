@@ -123,7 +123,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
                           <b>{{ s.n }}</b>
                           <span class="xs muted" style="display:block">{{ s.t }} · {{ s.x }} years · consultation {{ surgeryService.formatMoney(s.fee) }}</span>
                         </div>
-                        <button class="btn btn-ink" type="button" (click)="openBooking(s, pr.id)">Book consultation</button>
+                        <a class="btn btn-ink" href="https://patient.pulseq.health">Book consultation</a>
                       </div>
                     }
                   </article>
@@ -323,7 +323,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
                         <b>{{ s.n }}</b>
                         <span class="xs muted" style="display:block">{{ s.t }} · {{ s.x }} years · consultation {{ surgeryService.formatMoney(s.fee) }}</span>
                       </div>
-                      <button class="btn btn-ink" type="button" (click)="openBooking(s, pr.id)">Book consultation</button>
+                      <a class="btn btn-ink" href="https://patient.pulseq.health">Book consultation</a>
                     </div>
                   }
                 </article>
@@ -362,34 +362,11 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
             </div>
           }
 
-          @if (requests().length > 0) {
-            <div id="sReqWrap" style="margin-top:44px">
-              <h3 style="font-size:28px;margin-bottom:14px">Your surgery requests</h3>
-              <div class="mine" id="sReq">
-                @for (r of requests(); track r.code) {
-                  <div class="bk">
-                    <span class="muted xs">{{ r.hospital }}</span>
-                    <code>{{ r.code }}</code>
-                    <b>{{ r.proc }}</b>
-                    <p class="sm">{{ r.doctor }} · {{ r.when }}</p>
-                    <div class="track" aria-hidden="true">
-                      @for (st of surgeryService.stages; track st; let i = $index) {
-                        <i [class.on]="i <= r.stage"></i>
-                      }
-                    </div>
-                    <p class="xs muted">Stage {{ r.stage + 1 }} of 6 · {{ surgeryService.stages[r.stage] }}. The hospital will contact you on {{ r.phone }}.</p>
-                    <button class="btn btn-line" type="button" (click)="cancelRequest(r.code)" style="margin-top:8px">Cancel request</button>
-                  </div>
-                }
-              </div>
-            </div>
-          }
-
           <div id="sJourney" style="margin-top:56px">
             <span class="eyebrow">How it works</span>
             <h3 style="font-size:clamp(26px,3.0vw,30px);margin:6px 0 16px">Your surgery journey, stage by stage</h3>
             <div class="jsteps">
-              <div class="jstep"><span class="n">1</span><b>Request</b><p class="muted sm">Pick a surgeon and a preferred day. The hospital’s coordinator contacts you.</p></div>
+              <div class="jstep"><span class="n">1</span><b>Book consultation</b><p class="muted sm">Choose a surgeon, then complete your appointment booking in the patient portal.</p></div>
               <div class="jstep"><span class="n">2</span><b>Consultation</b><p class="muted sm">Meet the surgeon, go through options, risks and recovery.</p></div>
               <div class="jstep"><span class="n">3</span><b>Written quote</b><p class="muted sm">You get a written price that lists what is included. No pressure to accept.</p></div>
               <div class="jstep"><span class="n">4</span><b>Date and pre-op</b><p class="muted sm">Choose a surgery date and complete the tests and checklist.</p></div>
@@ -453,7 +430,6 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
           <div class="sgrid" id="fGrid">
             @for (s of surgeons.slice(0, surgeonVisibleLimit); track s.id) {
               @let h = getHospital(s.h);
-              @let pid = (fProc && s.p.indexOf(fProc) > -1) ? fProc : s.p[0];
               <article class="doc">
                 <div class="doc-top">
                   <div class="avatar t{{ s.tint }}">{{ getInitials(s.n) }}</div>
@@ -472,7 +448,7 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
                     <span class="chip" style="min-height:32px;padding:0 12px;font-size:13px;cursor:default">{{ getProcName(i) }}</span>
                   }
                 </div>
-                <button class="btn btn-ink full" type="button" (click)="openBooking(s, pid)">Book consultation</button>
+                <a class="btn btn-ink full" href="https://patient.pulseq.health">Book consultation</a>
               </article>
             }
             @if (surgeons.length === 0) {
@@ -496,92 +472,6 @@ import { Procedure, Surgeon, Hospital } from '../../shared/models';
       </section>
     }
 
-    <!-- Consultation Modal (smodal) -->
-    @if (modalOpen) {
-      <div class="modal" id="smodal" (click)="onBackdrop($event)">
-        <div class="panel" role="dialog" aria-modal="true" aria-labelledby="sTitle" tabindex="-1" id="spanel">
-          @if (!modalDone) {
-            <div id="sForm" style="display:flex;flex-direction:column;gap:18px">
-              <div class="panel-head">
-                <div class="avatar t{{ activeSurgeon?.tint }}" id="sAv">{{ getInitials(activeSurgeon?.n || '') }}</div>
-                <div class="min0">
-                  <h3 id="sTitle" style="font-size:24px">Consultation with {{ activeSurgeon?.n }}</h3>
-                  <p class="muted sm" id="sSub">{{ activeSurgeon?.t }} · {{ getHospital(activeSurgeon?.h || '')?.name }} · {{ surgeryService.formatMoney(activeSurgeon?.fee || 0) }}</p>
-                </div>
-                <button class="icon-btn x" id="sClose" aria-label="Close" (click)="closeBooking()">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-                    <path d="M6 6l12 12M18 6L6 18"></path>
-                  </svg>
-                </button>
-              </div>
-              <div>
-                <label class="lbl" for="sProc">Procedure</label>
-                <select class="inp" id="sProc" [(ngModel)]="modalProcId">
-                  @for (pid of activeSurgeon?.p || []; track pid) {
-                    <option [value]="pid">{{ getProcName(pid) }}</option>
-                  }
-                </select>
-              </div>
-              <div>
-                <span class="lbl">Preferred day</span>
-                <div class="chips" id="sDays">
-                  @for (d of dayOffsets; track d.offset) {
-                    <button class="chip" [class.on]="selectedOffset === d.offset" [attr.aria-pressed]="selectedOffset === d.offset" type="button" (click)="selectedOffset = d.offset">
-                      {{ d.label }}
-                    </button>
-                  }
-                </div>
-              </div>
-              <div>
-                <span class="lbl">Preferred time</span>
-                <div class="chips" id="sParts">
-                  @for (p of timeParts; track p[0]) {
-                    <button class="chip" [class.on]="selectedPart === p[0]" [attr.aria-pressed]="selectedPart === p[0]" type="button" (click)="selectedPart = p[0]">
-                      {{ p[1] }}
-                    </button>
-                  }
-                </div>
-              </div>
-              <div>
-                <label class="lbl" for="sName">Patient name</label>
-                <input class="inp" id="sName" type="text" [(ngModel)]="patientName" autocomplete="name" autocapitalize="words" enterkeyhint="next">
-              </div>
-              <div>
-                <label class="lbl" for="sPhone">Mobile number</label>
-                <input class="inp" id="sPhone" type="tel" inputmode="numeric" placeholder="03xx xxxxxxx" [(ngModel)]="patientPhone" autocomplete="tel" enterkeyhint="next">
-              </div>
-              <div>
-                <label class="lbl" for="sNote">Anything the surgeon should know? (optional)</label>
-                <textarea class="inp" id="sNote" style="min-height:80px" placeholder="e.g. pain for 6 months, previous surgery" [(ngModel)]="patientNote"></textarea>
-              </div>
-              <p class="err" id="sErr" role="alert" *ngIf="modalError">{{ modalError }}</p>
-              <button class="btn btn-coral full" id="sGo" type="button" (click)="submitBooking()">Request consultation</button>
-            </div>
-          } @else {
-            <div id="sDone" style="display:flex;flex-direction:column;gap:16px">
-              <div style="display:flex;align-items:center;gap:12px">
-                <span style="width:48px;height:48px;border-radius:50%;background:var(--mint);display:flex;align-items:center;justify-content:center;flex:none">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#102A43" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12.5l4.5 4.5L19 7.5"></path>
-                  </svg>
-                </span>
-                <h3 style="font-size:28px">Request sent</h3>
-              </div>
-              <p id="sMsg" style="font-size:18px">We have sent your consultation request to {{ activeSurgeon?.n }} at {{ getHospital(activeSurgeon?.h || '')?.name }}.</p>
-              <div class="bk">
-                <span class="muted xs">Request code</span>
-                <code id="sCode">{{ lastCreatedRequest?.code }}</code>
-                <p class="sm" id="sWhat">{{ lastCreatedRequest?.proc }} · {{ lastCreatedRequest?.doctor }} · {{ lastCreatedRequest?.when }}</p>
-                <div class="track" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
-                <p class="xs muted">Stage 1 of 6 · After the consultation you receive a written quote.</p>
-              </div>
-              <p class="muted sm">Demo note: requests here are saved in this browser only.</p>
-              <button class="btn btn-ink full" id="sCloseDone" type="button" (click)="closeBooking()">Done</button>
-            </div>
-          }
-        </div>
-      </div>
-    }
   `,
   styles: [`
     :host { display: block; }
@@ -699,27 +589,6 @@ export class SurgeryComponent implements OnInit {
   ];
   fCities = ['all', 'Islamabad', 'Rawalpindi', 'Lahore', 'Karachi'];
 
-  // Modal state
-  modalOpen = false;
-  modalDone = false;
-  modalError = '';
-  activeSurgeon: Surgeon | null = null;
-  modalProcId = 8;
-  selectedOffset = 1;
-  selectedPart = 'morning';
-  patientName = '';
-  patientPhone = '';
-  patientNote = '';
-  lastCreatedRequest: any = null;
-
-  timeParts = [
-    ['morning', 'Morning'],
-    ['afternoon', 'Afternoon'],
-    ['evening', 'Evening']
-  ];
-
-  dayOffsets: { offset: number; label: string }[] = [];
-
   ngOnInit(): void {
     const [path, query = ''] = this.router.url.split('?');
     if (path === '/surgery/procedures') {
@@ -745,7 +614,6 @@ export class SurgeryComponent implements OnInit {
     } else {
       this.seo.setPage('Surgery & Procedures');
     }
-    this.buildDays();
   }
 
   resetProcedurePage(): void {
@@ -778,18 +646,6 @@ export class SurgeryComponent implements OnInit {
 
   procedureCategoryName(key: string): string {
     return this.surgeryService.categories().find(category => category.k === key)?.t || 'Procedure';
-  }
-
-  buildDays(): void {
-    const arr: { offset: number; label: string }[] = [];
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    for (let o = 1; o <= 7; o++) {
-      const d = new Date();
-      d.setDate(d.getDate() + o);
-      arr.push({ offset: o, label: `${days[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}` });
-    }
-    this.dayOffsets = arr;
   }
 
   getProcsCount(cat: string): number {
@@ -877,14 +733,6 @@ export class SurgeryComponent implements OnInit {
     };
   }
 
-  requests() {
-    return this.surgeryService.requests();
-  }
-
-  cancelRequest(code: string): void {
-    this.surgeryService.cancelRequest(code);
-  }
-
   browseSurgeonsForProc(procId: number): void {
     this.router.navigate(['/surgery/surgeons'], { queryParams: { procedure: procId } });
   }
@@ -929,63 +777,4 @@ export class SurgeryComponent implements OnInit {
     return name.replace('Dr. ', '').split(' ').map(w => w[0]).slice(0, 2).join('');
   }
 
-  openBooking(s: Surgeon, pid: number): void {
-    this.activeSurgeon = s;
-    this.modalProcId = pid;
-    this.selectedOffset = 1;
-    this.selectedPart = 'morning';
-    this.patientName = '';
-    this.patientPhone = '';
-    this.patientNote = '';
-    this.modalError = '';
-    this.modalDone = false;
-    this.modalOpen = true;
-  }
-
-  closeBooking(): void {
-    this.modalOpen = false;
-    this.activeSurgeon = null;
-  }
-
-  onBackdrop(e: MouseEvent): void {
-    if ((e.target as HTMLElement).classList.contains('modal')) {
-      this.closeBooking();
-    }
-  }
-
-  submitBooking(): void {
-    const name = this.patientName.trim();
-    const ph = this.patientPhone.replace(/[^0-9]/g, '');
-    if (name.length < 2) {
-      this.modalError = 'Enter the patient’s name.';
-      return;
-    }
-    if (ph.length < 10 || ph.length > 13) {
-      this.modalError = 'Enter a mobile number with 10 to 13 digits.';
-      return;
-    }
-
-    const s = this.activeSurgeon!;
-    const h = this.getHospital(s.h);
-    const pr = this.surgeryService.getProcedureById(Number(this.modalProcId))!;
-    const dObj = this.dayOffsets.find(d => d.offset === this.selectedOffset);
-    const when = `${dObj?.label || 'Tomorrow'}, ${this.selectedPart}`;
-
-    const code = this.surgeryService.createRequest({
-      doctor: s.n,
-      hospital: h?.name || '',
-      proc: pr?.n || '',
-      when: when,
-      name: name,
-      phone: this.patientPhone.trim()
-    });
-
-    this.lastCreatedRequest = {
-      code,
-      doctor: s.n,
-      proc: pr?.n,
-      when
-    };
-    this.modalDone = true;
-  }
 }

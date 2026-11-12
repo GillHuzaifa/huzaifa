@@ -175,6 +175,11 @@ button.st{border:0;cursor:pointer;font-family:inherit;min-height:28px}
 .drow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 12px;padding:10px 0;border-top:1px solid #E2E8F0}
 .drow .av{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex:none}
 .dsec{background:#fff;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column}
+.billing-row{display:grid;grid-template-columns:minmax(0,1fr) 110px 110px;align-items:center;gap:12px;padding:9px 0;border-top:1px solid #E2E8F0}
+.billing-doctor{min-width:0}
+.billing-patients,.billing-amount{text-align:right;white-space:nowrap}
+.billing-patients{color:#526477}
+.billing-total{grid-template-columns:minmax(0,1fr) 110px}
 .derr{color:#B42318;font-size:12px;min-height:16px}
 .rail div{width:56px;padding:8px 0;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:#B6C6D8}
 .rail div.on{background:#1A4A92;color:#fff}

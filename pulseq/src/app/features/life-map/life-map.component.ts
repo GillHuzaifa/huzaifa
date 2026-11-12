@@ -337,7 +337,7 @@ const RISK_FACTORS: [string, string, string][] = [
     :host{display:block;color:#102A43}
     .life-map{display:block!important;min-height:70vh;padding-top:28px;background:#fff}
     .life-map h1,.life-map h2,.life-map h3{font-family:var(--disp,'Bricolage Grotesque',sans-serif);font-weight:800;letter-spacing:-.02em;line-height:1.08}
-    .lm-hero{position:relative;overflow:hidden;border-radius:36px;padding:32px clamp(24px,3.6vw,40px) 36px;background:#2381FF;color:#fff;text-align:center}
+    .lm-hero{position:relative;overflow:hidden;margin-inline:calc(50% - 50vw);border-radius:12px;padding:32px clamp(24px,3.6vw,40px) 36px;background:#2381FF;color:#fff;text-align:center}
     .lm-hero:before{display:none}
     .eyebrow{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1558B8}
     .lm-hero .eyebrow{color:#BFDBFE}.lm-hero h1{font-size:clamp(30px,3vw,40px);max-width:18ch;margin:12px auto 0;position:relative}.lm-hero p{max-width:520px;color:#F0F6FF;margin:14px auto 0;font-size:17px;position:relative}
@@ -383,7 +383,7 @@ const RISK_FACTORS: [string, string, string][] = [
     @media(prefers-reduced-motion:reduce){.orb .out{opacity:1;position:static;margin-left:4px}.orb .in{position:static}.orb{flex-direction:column}}
     .exercise-list li{display:grid;grid-template-columns:28px minmax(0,1fr);align-items:start;column-gap:10px;row-gap:6px}.exercise-list li b{display:block;min-width:0;font-weight:700}.exercise-list li .lm-pill{grid-column:2;justify-self:start;max-width:100%;text-align:left}.exercise-number{flex:none;width:28px;height:28px;border-radius:50%;background:#DBEAFE;color:#1558B8;font-weight:800;font-size:13px;display:grid;place-items:center}.safety-copy{margin:0 0 14px;font-size:15px}.disclaimer{margin-top:36px;padding:18px 22px;background:#EFF6FF;border:1px solid #BFDBFE;border-left:5px solid #2381FF;border-radius:16px;color:#102A43;font-size:16px;font-weight:600;line-height:1.6}
     @media(max-width:860px){.lm-body,.tp-grid{grid-template-columns:1fr}.lm-lead{position:static}.md-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}}
-    @media(max-width:600px){.lm-hero{border-radius:28px;padding-bottom:80px}.lm-who{max-width:100%;display:flex}.lm-who button{padding-inline:16px;flex:1}.lm-card{padding:18px}.lm-card.wide{grid-column:auto}.tp-warn{grid-column:auto}.tp-warn ul{columns:1}.sign-title b{font-size:18px}.sign-time{font-size:12px}}
+    @media(max-width:600px){.lm-hero{padding-bottom:80px}.lm-who{max-width:100%;display:flex}.lm-who button{padding-inline:16px;flex:1}.lm-card{padding:18px}.lm-card.wide{grid-column:auto}.tp-warn{grid-column:auto}.tp-warn ul{columns:1}.sign-title b{font-size:18px}.sign-time{font-size:12px}}
   `]
 })
 export class LifeMapComponent implements OnInit {

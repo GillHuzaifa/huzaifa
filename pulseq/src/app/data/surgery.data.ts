@@ -8,7 +8,6 @@ export const SCATS: SurgeryCategory[] = [
   { k: "women", t: "Women’s health", s: "Hysterectomy, caesarean", cls: "t1" },
   { k: "other", t: "ENT, kidney and dental", s: "Tonsils, stones, wisdom teeth", cls: "t2" }
 ];
-
 export const PROCS: Procedure[] = [
   { id: 1, c: "heart", n: "Coronary bypass (CABG)", d: "Reroutes blood around blocked heart arteries.", stay: "7 to 10 days", rec: "6 to 12 weeks", lo: 900000, hi: 1600000 },
   { id: 2, c: "heart", n: "Heart valve replacement", d: "Replaces a damaged heart valve with a new one.", stay: "7 to 10 days", rec: "6 to 12 weeks", lo: 1100000, hi: 2000000 },
@@ -55,13 +54,4 @@ export const SURGS: Surgeon[] = [
   { id: 8, n: "Dr. Faisal Qadir", t: "Cataract and Laser Eye Surgeon", h: "sunrise", x: 19, p: [3, 4], fee: 2800, c: "eye", tint: 1 },
   { id: 9, n: "Dr. Hira Latif", t: "ENT Surgeon", h: "lakeview", x: 10, p: [13], fee: 2000, c: "other", tint: 4 },
   { id: 10, n: "Dr. Anum Rauf", t: "Oral and Maxillofacial Surgeon", h: "meridian", x: 9, p: [15], fee: 1800, c: "other", tint: 3 }
-];
-
-export const STAGES = [
-  "Request sent",
-  "Consultation",
-  "Written quote",
-  "Date and pre-op",
-  "Surgery",
-  "Follow-up"
 ];
