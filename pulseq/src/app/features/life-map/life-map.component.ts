@@ -156,7 +156,7 @@ const RISK_FACTORS: [string, string, string][] = [
         <div class="lm-hero">
           <span class="eyebrow">PulseQ Lifemap</span>
           <h1>Your health, mapped age by age.</h1>
-          <p>Pick your stage of life to see which tests you need, what to watch for, and what puts your health at risk.</p>
+          <p>Choose a life stage to explore recommended screenings, preventive care, and key health considerations.</p>
           <svg viewBox="0 0 800 64" preserveAspectRatio="none" aria-hidden="true"><path d="M0 34h230l22-26 32 54 28-38 18 10h470"/></svg>
         </div>
 
