@@ -340,7 +340,7 @@ const RISK_FACTORS: [string, string, string][] = [
     .lm-hero{position:relative;overflow:hidden;border-radius:40px;padding:clamp(26px,4.6vw,58px) clamp(26px,4.6vw,58px) 92px;background:linear-gradient(135deg,#2381FF 0,#1558B8 62%,#0F3F86);color:#fff;box-shadow:0 30px 60px -36px rgba(12,45,94,.8)}
     .lm-hero:before{content:"";position:absolute;right:-110px;top:-130px;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(147,197,253,.5),rgba(147,197,253,0) 68%)}
     .eyebrow{display:block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1558B8}
-    .lm-hero .eyebrow{color:#BFDBFE}.lm-hero h1{font-size:clamp(36px,6.4vw,72px);max-width:11ch;margin-top:12px;position:relative}.lm-hero p{max-width:520px;color:#F0F6FF;margin-top:14px;font-size:18px;position:relative}
+    .lm-hero .eyebrow{color:#BFDBFE}.lm-hero h1{font-size:clamp(34px,4.6vw,60px);max-width:18ch;margin-top:12px;position:relative}.lm-hero p{max-width:520px;color:#F0F6FF;margin-top:14px;font-size:18px;position:relative}
     .lm-hero svg{position:absolute;left:0;bottom:16px;width:100%;height:64px;opacity:.55}.lm-hero path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1400}
     @media(prefers-reduced-motion:no-preference){.lm-hero path{animation:lmdraw 6s ease-in-out infinite}}@keyframes lmdraw{0%{stroke-dashoffset:1400}60%,100%{stroke-dashoffset:0}}
     .lm-who{display:inline-flex;gap:4px;padding:5px;margin-top:22px;border-radius:999px;background:#fff;box-shadow:0 0 0 1.5px #E2E8F0,0 18px 36px -24px rgba(16,42,67,.5)}
