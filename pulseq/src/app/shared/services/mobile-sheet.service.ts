@@ -36,9 +36,7 @@ export class MobileSheetService {
     document.addEventListener('keydown', (event) => {
       if (this.stack.length === 0) return;
       const top = this.stack[this.stack.length - 1];
-      const dialog = top.id === 'ai'
-        ? document.querySelector<HTMLElement>('.botpanel[role="dialog"]')
-        : top.id === 'booking'
+      const dialog = top.id === 'booking'
           ? document.querySelector<HTMLElement>('.modal [role="dialog"]')
           : document.querySelector<HTMLElement>('.more-sheet-backdrop[role="dialog"]');
       if (!dialog) return;
@@ -144,9 +142,7 @@ export class MobileSheetService {
     }
 
     this.stack.push({ id, onClose, previousFocus });
-    const dialogSelector = id === 'ai'
-      ? '.botpanel[role="dialog"]'
-      : id === 'booking'
+    const dialogSelector = id === 'booking'
         ? '.modal [role="dialog"]'
         : '.more-sheet-backdrop[role="dialog"]';
     setTimeout(() => {

@@ -7,7 +7,6 @@ import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
 import { MedicineService } from '../../services/medicine.service';
 import { ModalService } from '../../services/modal.service';
-import { PulseAiService } from '../../services/pulse-ai.service';
 import { Doctor, MedicineOrder } from '../../models';
 import { SPEC, CITIES } from '../../../data/specialties.data';
 
@@ -57,9 +56,6 @@ const SAY: Record<string, string> = {
 
         <!-- Right Action Button & Mobile Hamburger -->
         <div class="nav-cta">
-          <button class="ask-pulse-nav" type="button" (click)="pulseAi.open()" aria-label="Ask PulseQ">
-            Ask Pulse
-          </button>
           <a class="btn btn-ink desk-book" routerLink="/find-doctors">Book now</a>
           <button
             class="hamburger-btn"
@@ -262,7 +258,6 @@ const SAY: Record<string, string> = {
         <div class="trust home">
           <span>Verified doctors</span>
           <span>Live, real time slots</span>
-          <span>PulseQ AI assists in Urdu and English</span>
           <span>Pay online or at the clinic</span>
         </div>
       </ng-container>
@@ -381,7 +376,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   hospitalsService = inject(HospitalsService);
   medicineService = inject(MedicineService);
   modalService = inject(ModalService);
-  pulseAi = inject(PulseAiService);
 
   orderNotification: Signal<MedicineOrder | null> = this.medicineService.activeOrder;
   orderSummary = signal<MedicineOrder | null>(null);
@@ -640,8 +634,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  openAiUrdu(): void {
-    this.pulseAi.setLanguage('ur-PK');
-    this.pulseAi.open();
-  }
 }

@@ -6,7 +6,6 @@ import { HeaderComponent } from './shared/components/header/header.component';
 import { FooterComponent } from './shared/components/footer/footer.component';
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { ModalComponent } from './shared/components/modal/modal.component';
-import { PulseAiComponent } from './shared/components/pulse-ai/pulse-ai.component';
 import { MobileSheetService } from './shared/services/mobile-sheet.service';
 
 @Component({
@@ -21,7 +20,6 @@ import { MobileSheetService } from './shared/services/mobile-sheet.service';
     FooterComponent,
     ToastComponent,
     ModalComponent,
-    PulseAiComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

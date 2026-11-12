@@ -136,7 +136,7 @@ import { SPEC } from '../../data/specialties.data';
             } @else {
               <div class="empty" style="grid-column:1/-1">
                 <h3 style="font-size:26px">No doctors listed yet</h3>
-                <p class="muted">This hospital is joining PulseQ. Ask Pulse to find a similar doctor nearby.</p>
+                <p class="muted">This hospital is joining PulseQ. Try searching for a similar doctor nearby.</p>
               </div>
             }
           </div>

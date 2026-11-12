@@ -1,6 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { PulseAiService } from '../../services/pulse-ai.service';
 
 @Component({
   selector: 'app-footer',
@@ -35,7 +34,6 @@ import { PulseAiService } from '../../services/pulse-ai.service';
             <a routerLink="/find-doctors">Find a doctor</a>
             <a routerLink="/hospitals">Hospitals</a>
             <a routerLink="/" fragment="conditions">Conditions</a>
-            <a href="javascript:void(0)" (click)="openAi()">PulseQ AI</a>
             <a routerLink="/surgery">Surgery</a>
             <a routerLink="/medicine">Medicine</a>
           </div>
@@ -73,9 +71,4 @@ import { PulseAiService } from '../../services/pulse-ai.service';
   `
 })
 export class FooterComponent {
-  private aiService = inject(PulseAiService);
-
-  openAi(): void {
-    this.aiService.open();
-  }
 }

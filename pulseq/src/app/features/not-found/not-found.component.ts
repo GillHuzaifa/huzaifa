@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { PulseAiService } from '../../shared/services/pulse-ai.service';
 import { SeoService } from '../../shared/services/seo.service';
 
 @Component({
@@ -20,7 +19,6 @@ import { SeoService } from '../../shared/services/seo.service';
           <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
             <a class="btn btn-ink" routerLink="/" style="background: #fff; color: var(--navy);">Back to home</a>
             <a class="btn btn-line" routerLink="/find-doctors" style="color: #fff; border-color: rgba(255,255,255,0.4);">Find doctors</a>
-            <button class="btn btn-soft" type="button" (click)="openAi()" style="background: rgba(255,255,255,0.15); color: #fff;">Ask Pulse</button>
           </div>
         </div>
       </div>
@@ -31,7 +29,6 @@ import { SeoService } from '../../shared/services/seo.service';
   `]
 })
 export class NotFoundComponent {
-  private pulseAi = inject(PulseAiService);
   private seo = inject(SeoService);
 
   constructor() {
@@ -39,7 +36,4 @@ export class NotFoundComponent {
     this.seo.updateMeta('The page you requested could not be found. Return to PulseQ to book doctors and find hospitals.');
   }
 
-  openAi() {
-    this.pulseAi.open();
-  }
 }

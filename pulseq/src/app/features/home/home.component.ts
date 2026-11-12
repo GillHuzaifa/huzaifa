@@ -5,7 +5,6 @@ import { Router, RouterLink } from '@angular/router';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { ModalService } from '../../shared/services/modal.service';
-import { PulseAiService } from '../../shared/services/pulse-ai.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { DoctorCardComponent } from '../../shared/components/doctor-card/doctor-card.component';
 import { ClinicDashboardComponent } from '../../shared/components/clinic-dashboard/clinic-dashboard.component';
@@ -14,7 +13,7 @@ import { SHOPS } from '../../data/pharmacies.data';
 import { SITE } from '../../data/site.data';
 import { BM_AREAS, BM_CHILD } from '../../data/body-map.data';
 import { ABOUT } from '../../data/about.data';
-import { Doctor, Hospital, Slot } from '../../shared/models';
+import { Doctor, Hospital } from '../../shared/models';
 import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map-3d';
 import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
 
@@ -184,34 +183,6 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
       </div>
     </section>
 
-    <!-- PULSE AI SECTION -->
-    <section class="sec dk home" id="ai">
-      <div class="wrap dk-two">
-        <div style="flex:1 1 400px;min-width:0;display:flex;flex-direction:column;gap:24px">
-          <span class="eyebrow">PulseQ AI assistant</span>
-          <h2 style="font-size:clamp(29px,4.3vw,55px);color:#fff">Type it. PulseQ books it.</h2>
-          <p class="muted" style="font-size:19px;max-width:480px">Type in your own words. PulseQ finds a doctor, checks real free slots and holds your visit in one conversation.</p>
-        </div>
-
-        <div style="flex:1 1 440px;min-width:0">
-          <div class="aicta">
-            <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true">
-              <path d="M32 8v8" />
-              <circle cx="32" cy="7" r="3" fill="currentColor"/>
-              <rect x="12" y="16" width="40" height="32" rx="12" />
-              <path d="M6 30v8M58 30v8" />
-              <circle cx="24" cy="31" r="3.5" fill="currentColor" stroke="none"/>
-              <circle cx="40" cy="31" r="3.5" fill="currentColor" stroke="none"/>
-              <path d="M24 40c4 3 12 3 16 0"/>
-              <path d="M22 48v6h20v-6"/>
-            </svg>
-            <h3 style="color:#fff;font-size:30px">PulseQ is always one tap away</h3>
-            <p class="muted">Look for the blue robot at the bottom right of every page. Ask a question, get support or book a visit.</p>
-            <button class="btn btn-mint" type="button" (click)="openPulseAi()">Chat with PulseQ</button>
-          </div>
-        </div>
-      </div>
-    </section>
     <!-- HOW IT WORKS (3 STEPS) -->
     <section class="sec home">
       <div class="wrap">
@@ -344,8 +315,6 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
         <div style="flex:2 1 500px;display:flex;flex-direction:column;gap:12px;min-width:0">
           <details><summary>Do I pay online?</summary><p>You choose. Pay online when you book, or pay at the clinic when you arrive, depending on what the doctor offers.</p></details>
           <details><summary>Can I change or cancel a booking?</summary><p>Yes. Cancel from your appointments list, or reschedule within the time limit the clinic sets. You see the limit before you confirm.</p></details>
-          <details><summary>Does PulseQ AI give medical advice?</summary><p>No. PulseQ helps you find the right kind of doctor and book a time. It does not diagnose. For a severe emergency, call 1122 immediately.</p></details>
-          <details><summary>Can I chat with PulseQ in Urdu?</summary><p>Yes. You can write in Urdu, English or a mix of both, and use our built-in on-screen Urdu writing tools.</p></details>
           <details><summary>How are doctors verified?</summary><p>Every doctor and facility is checked before their profile goes live on PulseQ.</p></details>
         </div>
       </div>
@@ -357,7 +326,6 @@ import { MobileSheetService } from '../../shared/services/mobile-sheet.service';
         <h2>Your next appointment is one sentence away.</h2>
         <div style="display:flex;flex-wrap:wrap;gap:12px">
           <a class="btn btn-ink" routerLink="/find-doctors" style="background:#0C2D5E;color:#fff">Find a doctor</a>
-          <a class="btn btn-line" (click)="scrollToAi()" style="color:#FFFFFF;box-shadow:inset 0 0 0 1.5px #FFFFFF;cursor:pointer">Try PulseQ AI</a>
         </div>
       </div>
     </section>
@@ -400,7 +368,6 @@ export class HomeComponent implements OnInit {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   modalService = inject(ModalService);
-  pulseAi = inject(PulseAiService);
   seo = inject(SeoService);
   private mobileSheet = inject(MobileSheetService);
 
@@ -621,90 +588,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  // Inline AI Assistant in section
-  aiLang = 'en-US';
-  aiInput = '';
-  showInlineUrduKeyboard = false;
-  inlineAiMessages: {
-    from: 'bot' | 'user';
-    text: string;
-    isHtml?: boolean;
-    doctorOptions?: { doctor: Doctor; slot: Slot }[];
-  }[] = [
-    {
-      from: 'bot',
-      text: 'Hi, I’m PulseQ. I can answer questions, help with support and book your visit. Tell me what’s wrong or who you’d like to see. You can type in English or Urdu.'
-    },
-    {
-      from: 'user',
-      text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">Example</span>Mujhe do din se bukhar hai, kal shaam ko appointment chahiye.',
-      isHtml: true
-    }
-  ];
-
-  aiSuggestionsEn = [
-    'Fever since two days',
-    'Skin rash, tomorrow evening',
-    'Child check-up on Friday',
-    'Dil mein dard, kal subah',
-    'How do I order medicine?',
-    'How do I book a surgery?'
-  ];
-
-  aiSuggestionsUr = [
-    'مجھے دو دن سے بخار ہے',
-    'جلد کی الرجی یا دانوں کا معائنہ',
-    'دل کے معائنے کے لیے ڈاکٹر',
-    'بچوں کا ڈاکٹر کل کے لیے',
-    'دوائی آرڈر کیسے کروں؟',
-    'سرجری کی معلومات'
-  ];
-
-  currentAiSuggestions(): string[] {
-    return this.aiLang === 'ur-PK' ? this.aiSuggestionsUr : this.aiSuggestionsEn;
-  }
-
-  pickAiSuggestion(s: string): void {
-    this.aiInput = s;
-    this.sendInlineAi();
-  }
-
-  setUrduAiBlock(): void {
-    this.aiLang = 'ur-PK';
-    this.onAiLangChange();
-    if (typeof document !== 'undefined') {
-      const el = document.getElementById('ai');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => {
-        const inp = document.getElementById('homeAiMsg');
-        if (inp) inp.focus();
-      }, 350);
-    }
-  }
-
-  urduQuickPhrases = [
-    'سر میں درد',
-    'بخار اور کھانسی',
-    'دل کا ڈاکٹر',
-    'جلد کی الرجی',
-    'بچوں کا معائنہ',
-    'دانت کا درد',
-    'ہڈیوں اور جوڑوں کا درد',
-    'کل شام'
-  ];
-
-  urduKeysRow1 = ['آ', 'ا', 'ب', 'پ', 'ت', 'ٹ', 'ث', 'ج', 'چ', 'ح', 'خ'];
-  urduKeysRow2 = ['د', 'ڈ', 'ذ', 'ر', 'ڑ', 'ز', 'ژ', 'س', 'ش', 'ص', 'ض'];
-  urduKeysRow3 = ['ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'ں'];
-  urduKeysRow4 = ['و', 'ہ', 'ھ', 'ء', 'ی', 'ے', '،', '؟'];
-
   constructor() {
     this.seo.setPage('PulseQ — Your health, one tap away.');
   }
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
-      window.addEventListener('pulseq:set-urdu-ai', () => this.setUrduAiBlock());
       if (window.location.hash) {
         setTimeout(() => {
           const id = window.location.hash.slice(1);
@@ -800,7 +689,7 @@ export class HomeComponent implements OnInit {
       this.symptomNote = `Suggested specialist: ${SPEC[detected]}`;
       this.router.navigate(['/find-doctors'], { queryParams: { spec: detected, q } });
     } else {
-      this.symptomNote = `No exact specialty match for "${q}". Search all doctors or ask PulseQ AI.`;
+      this.symptomNote = `No exact specialty match for "${q}". Search all doctors or try another symptom.`;
     }
   }
 
@@ -829,97 +718,4 @@ export class HomeComponent implements OnInit {
     return list.filter(h => h.city.toLowerCase() === c.toLowerCase());
   }
 
-  // AI
-  openPulseAi() {
-    this.pulseAi.open();
-  }
-
-  openFloatingChat(): void {
-    this.pulseAi.open();
-  }
-
-  scrollToAi() {
-    if (typeof document !== 'undefined') {
-      const el = document.getElementById('ai');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  onAiLangChange(): void {
-    if (this.aiLang === 'ur-PK') {
-      this.showInlineUrduKeyboard = true;
-      if (this.inlineAiMessages.length <= 2) {
-        this.inlineAiMessages = [
-          {
-            from: 'bot',
-            text: 'سلام! میں PulseQ ہوں۔ میں اردو یا انگریزی میں آپ کے سوالات کا جواب، ڈاکٹر کی تلاش اور اپائنٹمنٹ بکنگ میں مدد کر سکتا ہوں۔ آپ اپنی ضرورت یا علامت لکھ سکتے ہیں۔'
-          },
-          {
-            from: 'user',
-            text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">مثال</span>مجھے دو دن سے بخار ہے، کل شام کو اپائنٹمنٹ چاہیے',
-            isHtml: true
-          }
-        ];
-      }
-    } else {
-      this.showInlineUrduKeyboard = false;
-      if (this.inlineAiMessages.length <= 2) {
-        this.inlineAiMessages = [
-          {
-            from: 'bot',
-            text: 'Hi, I’m PulseQ. I can answer questions, help with support and book your visit. Tell me what’s wrong or who you’d like to see. You can type in English or Urdu.'
-          },
-          {
-            from: 'user',
-            text: '<span class="xs" style="opacity:.8;display:block;margin-bottom:2px">Example</span>Mujhe do din se bukhar hai, kal shaam ko appointment chahiye.',
-            isHtml: true
-          }
-        ];
-      }
-    }
-  }
-
-  insertInlineUrdu(phrase: string): void {
-    this.aiInput = phrase;
-    this.sendInlineAi();
-  }
-
-  addInlineUrduChar(char: string): void {
-    this.aiInput += char;
-  }
-
-  backspaceInlineUrdu(): void {
-    if (this.aiInput.length > 0) {
-      this.aiInput = this.aiInput.slice(0, -1);
-    }
-  }
-
-  clearInlineUrdu(): void {
-    this.aiInput = '';
-  }
-
-  isUrduText(text: string): boolean {
-    return /[\u0600-\u06FF]/.test(text);
-  }
-
-  bookAiDoctor(docId: number, o: number, t: string) {
-    this.modalService.openBooking(docId, o, t);
-  }
-
-  sendInlineAi() {
-    const text = this.aiInput.trim();
-    if (!text) return;
-    this.inlineAiMessages.push({ from: 'user', text });
-    this.aiInput = '';
-
-    const res = this.pulseAi.getSmartReplyDetailed(text);
-    setTimeout(() => {
-      this.inlineAiMessages.push({
-        from: 'bot',
-        text: res.text,
-        isHtml: res.isHtml,
-        doctorOptions: res.doctorOptions
-      });
-    }, 400);
-  }
 }

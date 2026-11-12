@@ -127,7 +127,7 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
                   }
                 </div>
               } @else {
-                <p class="muted">No free slots right now. Ask Pulse to find the next opening.</p>
+                <p class="muted">No free slots right now. Try another doctor or day.</p>
               }
 
               <div class="bm-foot" style="margin-top:16px">

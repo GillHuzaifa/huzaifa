@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CONTACT } from '../../data/contact.data';
-import { PulseAiService } from '../../shared/services/pulse-ai.service';
 import { SeoService } from '../../shared/services/seo.service';
 
 interface CollabOption {
@@ -48,18 +47,6 @@ interface CollabOption {
 
         <!-- Contact Cards Grid -->
         <div class="ct-grid">
-          <!-- Chat with PulseQ -->
-          <div class="ct-card">
-            <i>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 12l16-8-6 16-3-7z"></path>
-              </svg>
-            </i>
-            <h3>Chat with PulseQ</h3>
-            <p>Fastest for booking help, finding a doctor or a quick question, in Urdu or English.</p>
-            <button class="btn btn-ink" type="button" (click)="openAi()">Open PulseQ</button>
-          </div>
-
           <!-- Common questions -->
           <div class="ct-card">
             <i>
@@ -265,7 +252,6 @@ interface CollabOption {
   `]
 })
 export class ContactComponent implements OnInit {
-  private pulseAi = inject(PulseAiService);
   private seo = inject(SeoService);
   private route = inject(ActivatedRoute);
   contact = CONTACT;
@@ -343,7 +329,7 @@ export class ContactComponent implements OnInit {
 
   constructor() {
     this.seo.updateTitle('Contact Us — PulseQ Pakistan');
-    this.seo.updateMeta('Get in touch with PulseQ. Chat with PulseQ or list your clinic or collaborate with us.');
+    this.seo.updateMeta('Get in touch with PulseQ to list your clinic, collaborate with us or ask about our services.');
   }
 
   ngOnInit(): void {
@@ -357,10 +343,6 @@ export class ContactComponent implements OnInit {
         }
       }
     });
-  }
-
-  openAi() {
-    this.pulseAi.open();
   }
 
   toggleSpec(spec: string): void {
