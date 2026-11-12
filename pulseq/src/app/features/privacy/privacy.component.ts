@@ -50,7 +50,6 @@ import { SeoService } from '../../shared/services/seo.service';
           </div>
         </div>
 
-        <p class="pv-note"><b>Draft for review.</b> This policy describes how PulseQ is designed to work. Have a qualified lawyer review it against Pakistani law and your final data practices before launch.</p>
       </div>
     </section>
   `,
