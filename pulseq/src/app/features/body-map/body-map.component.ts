@@ -5,7 +5,6 @@ import { BM_AREAS, BM_CHILD } from '../../data/body-map.data';
 import { SPEC, SPEC_PLURAL } from '../../data/specialties.data';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
-import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { Doctor } from '../../shared/models';
 import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map-3d';
@@ -119,9 +118,9 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
                         <span>{{ h?.name }} · {{ h?.city }} · Rs {{ d.fee.toLocaleString('en-US') }}</span>
                       </div>
                       @if (n) {
-                        <button class="btn btn-ink" type="button" (click)="bookSlot(d, n.o, n.t)">
+                        <a class="btn btn-ink" href="https://patient.pulseq.health">
                           {{ formatSlot(n.o, n.t) }}
-                        </button>
+                        </a>
                       }
                     </div>
                   }
@@ -148,7 +147,6 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
 export class BodyMapComponent implements OnInit, AfterViewInit, OnDestroy {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
-  modalService = inject(ModalService);
   seo = inject(SeoService);
   router = inject(Router);
   platformId = inject(PLATFORM_ID);
@@ -228,10 +226,6 @@ export class BodyMapComponent implements OnInit, AfterViewInit, OnDestroy {
     d.setDate(d.getDate() + offset);
     const day = offset === 0 ? 'Today' : offset === 1 ? 'Tmrw' : days[d.getDay()];
     return `${day} ${this.doctorsService.formatTime(timeStr)}`;
-  }
-
-  bookSlot(doc: Doctor, offset: number, time: string): void {
-    this.modalService.openBooking(doc.id, offset, time);
   }
 
   seeAllDoctors(spec: string): void {

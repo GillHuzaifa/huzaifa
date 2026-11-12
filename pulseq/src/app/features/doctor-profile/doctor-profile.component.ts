@@ -3,7 +3,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
-import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { ReviewsService, ReviewStats, DOC_ASPECTS } from '../../shared/services/reviews.service';
 import { ToastService } from '../../shared/services/toast.service';
@@ -161,12 +160,11 @@ import { SPEC } from '../../data/specialties.data';
                       <p class="muted xs">Next free</p>
                       <div class="slots">
                         @for (s of ns; track s.o + s.t) {
-                          <button
+                          <a
                             class="slot"
-                            type="button"
-                            (click)="bookSlot(p.id, s.o, s.t)">
+                            href="https://patient.pulseq.health">
                             {{ doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
-                          </button>
+                          </a>
                         }
                       </div>
                     </div>
@@ -174,15 +172,13 @@ import { SPEC } from '../../data/specialties.data';
                     <p class="muted sm">No free slots this week at this place.</p>
                   }
 
-                  <button
+                  <a
                     class="btn"
                     [class.btn-ink]="i === 0"
                     [class.btn-line]="i > 0"
-                    type="button"
-                    [disabled]="!ns.length"
-                    (click)="bookSlot(p.id, ns[0].o, ns[0].t)">
+                    href="https://patient.pulseq.health">
                     Book at {{ h ? h.name : p.h }}
-                  </button>
+                  </a>
                 </div>
               }
             </div>
@@ -195,7 +191,7 @@ import { SPEC } from '../../data/specialties.data';
             <span class="xs muted" style="display:block">Consultation</span>
             <b style="font-size:16px;color:#102A43">Rs {{ minFee().toLocaleString('en-US') }}</b>
           </div>
-          <button class="btn btn-ink" type="button" (click)="bookSlot(doctor.id)">Book appointment</button>
+          <a class="btn btn-ink" href="https://patient.pulseq.health">Book appointment</a>
         </div>
       } @else {
         <a class="pgback" routerLink="/find-doctors">All doctors</a>
@@ -240,7 +236,6 @@ export class DoctorProfileComponent implements OnInit {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);
-  modalService = inject(ModalService);
   toast = inject(ToastService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
@@ -316,7 +311,4 @@ export class DoctorProfileComponent implements OnInit {
     return `${this.doctorsService.formatTime(a)} – ${this.doctorsService.formatTime(e)}`;
   }
 
-  bookSlot(id: number, o?: number, t?: string): void {
-    this.modalService.openBooking(id, o, t);
-  }
 }

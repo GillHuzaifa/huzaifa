@@ -88,6 +88,7 @@ button,input,select{font-family:inherit;font-size:16px;color:inherit}
 .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .slot{min-height:44px;padding:0 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;font-weight:500;font-size:14px}
 .slot:hover{border-color:var(--fg)}
+a.slot{display:inline-flex;align-items:center;justify-content:center;color:inherit;text-decoration:none}
 .empty{background:var(--surface);border-radius:28px;padding:40px 24px;text-align:center;box-shadow:inset 0 0 0 1.5px var(--line);display:flex;flex-direction:column;gap:12px;align-items:center}
 .load-more-wrap{display:flex;justify-content:center;padding:20px 0 8px}
 .load-more-btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:50px;padding:0 22px;border:0;border-radius:999px;background:linear-gradient(135deg,#2381FF,#1558B8);color:#fff;font:inherit;font-weight:700;box-shadow:0 10px 22px -12px rgba(21,88,184,.75);cursor:pointer;transition:transform .16s,box-shadow .16s}

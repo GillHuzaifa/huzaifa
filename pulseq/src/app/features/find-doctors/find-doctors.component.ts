@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { ReviewsService } from '../../shared/services/reviews.service';
-import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { SPEC, SPEC_PLURAL, CITIES } from '../../data/specialties.data';
 import { Doctor, Place, Slot } from '../../shared/models';
@@ -323,12 +322,12 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   <div class="fd-slots">
                     @if (ns.length) {
                       @for (s of expandedSlots.has(d.id) ? ns : ns.slice(0, 2); track s.o + s.t) {
-                        <button
+                        <a
                           class="slot"
-                          type="button"
-                          (click)="$event.stopPropagation(); modalService.openBooking(P.id, s.o, s.t)">
+                          href="https://patient.pulseq.health"
+                          (click)="$event.stopPropagation()">
                           {{ s.o === 0 ? 'Today' : doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
-                        </button>
+                        </a>
                       }
                       @if (ns.length > 2) {
                         <button
@@ -387,7 +386,6 @@ export class FindDoctorsComponent implements OnInit {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);
-  modalService = inject(ModalService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
   router = inject(Router);

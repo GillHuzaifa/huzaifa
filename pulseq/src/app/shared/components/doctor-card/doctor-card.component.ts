@@ -4,7 +4,6 @@ import { Doctor, Place, Slot } from '../../models';
 import { DoctorsService } from '../../services/doctors.service';
 import { HospitalsService } from '../../services/hospitals.service';
 import { ReviewsService } from '../../services/reviews.service';
-import { ModalService } from '../../services/modal.service';
 import { SPEC } from '../../../data/specialties.data';
 
 @Component({
@@ -95,11 +94,11 @@ import { SPEC } from '../../../data/specialties.data';
           <div class="slots">
             @if (ns.length) {
               @for (s of ns; track s.o + s.t) {
-                <button
+                <a
                   class="slot"
-                  (click)="bookSlot(P.id, s.o, s.t)">
+                  href="https://patient.pulseq.health">
                   {{ s.o === 0 ? 'Today' : doctorsService.shortDay(s.o) }} {{ doctorsService.formatTime(s.t) }}
-                </button>
+                </a>
               }
             } @else {
               <span class="muted sm">No free slots this week</span>
@@ -107,12 +106,11 @@ import { SPEC } from '../../../data/specialties.data';
           </div>
         </div>
 
-        <button
+        <a
           class="btn btn-ink full"
-          [disabled]="!ns.length"
-          (click)="bookSlot(P.id, ns[0].o, ns[0].t)">
+          href="https://patient.pulseq.health">
           Book appointment
-        </button>
+        </a>
       </article>
     }
   `
@@ -124,7 +122,6 @@ export class DoctorCardComponent {
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
   reviewsService = inject(ReviewsService);
-  modalService = inject(ModalService);
 
   getDocRating(id: number) {
     return this.reviewsService.getDocStats(id);
@@ -203,7 +200,4 @@ export class DoctorCardComponent {
     return `${this.doctorsService.formatTime(a)} – ${this.doctorsService.formatTime(e)}`;
   }
 
-  bookSlot(id: number, o?: number, t?: string): void {
-    this.modalService.openBooking(id, o, t);
-  }
 }

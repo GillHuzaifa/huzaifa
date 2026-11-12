@@ -4,7 +4,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { HospitalsService } from '../../shared/services/hospitals.service';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { ReviewsService, ReviewStats, HOSP_ASPECTS } from '../../shared/services/reviews.service';
-import { ModalService } from '../../shared/services/modal.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { PatientReviewsComponent, SubmittedReview } from '../../shared/components/patient-reviews/patient-reviews.component';
@@ -119,9 +118,9 @@ import { SPEC } from '../../data/specialties.data';
                   <div class="dr-sl">
                     @if (slots.length > 0) {
                       @for (slot of slots; track slot.o + slot.t) {
-                        <button class="slot" type="button" (click)="modalService.openBooking(place.id, slot.o, slot.t)">
+                        <a class="slot" href="https://patient.pulseq.health">
                           {{ doctorsService.shortDay(slot.o) }} {{ doctorsService.formatTime(slot.t) }}
-                        </button>
+                        </a>
                       }
                     } @else {
                       <span class="muted sm">No free slots this week</span>
@@ -129,7 +128,7 @@ import { SPEC } from '../../data/specialties.data';
                   </div>
                   <div class="dr-act">
                     <b class="dc-fee">Rs {{ place.fee.toLocaleString('en-US') }}</b>
-                    <button class="btn btn-ink" type="button" [disabled]="!slots.length" (click)="modalService.openBooking(place.id, slots[0].o, slots[0].t)">Book</button>
+                    <a class="btn btn-ink" href="https://patient.pulseq.health">Book</a>
                   </div>
                 </article>
               }
@@ -213,7 +212,6 @@ export class HospitalDetailComponent implements OnInit {
   hospitalsService = inject(HospitalsService);
   doctorsService = inject(DoctorsService);
   reviewsService = inject(ReviewsService);
-  modalService = inject(ModalService);
   toastService = inject(ToastService);
   seo = inject(SeoService);
   route = inject(ActivatedRoute);
