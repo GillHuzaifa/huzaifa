@@ -581,7 +581,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
             <code id="oCode">{{ lastOrderCode }}</code>
             <p class="sm" id="oItems">{{ lastOrderItems }}</p>
           </div>
-          <p class="muted sm">Please keep your phone nearby. Demo note: orders here are saved in this browser only.</p>
+          <p class="muted sm">Please keep your phone nearby. Note: orders here are saved in this browser only.</p>
           <button class="btn btn-ink full" id="oClose" type="button" (click)="orderSuccessOpen = false">Done</button>
         </div>
       </div>
