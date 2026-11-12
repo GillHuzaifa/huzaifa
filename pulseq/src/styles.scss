@@ -12,6 +12,13 @@
 html,body{margin:0;padding:0;width:100%;max-width:100%;min-height:100dvh;overflow-x:hidden}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media (min-width:1200px){
+  .wrap{
+    max-width:100%;
+    padding-left:clamp(32px,5vw,96px);
+    padding-right:clamp(32px,5vw,96px);
+  }
+}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 app-root,#top{display:block;margin:0;padding:0;width:100%}
 h1,h2,h3,p{margin:0}
