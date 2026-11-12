@@ -451,7 +451,7 @@ header.wrap .btn-line{box-shadow:inset 0 0 0 1.5px currentColor!important}
   .botlbl{display:none!important}
   .botpanel{right:0;left:0;bottom:0;width:100%;height:min(88dvh,calc(100dvh - 12px));border-radius:24px 24px 0 0}
 }
-body.input-focused .botfab,body.input-focused .botlbl{opacity:0!important;pointer-events:none!important;visibility:hidden!important;transform:scale(0.8)!important}
+body.input-focused .botlbl{opacity:0!important;pointer-events:none!important;visibility:hidden!important;transform:scale(0.8)!important}
 
 /* distinct hospital and doctor identities */
 .hosp{border-radius:26px;box-shadow:0 0 0 1.5px #C9DDFB,0 24px 40px -30px rgba(12,45,94,.55);transition:transform .18s,box-shadow .18s}
@@ -2208,15 +2208,6 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     display: none !important;
   }
 
-  body.input-focused .botfab,
-  body.sheet-scroll-locked .botfab,
-  body.kb-open .botfab,
-  body.pulse-scrolling-down .botfab,
-  body.pulse-fab-overlap .botfab {
-    opacity: 0 !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
-  }
 }
 
 .clinic-preview {
