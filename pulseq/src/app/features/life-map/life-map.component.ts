@@ -318,11 +318,11 @@ const RISK_FACTORS: [string, string, string][] = [
           <span class="eyebrow">Know your signs</span><h2>Two quick checks that can save a life.</h2>
           <p class="section-copy">Heart disease is the world’s leading cause of death, and breast cancer is the most common cancer in women. Both are far easier to treat when caught early.</p>
           <div class="lm-two">
-            <details class="lm-sign heart">
+            <details class="lm-sign heart" name="lifemap-sign-checks">
               <summary><span class="sign-icon">♥</span><span class="sign-title"><b>Heart attack check</b><span>Warning signs and your risk</span></span><span class="sign-time">2 min →</span></summary>
               <div class="sign-body"><b>Warning signs</b><ul><li>Pressure, squeezing or heaviness in the chest</li><li>Pain spreading to the left arm, jaw, neck or back</li><li>Shortness of breath, cold sweat, nausea or dizziness</li><li>In women, signs can be milder: unusual tiredness, back or jaw pain, indigestion</li></ul><div class="sign-action">Do not wait and do not drive yourself. Call your emergency number now (Rescue 1122 or Edhi 115) and sit down and stay calm.</div></div>
             </details>
-            <details class="lm-sign breast">
+            <details class="lm-sign breast" name="lifemap-sign-checks">
               <summary><span class="sign-icon">♡</span><span class="sign-title"><b>Breast health check</b><span>Self-exam guide and warning signs</span></span><span class="sign-time">2 min →</span></summary>
               <div class="sign-body"><b>Once a month, a few days after your period ends</b><ul><li>Look in a mirror for changes in size, shape or skin</li><li>Feel each breast and armpit with flat fingers, in small circles</li><li>Warning signs: a new lump, dimpling, nipple turning inward, discharge, redness or swelling</li></ul><div class="sign-action">Most lumps are not cancer, but see a doctor within 2 weeks of finding any change. Women 40 and over should ask about a mammogram.</div></div>
             </details>
@@ -364,7 +364,7 @@ const RISK_FACTORS: [string, string, string][] = [
     .lm-sec{margin-top:44px}.lm-sec>h2{font-size:clamp(26px,4vw,40px);margin:6px 0 16px}.section-copy{max-width:620px;margin:-6px 0 18px;color:#526477}
     .lm-risk{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}.lm-toggle{display:flex;gap:12px;align-items:center;min-height:48px;padding:8px 0;cursor:pointer;font-size:15px}.lm-toggle input{width:22px;height:22px;accent-color:#2381FF;flex:none}
     .lm-res{background:#1558B8;color:#fff;border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:12px}.lm-res .eyebrow{color:#BFDBFE}.lm-res .num{font:800 54px/1 var(--disp,'sans-serif')}.lm-res ul{margin:0;padding-left:18px;font-size:15px;color:#F0F6FF}.lm-res .xs{font-size:13px;color:#DBEAFE}
-    .lm-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}.lm-sign{border-radius:28px;overflow:hidden}.lm-sign.heart{background:#FDE8E6;color:#9A1B0F}.lm-sign.breast{background:#F9E6F2;color:#9B1B68}
+    .lm-two{display:grid;align-items:start;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}.lm-sign{border-radius:28px;overflow:hidden}.lm-sign.heart{background:#FDE8E6;color:#9A1B0F}.lm-sign.breast{background:#F9E6F2;color:#9B1B68}
     .lm-sign summary{list-style:none;display:flex;align-items:center;gap:16px;padding:22px;cursor:pointer;min-height:96px}.lm-sign summary::-webkit-details-marker{display:none}.sign-icon{width:58px;height:58px;border-radius:18px;background:#fff;display:grid;place-items:center;flex:none;font-size:34px}
     .sign-title{flex:1;min-width:0}.sign-title b{display:block;font:800 21px var(--disp,'sans-serif')}.sign-title span{font-size:15px;opacity:.85}.sign-time{font-weight:700;font-size:14px;white-space:nowrap}.lm-sign[open] .sign-time{display:none}
     .sign-body{padding:0 22px 22px;font-size:15px;color:#102A43}.sign-body ul{margin:6px 0 12px;padding-left:20px}.sign-action{background:#fff;border-radius:18px;padding:14px;font-weight:700}
