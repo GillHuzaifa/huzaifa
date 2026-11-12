@@ -32,6 +32,11 @@ export const routes: Routes = [
     title: 'Pulse Body Map — PulseQ Pakistan'
   },
   {
+    path: 'life-map',
+    loadComponent: () => import('./features/life-map/life-map.component').then(m => m.LifeMapComponent),
+    title: 'Life Map — PulseQ Pakistan'
+  },
+  {
     path: 'surgery',
     loadComponent: () => import('./features/surgery/surgery.component').then(m => m.SurgeryComponent),
     title: 'Surgery & Procedures — PulseQ Pakistan'
