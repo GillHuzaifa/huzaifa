@@ -119,14 +119,15 @@ import { ToastService } from '../../services/toast.service';
               }
             }
 
-            @if (showSuggestions()) {
-              <div class="sugs" [attr.dir]="selectedLang === 'ur-PK' ? 'rtl' : 'ltr'">
-                @for (s of currentSuggestions(); track s) {
-                  <button class="sug" type="button" (click)="pickSuggestion(s)">{{ s }}</button>
-                }
-              </div>
-            }
           </div>
+
+          @if (showSuggestions()) {
+            <div class="sugs" [attr.dir]="selectedLang === 'ur-PK' ? 'rtl' : 'ltr'">
+              @for (s of currentSuggestions(); track s) {
+                <button class="sug" type="button" (click)="pickSuggestion(s)">{{ s }}</button>
+              }
+            </div>
+          }
 
           <!-- Urdu Writing Assistance Options in popup -->
           @if (selectedLang === 'ur-PK') {
