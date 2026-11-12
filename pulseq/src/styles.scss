@@ -19,6 +19,17 @@ html{scroll-behavior:smooth}
     padding-right:clamp(32px,5vw,96px);
   }
 }
+@media (min-width:900px){
+  header.wrap .hero-title{
+    display:flex;
+    align-items:baseline;
+    gap:.28em;
+    white-space:nowrap;
+  }
+  header.wrap .hero-title span:nth-child(1){color:#102A43}
+  header.wrap .hero-title span:nth-child(2){color:#1558B8}
+  header.wrap .hero-title span:nth-child(3){color:#2381FF}
+}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 app-root,#top{display:block;margin:0;padding:0;width:100%}
 h1,h2,h3,p{margin:0}
