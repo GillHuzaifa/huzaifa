@@ -426,7 +426,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 </div>
               }
             </div>
-            <p class="muted xs" style="margin-top:20px;max-width:640px">Sample catalogue for this demo. Information is general and is not medical advice. Always follow your doctor’s prescription and the label. Medicines marked Rx need a prescription.</p>
+            <p class="medicine-safety-note">Information is general and is not medical advice. Always follow your doctor’s prescription and the label. Medicines marked Rx need a prescription.</p>
           </div>
 
           <aside class="mcart" aria-label="Your pack">
@@ -676,6 +676,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
     .catalog-detail-grid h3 { margin-bottom: 8px; }
     .catalog-detail-grid ul { padding-left: 20px; }
     .catalog-caution { margin-top: 18px; padding: 12px 14px; border-radius: 12px; background: #FFF7E5; color: #78350F; }
+    .medicine-safety-note { margin-top: 20px; max-width: 640px; padding: 16px 18px; border: 1px solid #BFDBFE; border-left: 4px solid #2381FF; border-radius: 12px; background: #EFF6FF; color: #102A43; font-size: 16px; font-weight: 600; line-height: 1.55; }
     .catalog-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .catalog-disclaimer { margin-top: 18px; max-width: 700px; }
     .pharmacy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
