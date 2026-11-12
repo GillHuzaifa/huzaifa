@@ -531,7 +531,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 </div>
               }
               <p class="err" id="rxErr" role="alert" *ngIf="orderError && orderError.includes('prescription')">{{ orderError }}</p>
-              <p class="muted xs">Demo: your file stays in this browser. A live site sends it securely to your pharmacy only.</p>
+              <p class="muted sm">Note: your file stays in this browser. A live site sends it securely to your pharmacy only.</p>
             </div>
             @if (medService.hasRxInCart()) {
               <p class="muted xs" id="rxNote">Your pack has prescription (Rx) medicines. Upload your prescription so the pharmacy can check it.</p>
