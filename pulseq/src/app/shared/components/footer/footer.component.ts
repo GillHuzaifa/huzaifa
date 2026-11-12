@@ -71,7 +71,7 @@ import { RouterLink } from '@angular/router';
             <a routerLink="/terms">Terms of use</a>
           </span>
           <span class="foot-note">PulseQ does not provide medical advice.</span>
-          <span class="foot-emergency">Emergency: call 1122.</span>
+          <a class="foot-emergency" href="tel:1122" aria-label="Call emergency services at 1122">Emergency: call 1122.</a>
         </div>
       </div>
     </footer>
