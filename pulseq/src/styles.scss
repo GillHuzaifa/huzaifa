@@ -216,14 +216,14 @@ details p{padding:0 24px 22px;color:var(--muted);max-width:760px}
 .foot-brand-mark{display:flex;align-items:center;gap:12px}
 .foot-brand-mark .logo-mark{width:44px;height:44px;border-radius:14px;box-shadow:none}
 .foot-brand-mark p{margin:0;color:#FFFFFF;font-family:var(--disp);font-size:30px;font-weight:800;letter-spacing:-.03em}
-.foot-description{margin:14px 0 0;color:#D9E7F5;font-size:13px;line-height:1.55}
+.foot-description{margin:14px 0 0;color:#D9E7F5;font-size:15px;line-height:1.6}
 .foot-signoff{margin:13px 0 0;color:#F3C15C;font-size:18px}
-.foot-socials{display:flex;gap:7px;margin-top:12px}
-.foot-socials a{display:inline-flex!important;align-items:center;justify-content:center;width:20px;height:20px;padding:0!important;border-radius:5px;background:#214568;color:#D9E7F5!important;font-size:10px!important;font-weight:800}
-.foot .foot-group .eyebrow{margin:3px 0 10px;color:#5FA3FF!important;font-size:10px}
-.foot-cols a{display:block;color:#D9E7F5;text-decoration:none;padding:5px 0;font-size:12px;line-height:1.35;transition:color .18s,transform .18s}
+.foot-socials{display:flex;gap:9px;margin-top:14px}
+.foot-socials a{display:inline-flex!important;align-items:center;justify-content:center;width:30px;height:30px;padding:0!important;border-radius:7px;background:#214568;color:#D9E7F5!important;font-size:12px!important;font-weight:800}
+.foot .foot-group .eyebrow{margin:3px 0 10px;color:#5FA3FF!important;font-size:12px}
+.foot-cols a{display:block;color:#D9E7F5;text-decoration:none;padding:6px 0;font-size:14px;line-height:1.4;transition:color .18s,transform .18s}
 .foot-cols a:hover{color:#FFFFFF;transform:translateX(3px)}
-.foot-legal{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px 15px;margin-top:30px;padding:14px 0 20px;border-top:1px solid #214568;color:#9DB4C9;font-size:10px;line-height:1.45;text-align:center}
+.foot-legal{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px 15px;margin-top:30px;padding:14px 0 20px;border-top:1px solid #214568;color:#9DB4C9;font-size:12px;line-height:1.45;text-align:center}
 .foot-copy{font-weight:800;color:#D9E7F5;white-space:nowrap}
 .foot-links{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .foot-links a{color:#D9E7F5;text-decoration:none}
@@ -240,7 +240,7 @@ details p{padding:0 24px 22px;color:var(--muted);max-width:760px}
   .foot-brand-mark p{font-size:27px}
   .foot-description{max-width:34ch}
   .foot-signoff{font-size:20px}
-  .foot-cols a{padding:5px 0;font-size:13px}
+  .foot-cols a{padding:6px 0;font-size:14px}
   .foot-legal{align-items:center;flex-direction:column;gap:7px;margin-top:34px;padding:16px 0 calc(76px + env(safe-area-inset-bottom,0px));font-size:12px}
   .foot-note{max-width:48ch}
 }

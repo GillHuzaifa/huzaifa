@@ -31,7 +31,8 @@ import { RouterLink } from '@angular/router';
             <p class="hand foot-signoff">made with care in Pakistan</p>
             <div class="foot-socials" aria-label="Social links">
               <a href="https://www.facebook.com" target="_blank" rel="noopener" aria-label="Facebook">f</a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram">◎</a>
+              <a href="https://wa.me/923201122000" target="_blank" rel="noopener" aria-label="WhatsApp">wa</a>
+              <a href="https://www.instagram.com" target="_blank" rel="noopener" aria-label="Instagram">ig</a>
               <a href="https://www.linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
             </div>
           </div>
