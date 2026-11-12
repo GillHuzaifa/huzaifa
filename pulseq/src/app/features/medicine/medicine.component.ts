@@ -86,7 +86,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
               <button class="load-more-btn" type="button" (click)="loadMoreCatalog()">Load more medicines <span>{{ catalogMeds.length - catalogVisibleLimit }} remaining</span></button>
             </div>
           }
-          <p class="muted xs catalog-disclaimer">Sample catalogue for this demo. This information is general and is not medical advice. Follow your doctor’s prescription and the medicine label.</p>
+          <p class="medicine-safety-note">This information is general and is not medical advice. Follow your doctor’s prescription and the medicine label.</p>
         </div>
       </section>
     } @else if (viewMode === 'medicine-detail') {
@@ -334,6 +334,7 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                 @for (m of medicines; track m.id) {
                   @let u = getUnits(m);
                   @let mode = medService.modeOf(m.id);
+                  @let selectedShop = medService.selectedShop();
                   @let isOpen = medService.isInfoOpen(m.id);
                   @let isWhere = medService.isWhereOpen(m.id);
                   @let inCart = medService.inCartCount(m.id, mode);
@@ -373,6 +374,14 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
                       <div class="seg" role="group" [attr.aria-label]="'Choose single or full pack for ' + m.n">
                         <button [class.on]="mode === 's'" type="button" (click)="medService.setMode(m.id, 's')" [attr.aria-pressed]="mode === 's'">{{ u[0] }}</button>
                         <button [class.on]="mode === 'p'" type="button" (click)="medService.setMode(m.id, 'p')" [attr.aria-pressed]="mode === 'p'">{{ u[1] }}</button>
+                      </div>
+
+                      <div class="medicine-price" aria-live="polite">
+                        <span class="medicine-price-copy">
+                          <b>{{ u[mode === 's' ? 0 : 1] }} price</b>
+                          <small>{{ selectedShop ? 'Estimate for ' + selectedShop.n : 'Estimate · varies by pharmacy' }}</small>
+                        </span>
+                        <strong>Rs {{ mainMedicinePrice(m) }}</strong>
                       </div>
 
                       <div class="strip-act">
