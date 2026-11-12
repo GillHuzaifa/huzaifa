@@ -19,17 +19,6 @@ html{scroll-behavior:smooth}
     padding-right:clamp(32px,5vw,96px);
   }
 }
-@media (min-width:900px){
-  header.wrap .hero-title{
-    display:flex;
-    align-items:baseline;
-    gap:.28em;
-    white-space:nowrap;
-  }
-  header.wrap .hero-title span:nth-child(1){color:#102A43}
-  header.wrap .hero-title span:nth-child(2){color:#1558B8}
-  header.wrap .hero-title span:nth-child(3){color:#2381FF}
-}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 app-root,#top{display:block;margin:0;padding:0;width:100%}
 h1,h2,h3,p{margin:0}
@@ -3943,7 +3932,7 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
 }
 
 
-/* ===== Full-width layout for ALL pages (desktop) =====
+/* ===== Full-width, responsive layout for ALL pages (desktop / laptop) =====
    Paste at the very END of styles.scss. Nothing above it is edited.
    Phones and small tablets (< 900px) are not affected. */
 
@@ -3951,51 +3940,59 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
   #top header.wrap { max-width: 100%; margin-inline: 0; }
 }
 
+/* Laptops and desktops: full-width header, content and footer */
 @media (min-width: 1024px) {
-
-  /* Every page: header, page content, CTA and footer span the full width */
   #top .wrap,
   #top header.wrap {
     max-width: 100%;
-    padding-left: clamp(32px, 5vw, 96px);
-    padding-right: clamp(32px, 5vw, 96px);
+    padding-left: clamp(24px, 4.5vw, 96px);
+    padding-right: clamp(24px, 4.5vw, 96px);
   }
 
-  /* Nav sized for a wide screen */
-  #top header.wrap .nav { padding-block: 20px; }
-  #top header.wrap .logo { font-size: 26px; }
-  #top header.wrap .logo-mark { width: 44px; height: 44px; border-radius: 14px; }
+  /* Nav scales with the screen */
+  #top header.wrap .nav { padding-block: clamp(12px, 1.2vw, 20px); }
+  #top header.wrap .logo { font-size: clamp(20px, 1.5vw, 26px); }
+  #top header.wrap .logo-mark { width: clamp(36px, 2.6vw, 44px); height: clamp(36px, 2.6vw, 44px); border-radius: 14px; }
   #top header.wrap .nav-links > a,
-  #top header.wrap .nav-menu-trigger { font-size: 17px !important; min-height: 44px; }
-  #top header.wrap .nav-cta .btn-ink { min-height: 46px; padding-inline: 26px; font-size: 15px; white-space: nowrap; }
+  #top header.wrap .nav-menu-trigger { font-size: clamp(14px, 1.05vw, 17px) !important; min-height: 40px; }
+  #top header.wrap .nav-cta .btn-ink { min-height: 44px; padding-inline: clamp(18px, 1.6vw, 26px); font-size: clamp(14px, 0.95vw, 15px); white-space: nowrap; }
 
-  /* Home hero: two columns across the full width */
+  /* Home hero text scales smoothly and can never run into the card */
+  #top header.wrap > .hero.home .hero-l { min-width: 0; }
+  #top header.wrap > .hero.home .hero-l h1 {
+    max-width: none;
+    font-size: clamp(34px, 3.3vw + 8px, 80px);
+    line-height: 1.04;
+    letter-spacing: -.04em;
+    overflow-wrap: break-word;
+  }
+  #top header.wrap > .hero.home .hero-desc { font-size: clamp(16px, 1.2vw, 20px); }
+
+  /* Search box: field, city and button always stay on one row */
+  #top header.wrap > .hero.home .search { max-width: 880px; }
+  #top header.wrap > .hero.home .search .fields { flex-wrap: nowrap; align-items: stretch; }
+  #top header.wrap > .hero.home .search .field { flex: 1 1 0; min-width: 0; }
+  #top header.wrap > .hero.home .search .field.wide { flex: 2 1 0; }
+  #top header.wrap > .hero.home .search #goBtn { flex: 0 0 auto; padding-inline: clamp(18px, 1.8vw, 32px); white-space: nowrap; }
+  #top header.wrap > .hero.home .feel { max-width: 880px; }
+}
+
+/* Small laptops and large tablets (1024-1199px): hero stacks, still full width */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  #top header.wrap > .hero.home { gap: 28px; padding-block: 24px 32px; }
+  #top header.wrap > .hero.home .hero-l,
+  #top header.wrap > .hero.home .hero-r { width: 100%; max-width: 820px; }
+}
+
+/* Laptops and desktops (1200px+): hero in two columns across the full width */
+@media (min-width: 1200px) {
   #top header.wrap > .hero.home {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    gap: clamp(32px, 5vw, 96px);
-    padding-block: 32px 40px;
+    gap: clamp(32px, 4vw, 96px);
+    padding-block: clamp(20px, 2.4vw, 40px);
   }
-  #top header.wrap > .hero.home .hero-l {
-    flex: 1.15 1 0;
-    width: auto;
-    max-width: none;
-    min-width: 0;
-  }
-  #top header.wrap > .hero.home .hero-r {
-    flex: 1 1 0;
-    width: auto;
-    max-width: 760px;
-    min-width: 0;
-    padding-top: 0;
-  }
-  #top header.wrap > .hero.home .hero-l h1 {
-    max-width: none;
-    font-size: clamp(44px, 4.8vw, 88px);
-    line-height: 1.02;
-    letter-spacing: -.04em;
-  }
-  #top header.wrap > .hero.home .search,
-  #top header.wrap > .hero.home .feel { max-width: 880px; }
+  #top header.wrap > .hero.home .hero-l { flex: 1.15 1 0; width: auto; max-width: none; }
+  #top header.wrap > .hero.home .hero-r { flex: 1 1 0; width: auto; max-width: 760px; min-width: 0; padding-top: 0; }
 }
