@@ -348,13 +348,12 @@ import { Doctor, Place, Slot } from '../../shared/models';
                   <div class="fd-actions">
                     <span class="fee-caption">Consultation fee</span>
                     <b class="dc-fee">Rs {{ P.fee.toLocaleString('en-US') }}</b>
-                    <button
+                    <a
                       class="btn btn-ink"
-                      type="button"
-                      [disabled]="!ns.length"
-                      (click)="$event.stopPropagation(); ns.length && modalService.openBooking(P.id, ns[0].o, ns[0].t)">
+                      href="https://patient.pulseq.health"
+                      (click)="$event.stopPropagation()">
                       Book
-                    </button>
+                    </a>
                   </div>
                 </article>
               }

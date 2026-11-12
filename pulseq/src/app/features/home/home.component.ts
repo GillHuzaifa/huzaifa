@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DoctorsService } from '../../shared/services/doctors.service';
 import { HospitalsService } from '../../shared/services/hospitals.service';
-import { ModalService } from '../../shared/services/modal.service';
 import { SeoService } from '../../shared/services/seo.service';
 import { DoctorCardComponent } from '../../shared/components/doctor-card/doctor-card.component';
 import { ClinicDashboardComponent } from '../../shared/components/clinic-dashboard/clinic-dashboard.component';
@@ -128,9 +127,9 @@ import { observeLazy3DBody, Body3DController } from '../../shared/utils/body-map
                   <b><a class="dlink" [routerLink]="['/doctor', d.id]">{{ d.name }}</a></b>
                   <span>{{ getHospitalName(d.h) }} · {{ getHospitalCity(d.h) }} · Rs {{ d.fee.toLocaleString('en-US') }}</span>
                 </div>
-                <button class="btn btn-ink" type="button" (click)="bookBmDoctor(d)">
+                <a class="btn btn-ink" [attr.aria-label]="'Book an appointment with ' + d.name" href="https://patient.pulseq.health">
                   {{ getNextSlotText(d) }}
-                </button>
+                </a>
               </div>
             </div>
             <div class="bm-foot" style="margin-top:16px">
@@ -294,7 +293,6 @@ export class HomeComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   doctorsService = inject(DoctorsService);
   hospitalsService = inject(HospitalsService);
-  modalService = inject(ModalService);
   seo = inject(SeoService);
 
   specMap = SPEC;
@@ -423,12 +421,6 @@ export class HomeComponent implements OnInit {
       return `${day} ${this.doctorsService.formatTime(s.t)}`;
     }
     return 'View slots';
-  }
-
-  bookBmDoctor(d: Doctor) {
-    const sl = this.doctorsService.nextSlots(d, 1);
-    const s = sl[0] || { o: 0, t: '10:00' };
-    this.modalService.openBooking(d.id, s.o, s.t);
   }
 
   // Condition Search
