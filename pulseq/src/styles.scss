@@ -3930,3 +3930,65 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     max-height: min(92dvh, 580px, var(--vv-sheet-height, 92dvh), calc(100dvh - 58px - env(safe-area-inset-top, 0px))) !important;
   }
 }
+
+
+/* ===== Home: full-width hero + sections (desktop >= 1024px only) =====
+   Paste at the very END of styles.scss. Nothing above it is edited.
+   Phones and tablets (< 1024px) are not affected. */
+@media (min-width: 1024px) {
+
+  /* Header + hero stretch edge to edge (home page only) */
+  #top header.wrap:has(> .hero.home) {
+    max-width: 100% !important;
+    width: 100%;
+    margin-inline: 0 !important;
+    padding-left: clamp(32px, 5vw, 96px) !important;
+    padding-right: clamp(32px, 5vw, 96px) !important;
+  }
+
+  /* Nav sized for a wide screen */
+  #top header.wrap:has(> .hero.home) .nav { padding-block: 20px; }
+  #top header.wrap:has(> .hero.home) .logo { font-size: 26px; }
+  #top header.wrap:has(> .hero.home) .logo-mark { width: 44px; height: 44px; border-radius: 14px; }
+  #top header.wrap:has(> .hero.home) .nav-links > a,
+  #top header.wrap:has(> .hero.home) .nav-menu-trigger { font-size: 17px !important; min-height: 44px; }
+  #top header.wrap:has(> .hero.home) .nav-cta .btn-ink { min-height: 46px; padding-inline: 26px; font-size: 15px; }
+
+  /* Hero: two columns across the full width */
+  #top header.wrap > .hero.home {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: clamp(32px, 5vw, 96px);
+    padding-block: 32px 40px;
+  }
+  #top header.wrap > .hero.home .hero-l {
+    flex: 1.15 1 0;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+  #top header.wrap > .hero.home .hero-r {
+    flex: 1 1 0;
+    width: auto;
+    max-width: 760px;
+    min-width: 0;
+    padding-top: 0;
+  }
+  #top header.wrap > .hero.home .hero-l h1 {
+    max-width: none;
+    font-size: clamp(44px, 4.8vw, 88px);
+    line-height: 1.02;
+    letter-spacing: -.04em;
+  }
+  #top header.wrap > .hero.home .search,
+  #top header.wrap > .hero.home .feel { max-width: 880px; }
+
+  /* Sections below the hero (home page only) */
+  #top section.home > .wrap,
+  #top section.wrap.home {
+    max-width: 100%;
+    padding-left: clamp(32px, 5vw, 96px);
+    padding-right: clamp(32px, 5vw, 96px);
+  }
+}
