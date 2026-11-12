@@ -688,9 +688,13 @@ import { Medicine, Pharmacy, MedicineOrder, NeedCategory } from '../../shared/mo
     .medicine-safety-note { margin-top: 20px; max-width: 640px; padding: 16px 18px; border: 1px solid #BFDBFE; border-left: 5px solid #2381FF; border-radius: 16px; background: #EFF6FF; color: #102A43; font-size: 16px; font-weight: 600; line-height: 1.55; }
     .catalog-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
     .catalog-disclaimer { margin-top: 18px; max-width: 700px; }
-    .pharmacy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
-    .pharmacy-card { display: flex; flex-direction: column; gap: 10px; padding: 20px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
+    .pharmacy-grid { display: grid; width: 100%; min-width: 0; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+    .pharmacy-card { display: flex; min-width: 0; flex-direction: column; gap: 10px; padding: 20px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1px #DCE8F8; }
+    .pharmacy-card .tags { display: flex; flex-wrap: wrap; gap: 8px; }
     .pharmacy-card .btn { margin-top: auto; }
+    @media (max-width: 1100px) { .pharmacy-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 900px) { .pharmacy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .pharmacy-grid { grid-template-columns: minmax(0, 1fr); } }
     .catalog-entry-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 12px; max-width: 640px; }
     .catalog-entry { display: flex; align-items: center; gap: 14px; min-height: 78px; padding: 14px 16px; border-radius: 20px; background: #fff; box-shadow: inset 0 0 0 1.5px #DCE8F8, 0 1px 2px rgba(16,42,67,.04); color: #102A43; text-decoration: none; transition: transform .18s, box-shadow .18s; }
     .catalog-entry:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #2381FF, 0 14px 30px -16px rgba(35,129,255,.6); }
