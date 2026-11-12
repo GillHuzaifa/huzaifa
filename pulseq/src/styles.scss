@@ -1070,7 +1070,7 @@ button.dc-pl.on::before{border-color:#1D6FE0;background:radial-gradient(circle,#
 .nav-cta .btn-ink{background:var(--btn-bg)!important;color:#fff!important;font-weight:700;padding:0 22px;min-height:44px;box-shadow:none!important;transition:all .15s ease}
 .nav-cta .btn-ink:hover{background:var(--btn-hover)!important;color:#fff!important;transform:translateY(-1px)}
 
-.nav-menu .nav-dropdown{top:48px;width:474px;min-width:0;padding:24px 30px;display:block;z-index:99999}
+.nav-menu .nav-dropdown{top:40px;width:474px;min-width:0;padding:24px 30px;display:block;z-index:99999}
 .nav-menu .hospitals-dropdown{width:420px}
 @media(min-width:900px){
   .nav-menu:hover .nav-dropdown{display:block}
@@ -3229,8 +3229,18 @@ button:active, .btn:active, .chip:active, .tab:active, .slot:active, .feel-t:act
     touch-action: manipulation;
   }
 
+  .clinic-preview-heading,
+  .clinic-preview-chips,
+  .clinic-preview-stats,
+  .clinic-preview-next,
+  .clinic-preview-list,
+  .clinic-preview-link,
   .laptop-box {
-    display: block !important;
+    display: none !important;
+  }
+
+  .laptop-box {
+    display: none !important;
   }
 
   button, a {
